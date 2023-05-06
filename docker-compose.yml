@@ -1,0 +1,28 @@
+version: '3'
+services:
+  nightfly:
+    container_name: nightfly
+    build: ./nightfly
+    restart: on-failure
+    ports:
+      - 8080:8080
+    depends_on:
+      - nightfly_db
+    environment:
+      DATABASE_HOST: nightfly_db
+
+  nightfly_db:
+    container_name: nightfly_db
+    image: mariadb:10.11
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: nightfly
+      MYSQL_PASSWORD: nightfly
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nightfly
+    command: --default-storage-engine innodb
+    restart: always
+    volumes:
+      - ./nightfly_db/data:/var/lib/mysql
+      - ./nightfly_db/scripts:/docker-entrypoint-initdb.d
