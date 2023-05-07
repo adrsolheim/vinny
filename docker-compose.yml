@@ -10,6 +10,8 @@ services:
       - nightfly_db
     environment:
       DATABASE_HOST: nightfly_db
+      DB_USER: nightfly
+      DB_PASS: nightfly
 
   nightfly_db:
     container_name: nightfly_db
@@ -17,10 +19,10 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_USER: nightfly
-      MYSQL_PASSWORD: nightfly
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nightfly
+      MARIADB_USER: nightfly
+      MARIADB_PASSWORD: nightfly
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: nightfly
     command: --default-storage-engine innodb
     restart: always
     volumes:
