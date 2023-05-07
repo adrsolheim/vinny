@@ -12,4 +12,5 @@ public class Batch {
     private final String brewfatherId;
     private final String name;
     private final BatchStatus status;
+    // TODO: filter batches for display on frontend
 }
