@@ -1,9 +1,13 @@
 package no.vinny.nightfly.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.domain.data.Batch;
 import no.vinny.nightfly.domain.data.BatchStatus;
 import no.vinny.nightfly.domain.dto.BatchDTO;
+import no.vinny.nightfly.domain.util.BatchMapping;
+import no.vinny.nightfly.repository.BatchRepository;
 import no.vinny.nightfly.service.BatchService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,7 +21,15 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
-public class BatchServiceMock implements BatchService {
+public class BatchServiceImpl implements BatchService {
+
+    private final BatchRepository batchRepository;
+
+    @Autowired
+    public BatchServiceImpl(BatchRepository batchRepository) {
+        this.batchRepository = batchRepository;
+    }
+
     @Override
     public Mono<BatchDTO> getBatch(Long id) {
         log.info("Constructing mock batch of id {}..", id);
@@ -32,11 +44,18 @@ public class BatchServiceMock implements BatchService {
 
     @Override
     public Mono<Integer> addBatch(BatchDTO batch) {
-        return null;
+        Mono<Integer> result = Mono.just(batchRepository.insert(batch));
+        log.info("inserted {} to the database, {} rows updated", batch, result);
+        return result;
     }
 
     @Override
     public Flux<BatchDTO> getAllBatches() {
-        return null;
+        log.info("Fetching all batches from database..");
+        List<Batch> result = batchRepository.findAll();
+        if (result.size() == 0) {
+            return Flux.empty();
+        }
+        return Flux.fromIterable(result.stream().map(BatchMapping::batchToDTO).collect(Collectors.toList()));
     }
 }
