@@ -23,17 +23,17 @@ public class BatchController {
 
     @GetMapping("/{id}")
     public Mono<BatchDTO> batch(@PathVariable Long id) {
-        return batchService.getBatch(id);
+        return batchService.get(id);
     }
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<BatchDTO> batches() {
-        return batchService.getAllBatches();
+        return batchService.getAll();
     }
 
     @GetMapping("/sse")
     public Flux<ServerSentEvent<BatchDTO>> streamEvents() {
-        return batchService.getAllBatches()
+        return batchService.getAll()
                 .map(batch -> ServerSentEvent.<BatchDTO> builder()
                         .id(batch.getBrewfatherId())
                         .event("periodic-event")
@@ -44,7 +44,7 @@ public class BatchController {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Integer> create(@RequestBody BatchDTO batch) {
-       return batchService.addBatch(batch);
+       return batchService.add(batch);
     }
 
 }

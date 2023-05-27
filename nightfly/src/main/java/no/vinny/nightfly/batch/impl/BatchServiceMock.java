@@ -15,7 +15,7 @@ import java.time.Duration;
 @Service
 public class BatchServiceMock implements BatchService {
     @Override
-    public Mono<BatchDTO> getBatch(Long id) {
+    public Mono<BatchDTO> get(Long id) {
         log.info("Constructing mock batch of id {}..", id);
         return Mono.just(
                 BatchDTO.builder()
@@ -27,12 +27,12 @@ public class BatchServiceMock implements BatchService {
     }
 
     @Override
-    public Mono<Integer> addBatch(BatchDTO batch) {
+    public Mono<Integer> add(BatchDTO batch) {
         return null;
     }
 
     @Override
-    public Flux<BatchDTO> getAllBatches() {
+    public Flux<BatchDTO> getAll() {
         return null;
     }
 }
