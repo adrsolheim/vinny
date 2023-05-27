@@ -24,8 +24,8 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Mono<BatchDTO> getBatch(Long id) {
-        log.info("Constructing mock batch of id {}..", id);
+    public Mono<BatchDTO> get(Long id) {
+        log.info("Fetching batch of id {}..", id);
         return Mono.just(
                 BatchDTO.builder()
                         .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDO1")
@@ -36,21 +36,23 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Mono<Integer> addBatch(BatchDTO batch) {
+    public Mono<Integer> add(BatchDTO batch) {
         Mono<Integer> result = Mono.just(batchRepository.insert(batch));
-        log.info("inserted {} to the database, {} rows updated", batch, result);
+        if(result.block() == 0) {
+            log.warn("Failed to insert {} to the database => {} rows updated", batch, result);
+        } else {
+            log.info("Inserted {} to the database => {} rows updated", batch, result);
+        }
         return result;
     }
 
     @Override
-    public Flux<BatchDTO> getAllBatches() {
-        log.info("Fetching all batches from database..");
-        List<Batch> result = batchRepository.findAll();
+    public Flux<BatchDTO> getAll() {
+        List<BatchDTO> result = batchRepository.findAll().stream().map(BatchObjectMapper::from).collect(Collectors.toList());;
+        log.info("Fetching {} batches from database", result.size());
         if (result.size() == 0) {
             return Flux.empty();
         }
-        List<BatchDTO> dtoResult = result.stream().map(BatchMapping::batchToDTO).collect(Collectors.toList());
-        // TODO: remove delay in prod
-        return Flux.fromIterable(dtoResult).delayElements(Duration.ofMillis(400));
+        return Flux.fromIterable(result).delayElements(Duration.ofMillis(200));
     }
 }

@@ -2,18 +2,19 @@ package no.vinny.nightfly.batch.impl;
 
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
-import no.vinny.nightfly.batch.BatchMapper;
+import no.vinny.nightfly.batch.BatchRowMapper;
 import no.vinny.nightfly.batch.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS = "(id, brewfather_id, name, status)";
+    private static final String BATCH_COLUMNS = "id, brewfather_id, name, status";
+    private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + " FROM batch";
+    private static final String INSERT_BATCH = "INSERT INTO " + BATCH_COLUMNS + " VALUES (:id, :brewfatherId, :name, :status)";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -24,35 +25,41 @@ public class BatchRepositoryImpl implements BatchRepository {
     @Override
     public int insert(BatchDTO batch) {
         MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", null);
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus().getValue());
-        String sql = new StringBuilder()
-                .append("INSERT INTO batch ")
-                .append(BATCH_COLUMNS)
-                .append(" VALUES (NULL, :brewfatherId, :name, :status)")
-                .toString();
+        String sql = INSERT_BATCH;
         return jdbcTemplate.update(sql, params);
     }
 
     @Override
     public int delete(Long id) {
-        return 0;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        String sql = "DELETE FROM batch WHERE id=:id";
+        return jdbcTemplate.update(sql, params);
     }
 
     @Override
-    public Optional<Batch> findById(Long id) {
-        return Optional.empty();
+    public List<Batch> findById(Long id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        String sql = SELECT_BATCH + " WHERE id=" + id;
+        return jdbcTemplate.query(sql, params, new BatchRowMapper());
     }
 
     @Override
-    public Optional<Batch> findByBrewfatherId(String id) {
-        return Optional.empty();
+    public List<Batch> findByBrewfatherId(String id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        String sql = SELECT_BATCH + " WHERE brewfather_id=:id";
+        return jdbcTemplate.query(sql, params, new BatchRowMapper());
     }
 
     @Override
     public List<Batch> findAll() {
-        String sql = "SELECT " + BATCH_COLUMNS + " FROM batch";
-        return jdbcTemplate.query(sql, new BatchMapper());
+        String sql = SELECT_BATCH;
+        return jdbcTemplate.query(sql, new BatchRowMapper());
     }
 }
