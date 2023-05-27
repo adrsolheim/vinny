@@ -1,4 +1,4 @@
-package no.vinny.nightfly.domain.data;
+package no.vinny.nightfly.batch;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

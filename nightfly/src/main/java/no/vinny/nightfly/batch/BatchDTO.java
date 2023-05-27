@@ -1,13 +1,11 @@
-package no.vinny.nightfly.domain.dto;
+package no.vinny.nightfly.batch;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import no.vinny.nightfly.domain.data.BatchStatus;
 
 @Data
 @AllArgsConstructor

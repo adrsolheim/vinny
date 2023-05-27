@@ -1,7 +1,5 @@
-package no.vinny.nightfly.repository;
+package no.vinny.nightfly.batch;
 
-import no.vinny.nightfly.domain.data.Batch;
-import no.vinny.nightfly.domain.data.BatchStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

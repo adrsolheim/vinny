@@ -1,6 +1,6 @@
-package no.vinny.nightfly.service;
+package no.vinny.nightfly.batch;
 
-import no.vinny.nightfly.domain.dto.BatchDTO;
+import no.vinny.nightfly.batch.BatchDTO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

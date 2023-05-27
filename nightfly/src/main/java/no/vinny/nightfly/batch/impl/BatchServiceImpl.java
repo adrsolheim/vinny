@@ -1,12 +1,7 @@
-package no.vinny.nightfly.service.impl;
+package no.vinny.nightfly.batch.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.domain.data.Batch;
-import no.vinny.nightfly.domain.data.BatchStatus;
-import no.vinny.nightfly.domain.dto.BatchDTO;
-import no.vinny.nightfly.domain.util.BatchMapping;
-import no.vinny.nightfly.repository.BatchRepository;
-import no.vinny.nightfly.service.BatchService;
+import no.vinny.nightfly.batch.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -15,8 +10,6 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 
 @Slf4j
@@ -56,6 +49,8 @@ public class BatchServiceImpl implements BatchService {
         if (result.size() == 0) {
             return Flux.empty();
         }
-        return Flux.fromIterable(result.stream().map(BatchMapping::batchToDTO).collect(Collectors.toList()));
+        List<BatchDTO> dtoResult = result.stream().map(BatchMapping::batchToDTO).collect(Collectors.toList());
+        // TODO: remove delay in prod
+        return Flux.fromIterable(dtoResult).delayElements(Duration.ofMillis(400));
     }
 }

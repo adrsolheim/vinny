@@ -1,7 +1,4 @@
-package no.vinny.nightfly.domain.util;
-
-import no.vinny.nightfly.domain.data.Batch;
-import no.vinny.nightfly.domain.dto.BatchDTO;
+package no.vinny.nightfly.batch;
 
 public class BatchMapping {
     public static BatchDTO batchToDTO(Batch batch) {

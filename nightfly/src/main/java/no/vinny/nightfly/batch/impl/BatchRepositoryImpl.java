@@ -1,11 +1,10 @@
-package no.vinny.nightfly.repository.impl;
+package no.vinny.nightfly.batch.impl;
 
-import no.vinny.nightfly.domain.data.Batch;
-import no.vinny.nightfly.domain.dto.BatchDTO;
-import no.vinny.nightfly.repository.BatchMapper;
-import no.vinny.nightfly.repository.BatchRepository;
+import no.vinny.nightfly.batch.Batch;
+import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.batch.BatchMapper;
+import no.vinny.nightfly.batch.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -14,8 +13,7 @@ import java.util.Optional;
 
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS = "brewfather_id, name, status";
-    private static final String ALL_BATCH_COLUMNS = "(id, brewfather_id, name, status)";
+    private static final String BATCH_COLUMNS = "(id, brewfather_id, name, status)";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -31,8 +29,8 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("status", batch.getStatus().getValue());
         String sql = new StringBuilder()
                 .append("INSERT INTO batch ")
-                .append("("+BATCH_COLUMNS+")")
-                .append(" VALUES (:brewfatherId, :name, :status)")
+                .append(BATCH_COLUMNS)
+                .append(" VALUES (NULL, :brewfatherId, :name, :status)")
                 .toString();
         return jdbcTemplate.update(sql, params);
     }
@@ -54,7 +52,7 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     @Override
     public List<Batch> findAll() {
-        String sql = "SELECT id, " + BATCH_COLUMNS + " FROM batch";
+        String sql = "SELECT " + BATCH_COLUMNS + " FROM batch";
         return jdbcTemplate.query(sql, new BatchMapper());
     }
 }

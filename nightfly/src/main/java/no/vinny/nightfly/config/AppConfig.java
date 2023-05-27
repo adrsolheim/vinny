@@ -1,19 +1,15 @@
 package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import no.vinny.nightfly.repository.BatchRepository;
-import no.vinny.nightfly.repository.impl.BatchRepositoryImpl;
-import no.vinny.nightfly.service.BatchService;
-import no.vinny.nightfly.service.impl.BatchServiceImpl;
-import no.vinny.nightfly.service.impl.BatchServiceMock;
+import no.vinny.nightfly.batch.BatchRepository;
+import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
+import no.vinny.nightfly.batch.BatchService;
+import no.vinny.nightfly.batch.impl.BatchServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class AppConfig {

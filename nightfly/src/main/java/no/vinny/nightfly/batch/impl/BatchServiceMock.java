@@ -1,18 +1,14 @@
-package no.vinny.nightfly.service.impl;
+package no.vinny.nightfly.batch.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.domain.data.BatchStatus;
-import no.vinny.nightfly.domain.dto.BatchDTO;
-import no.vinny.nightfly.service.BatchService;
+import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.batch.BatchService;
+import no.vinny.nightfly.batch.BatchStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 
 @Slf4j

@@ -1,7 +1,4 @@
-package no.vinny.nightfly.repository;
-
-import no.vinny.nightfly.domain.data.Batch;
-import no.vinny.nightfly.domain.dto.BatchDTO;
+package no.vinny.nightfly.batch;
 
 import java.util.List;
 import java.util.Optional;
