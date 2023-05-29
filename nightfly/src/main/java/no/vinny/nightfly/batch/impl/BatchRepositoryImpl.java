@@ -7,6 +7,7 @@ import no.vinny.nightfly.batch.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     @Override
-    public List<Batch> findById(Long id) {
+    public Flux<Batch> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         String sql = SELECT_BATCH + " WHERE id=" + id;
@@ -50,7 +51,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     @Override
-    public List<Batch> findByBrewfatherId(String id) {
+    public Flux<Batch> findByBrewfatherId(String id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         String sql = SELECT_BATCH + " WHERE brewfather_id=:id";
@@ -58,7 +59,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     @Override
-    public List<Batch> findAll() {
+    public Flux<Batch> findAll() {
         String sql = SELECT_BATCH;
         return jdbcTemplate.query(sql, new BatchRowMapper());
     }
