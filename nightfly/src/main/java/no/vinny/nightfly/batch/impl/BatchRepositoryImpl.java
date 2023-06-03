@@ -5,6 +5,7 @@ import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchRowMapper;
 import no.vinny.nightfly.batch.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import reactor.core.publisher.Flux;
@@ -17,10 +18,12 @@ public class BatchRepositoryImpl implements BatchRepository {
     private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + " FROM batch";
     private static final String INSERT_BATCH = "INSERT INTO " + BATCH_COLUMNS + " VALUES (:id, :brewfatherId, :name, :status)";
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final R2dbcEntityTemplate dbTemplate;
 
     @Autowired
-    public BatchRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public BatchRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate, R2dbcEntityTemplate dbTemplate) {
        this.jdbcTemplate = jdbcTemplate;
+       this.dbTemplate = dbTemplate;
     }
 
     @Override

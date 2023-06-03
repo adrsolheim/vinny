@@ -1,7 +1,12 @@
 spring:
   web-application-type: reactive
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    jdbc-url: jdbc:mariadb://${DATABASE_HOST:localhost}:3306/nightfly
+  r2dbc:
+    driver-class-name: org.mariadb.r2dbc.Driver
+    r2dbc-url: r2dbc:mariadb://${DATABASE_HOST:localhost}:3306/nightfly
     username: ${DB_USER:nightfly}
     password: ${DB_PASS:nightfly}
+  #datasource:
+  #  driver-class-name: org.mariadb.jdbc.Driver
+  #  jdbc-url: jdbc:mariadb://${DATABASE_HOST:localhost}:3306/nightfly
+  #  username: ${DB_USER:nightfly}
+  #  password: ${DB_PASS:nightfly}
