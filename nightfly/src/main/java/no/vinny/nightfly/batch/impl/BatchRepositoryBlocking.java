@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -43,21 +42,21 @@ public class BatchRepositoryBlocking {
         return jdbcTemplate.update(sql, params);
     }
 
-    public Flux<Batch> findById(Long id) {
+    public List<Batch> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         String sql = SELECT_BATCH + " WHERE id=" + id;
         return jdbcTemplate.query(sql, params, new BatchRowMapper());
     }
 
-    public Flux<Batch> findByBrewfatherId(String id) {
+    public List<Batch> findByBrewfatherId(String id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         String sql = SELECT_BATCH + " WHERE brewfather_id=:id";
         return jdbcTemplate.query(sql, params, new BatchRowMapper());
     }
 
-    public Flux<Batch> findAll() {
+    public List<Batch> findAll() {
         String sql = SELECT_BATCH;
         return jdbcTemplate.query(sql, new BatchRowMapper());
     }

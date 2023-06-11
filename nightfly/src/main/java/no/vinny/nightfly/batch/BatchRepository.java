@@ -16,9 +16,13 @@ public interface BatchRepository extends Repository<Batch, Long> {
     @Query(value = """
             SELECT id, brewfather_id, name, status
             FROM batch
-            WHERE brewfather_id = :id
+            WHERE brewfather_id = :brewfatherId
             """)
-    public Flux<Batch> findByBrewfatherId(String id);
+    public Mono<Batch> findByBrewfatherId(String brewfatherId);
+    @Query(value = """
+            SELECT id, brewfather_id, name, status
+            FROM batch
+            """)
     public Flux<Batch> findAll();
     public Mono<Long> count();
 }

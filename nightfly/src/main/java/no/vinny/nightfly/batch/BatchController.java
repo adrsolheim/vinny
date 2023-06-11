@@ -26,6 +26,11 @@ public class BatchController {
         return batchService.get(id);
     }
 
+    @GetMapping("/brewfather/{id}")
+    public Mono<BatchDTO> batch(@PathVariable String id) {
+        return batchService.getByBrewfatherId(id);
+    }
+
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<BatchDTO> batches() {
         return batchService.getAll();

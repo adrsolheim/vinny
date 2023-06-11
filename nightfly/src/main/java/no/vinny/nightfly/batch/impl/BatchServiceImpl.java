@@ -36,6 +36,19 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
+    public Mono<BatchDTO> getByBrewfatherId(String id) {
+        return batchRepository
+                .findByBrewfatherId(id)
+                .map(BatchObjectMapper::from)
+                .doOnSuccess((val) -> log.info("Found 1 element matching brewfatherId={}", id));
+        //result.publish().autoConnect(1).hasElement().subscribe((hasElement) -> {
+        //    log.info("Found {} elements matching brewfatherId={}", hasElement ? "1" : "no", id);
+        //});
+
+    }
+
+
+    @Override
     public void add(BatchDTO batch) {
         batchRepository.save(batch)
                 .log()
@@ -44,11 +57,9 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Flux<BatchDTO> getAll() {
-        List<BatchDTO> result = batchRepository.findAll().stream().map(BatchObjectMapper::from).collect(Collectors.toList());;
-        log.info("Fetching {} batches from database", result.size());
-        if (result.size() == 0) {
-            return Flux.empty();
-        }
-        return Flux.fromIterable(result).delayElements(Duration.ofMillis(200));
+        Flux<BatchDTO> result = batchRepository.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
+        result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
+
+        return result;
     }
 }

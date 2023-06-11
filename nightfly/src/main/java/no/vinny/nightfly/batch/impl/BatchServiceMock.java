@@ -34,4 +34,9 @@ public class BatchServiceMock implements BatchService {
     public Flux<BatchDTO> getAll() {
         return null;
     }
+
+    @Override
+    public Mono<BatchDTO> getByBrewfatherId(String id) {
+        return null;
+    }
 }
