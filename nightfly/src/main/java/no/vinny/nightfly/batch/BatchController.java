@@ -43,8 +43,7 @@ public class BatchController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Integer> create(@RequestBody BatchDTO batch) {
-       return batchService.add(batch);
+    public void create(@RequestBody BatchDTO batch) {
     }
 
 }

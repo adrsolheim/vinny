@@ -36,14 +36,10 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Mono<Integer> add(BatchDTO batch) {
-        Mono<Integer> result = Mono.just(batchRepository.insert(batch));
-        if(result.block() == 0) {
-            log.warn("Failed to insert {} to the database => {} rows updated", batch, result);
-        } else {
-            log.info("Inserted {} to the database => {} rows updated", batch, result);
-        }
-        return result;
+    public void add(BatchDTO batch) {
+        batchRepository.save(batch)
+                .log()
+                .subscribe(b -> log.info("Inserted {} to the database", b));
     }
 
     @Override

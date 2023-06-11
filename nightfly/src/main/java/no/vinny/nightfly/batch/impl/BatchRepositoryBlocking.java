@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-public class BatchRepositoryImpl implements BatchRepository {
+public class BatchRepositoryBlocking {
 
     private static final String BATCH_COLUMNS = "id, brewfather_id, name, status";
     private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + " FROM batch";
@@ -21,12 +21,11 @@ public class BatchRepositoryImpl implements BatchRepository {
     private final R2dbcEntityTemplate dbTemplate;
 
     @Autowired
-    public BatchRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate, R2dbcEntityTemplate dbTemplate) {
+    public BatchRepositoryBlocking(NamedParameterJdbcTemplate jdbcTemplate, R2dbcEntityTemplate dbTemplate) {
        this.jdbcTemplate = jdbcTemplate;
        this.dbTemplate = dbTemplate;
     }
 
-    @Override
     public int insert(BatchDTO batch) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", null);
@@ -37,7 +36,6 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.update(sql, params);
     }
 
-    @Override
     public int delete(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
@@ -45,7 +43,6 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.update(sql, params);
     }
 
-    @Override
     public Flux<Batch> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
@@ -53,7 +50,6 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.query(sql, params, new BatchRowMapper());
     }
 
-    @Override
     public Flux<Batch> findByBrewfatherId(String id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
@@ -61,7 +57,6 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.query(sql, params, new BatchRowMapper());
     }
 
-    @Override
     public Flux<Batch> findAll() {
         String sql = SELECT_BATCH;
         return jdbcTemplate.query(sql, new BatchRowMapper());

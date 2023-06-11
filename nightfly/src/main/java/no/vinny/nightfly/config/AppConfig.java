@@ -2,7 +2,7 @@ package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import no.vinny.nightfly.batch.BatchRepository;
-import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
+import no.vinny.nightfly.batch.impl.BatchRepositoryBlocking;
 import no.vinny.nightfly.batch.BatchService;
 import no.vinny.nightfly.batch.impl.BatchServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -33,15 +33,5 @@ public class AppConfig {
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate(HikariDataSource hikariDataSource) {
         return new NamedParameterJdbcTemplate(hikariDataSource);
-    }
-
-    @Bean
-    public R2dbcEntityTemplate r2dbcEntityTemplate() {
-        return new R2dbcEntityTemplate();
-    }
-
-    @Bean
-    public BatchRepository batchRepository(NamedParameterJdbcTemplate jdbcTemplate, R2dbcEntityTemplate r2dbcEntityTemplate) {
-        return new BatchRepositoryImpl(jdbcTemplate, r2dbcEntityTemplate);
     }
 }

@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface BatchService {
     public Mono<BatchDTO> get(Long id);
-    public Mono<Integer> add(BatchDTO batch);
+    public void add(BatchDTO batch);
     public Flux<BatchDTO> getAll();
 }
