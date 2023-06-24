@@ -3,6 +3,9 @@ spring:
   r2dbc:
     #driver-class-name: org.mariadb.r2dbc.Driver
     url: r2dbc:mariadb://${DATABASE_HOST:localhost}:3306/nightfly
+    host: ${DATABASE_HOST:localhost}
+    database: nightfly
+    port: 3306
     username: ${DB_USER:nightfly}
     password: ${DB_PASS:nightfly}
   #datasource:

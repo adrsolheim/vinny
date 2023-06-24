@@ -17,27 +17,23 @@ import java.util.stream.Collectors;
 public class BatchServiceImpl implements BatchService {
 
     private final BatchRepository batchRepository;
+    private final BatchRepo batchRepo;
 
     @Autowired
-    public BatchServiceImpl(BatchRepository batchRepository) {
+    public BatchServiceImpl(BatchRepository batchRepository, BatchRepo batchRepo) {
         this.batchRepository = batchRepository;
+        this.batchRepo = batchRepo;
     }
 
     @Override
     public Mono<BatchDTO> get(Long id) {
         log.info("Fetching batch of id {}..", id);
-        return Mono.just(
-                BatchDTO.builder()
-                        .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDO1")
-                        .name("Cold IPA")
-                        .status(Batch.Status.COMPLETED)
-                        .build()
-        ).delayElement(Duration.ofSeconds(3));
+        return batchRepo.findById(id).delayElement(Duration.ofSeconds(3)).map(BatchObjectMapper::from);
     }
 
     @Override
     public Mono<BatchDTO> getByBrewfatherId(String id) {
-        return batchRepository
+        return batchRepo
                 .findByBrewfatherId(id)
                 .map(BatchObjectMapper::from)
                 .doOnSuccess((val) -> log.info("Found 1 element matching brewfatherId={}", id));
@@ -57,12 +53,13 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Mono<Long> count() {
-        return batchRepository.count();
+        return batchRepo.count();
     }
 
     @Override
     public Flux<BatchDTO> getAll() {
-        Flux<BatchDTO> result = batchRepository.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
+        //Flux<BatchDTO> result = batchRepository.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
+        Flux<BatchDTO> result = batchRepo.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 
         return result;

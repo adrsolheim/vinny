@@ -1,6 +1,7 @@
 package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import no.vinny.nightfly.batch.BatchRepo;
 import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.impl.BatchRepositoryBlocking;
 import no.vinny.nightfly.batch.BatchService;
@@ -17,8 +18,8 @@ public class AppConfig {
 
 
     @Bean
-    public BatchService batchService(BatchRepository batchRepository) {
-        return new BatchServiceImpl(batchRepository);
+    public BatchService batchService(BatchRepository batchRepository, BatchRepo batchRepo) {
+        return new BatchServiceImpl(batchRepository, batchRepo);
     }
 
     @Bean
