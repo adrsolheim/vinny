@@ -18,5 +18,5 @@ public class BatchDTO {
     @NotEmpty
     private final String name;
     // TODO: add enum validator
-    private BatchStatus status;
+    private Batch.Status status;
 }

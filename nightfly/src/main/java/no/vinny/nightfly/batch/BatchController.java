@@ -11,9 +11,10 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/batch")
+@RequestMapping("/api/batches")
 public class BatchController {
 
+    // TODO: MediaType.TEXT_EVENT_STREAM_VALUE can be used with EventSource api in js
     private final BatchService batchService;
 
     @Autowired
@@ -34,6 +35,16 @@ public class BatchController {
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<BatchDTO> batches() {
         return batchService.getAll();
+    }
+
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return batchService.count();
+    }
+
+    @GetMapping("/statuses")
+    public Flux<Batch.Status> statuses() {
+        return batchService.getStatuses();
     }
 
     @GetMapping("/sse")

@@ -8,4 +8,6 @@ public interface BatchService {
     public Mono<BatchDTO> getByBrewfatherId(String id);
     public void add(BatchDTO batch);
     public Flux<BatchDTO> getAll();
+    public Mono<Long> count();
+    public Flux<Batch.Status> getStatuses();
 }

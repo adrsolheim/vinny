@@ -30,7 +30,7 @@ public class BatchServiceImpl implements BatchService {
                 BatchDTO.builder()
                         .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDO1")
                         .name("Cold IPA")
-                        .status(BatchStatus.COMPLETED)
+                        .status(Batch.Status.COMPLETED)
                         .build()
         ).delayElement(Duration.ofSeconds(3));
     }
@@ -56,10 +56,20 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
+    public Mono<Long> count() {
+        return batchRepository.count();
+    }
+
+    @Override
     public Flux<BatchDTO> getAll() {
         Flux<BatchDTO> result = batchRepository.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 
         return result;
+    }
+
+    @Override
+    public Flux<Batch.Status> getStatuses() {
+        return batchRepository.statuses();
     }
 }

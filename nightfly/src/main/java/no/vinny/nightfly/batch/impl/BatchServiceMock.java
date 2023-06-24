@@ -1,9 +1,9 @@
 package no.vinny.nightfly.batch.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchService;
-import no.vinny.nightfly.batch.BatchStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,7 +21,7 @@ public class BatchServiceMock implements BatchService {
                 BatchDTO.builder()
                         .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDO1")
                         .name("Cold IPA")
-                        .status(BatchStatus.COMPLETED)
+                        .status(Batch.Status.COMPLETED)
                         .build()
         ).delayElement(Duration.ofSeconds(3));
     }
@@ -39,4 +39,15 @@ public class BatchServiceMock implements BatchService {
     public Mono<BatchDTO> getByBrewfatherId(String id) {
         return null;
     }
+
+    @Override
+    public Mono<Long> count() {
+        return null;
+    }
+
+    @Override
+    public Flux<Batch.Status> getStatuses() {
+        return null;
+    }
 }
+

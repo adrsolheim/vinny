@@ -25,4 +25,9 @@ public interface BatchRepository extends Repository<Batch, Long> {
             """)
     public Flux<Batch> findAll();
     public Mono<Long> count();
+    @Query(value = """
+            SELECT status
+            FROM batch
+            """)
+    public Flux<Batch.Status> statuses();
 }
