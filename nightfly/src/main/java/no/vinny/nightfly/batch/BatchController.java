@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/batches")
 public class BatchController {
 
+    // TODO: WebClient
     // TODO: MediaType.TEXT_EVENT_STREAM_VALUE can be used with EventSource api in js
     private final BatchService batchService;
 
@@ -42,9 +43,9 @@ public class BatchController {
         return batchService.count();
     }
 
-    @GetMapping("/statuses")
-    public Flux<Batch.Status> statuses() {
-        return batchService.getStatuses();
+    @DeleteMapping("/clear")
+    public Mono<Long> deleteAll() {
+        return batchService.deleteAll();
     }
 
     @GetMapping("/sse")

@@ -9,5 +9,6 @@ public interface BatchService {
     public void add(BatchDTO batch);
     public Flux<BatchDTO> getAll();
     public Mono<Long> count();
-    public Flux<Batch.Status> getStatuses();
+    public Mono<Long> deleteAll();
+    public Mono<Long> sync();
 }

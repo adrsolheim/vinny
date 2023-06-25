@@ -65,8 +65,15 @@ public class BatchServiceImpl implements BatchService {
         return result;
     }
 
+
     @Override
-    public Flux<Batch.Status> getStatuses() {
-        return batchRepository.statuses();
+    public Mono<Long> deleteAll() {
+        return batchRepo.deleteAll();
+    }
+
+    // TODO: Sync mechanism with brewfather
+    @Override
+    public Mono<Long> sync() {
+       return null;
     }
 }

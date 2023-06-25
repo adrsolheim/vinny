@@ -16,13 +16,17 @@ import java.util.function.BiFunction;
 @Component
 @Slf4j
 public class BatchRepo {
+   // TODO: replace DatabaseClient with R2dbcEntityTemplate?
    private final DatabaseClient databaseClient;
+
    public static final BiFunction<Row, RowMetadata, Batch> BATCH_MAPPER = (row, metadata) -> Batch.builder()
            .id(row.get("id", Long.class))
            .brewfatherId(row.get("brewfather_id", String.class))
            .name(row.get("name", String.class))
            .status(row.get("status", String.class) == null ? null : Batch.Status.valueOf(row.get("status", String.class)))
            .build();
+
+   public static final BiFunction<Row, RowMetadata, Long> LONG_MAPPER = (row, metadata) -> (Long) row.get(0);
 
    public Flux<Batch> findAll() {
       return databaseClient
@@ -49,7 +53,14 @@ public class BatchRepo {
    public Mono<Long> count() {
       return databaseClient
               .sql("SELECT COUNT(id) as n FROM batch")
-              .map((row, metadata) -> Long.valueOf((String) row.get("n")))
+              .map(LONG_MAPPER)
               .one();
+   }
+
+   public Mono<Long> deleteAll() {
+      return databaseClient
+              .sql("DELETE FROM batch")
+              .fetch()
+              .rowsUpdated();
    }
 }

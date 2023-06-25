@@ -16,13 +16,16 @@ public class Batch {
 
     @AllArgsConstructor
     public enum Status {
-        FERMENTING("Fermenting"),
-        BREWING("Brewing"),
-        CONDITIONING("Conditioning"),
-        COMPLETED("Completed");
+        FERMENTING("Fermenting", 0),
+        BREWING("Brewing", 1),
+        CONDITIONING("Conditioning", 2),
+        COMPLETED("Completed", 3),
+        SERVING("Serving", 4),
+        ARCHIVED("Archived", 5);
 
         @Getter
         private final String value;
+        private final int order;
 
         @Override
         public String toString() {

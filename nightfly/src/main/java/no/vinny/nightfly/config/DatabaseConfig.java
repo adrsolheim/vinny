@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-public class DatabaseConfig {
+@EnableTransactionManagement
+public class DatabaseConfig  {
 
     @Autowired
     private Environment env;
@@ -33,4 +38,9 @@ public class DatabaseConfig {
                 .namedParameters(true)
                 .build();
     }
+
+    //@Bean
+    //public TransactionManager transactionManager(ConnectionFactory connectionFactory) {
+    //    return new R2dbcTransactionManager(connectionFactory);
+    //}
 }

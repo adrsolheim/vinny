@@ -46,7 +46,12 @@ public class BatchServiceMock implements BatchService {
     }
 
     @Override
-    public Flux<Batch.Status> getStatuses() {
+    public Mono<Long> deleteAll() {
+        return null;
+    }
+
+    @Override
+    public Mono<Long> sync() {
         return null;
     }
 }
