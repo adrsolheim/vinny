@@ -1,5 +1,6 @@
 package no.vinny.nightfly.batch;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 
 @Data
@@ -30,6 +31,16 @@ public class Batch {
         @Override
         public String toString() {
             return this.value;
+        }
+
+        @JsonCreator
+        public static Status fromValue(String value) {
+            for (Status s : Status.values()) {
+                if (s.getValue().equals(value)) {
+                    return s;
+                }
+            }
+            throw new IllegalArgumentException();
         }
     }
 }

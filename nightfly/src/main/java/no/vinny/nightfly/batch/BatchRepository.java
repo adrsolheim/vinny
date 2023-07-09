@@ -10,24 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BatchRepository extends Repository<Batch, Long> {
-    public Mono<Batch> save(BatchDTO batch);
-    public Mono<Void> deleteById(Long id);
-    public Flux<Batch> findById(Long id);
-    @Query(value = """
-            SELECT id, brewfather_id, name, status
-            FROM batch
-            WHERE brewfather_id = :brewfatherId
-            """)
-    public Mono<Batch> findByBrewfatherId(String brewfatherId);
-    @Query(value = """
-            SELECT id, brewfather_id, name, status
-            FROM batch
-            """)
+    public Mono<Long> save(BatchDTO batch);
+    public Mono<Long> deleteById(Long id);
+    public Mono<Batch> findById(Long id);
+    public Flux<Batch> findByBrewfatherId(String brewfatherId);
     public Flux<Batch> findAll();
     public Mono<Long> count();
-    @Query(value = """
-            SELECT status
-            FROM batch
-            """)
-    public Flux<Batch.Status> statuses();
 }

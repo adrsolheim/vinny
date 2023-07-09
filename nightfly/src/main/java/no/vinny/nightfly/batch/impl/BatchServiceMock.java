@@ -27,7 +27,8 @@ public class BatchServiceMock implements BatchService {
     }
 
     @Override
-    public void add(BatchDTO batch) {
+    public Mono<Long> add(BatchDTO batch) {
+        return null;
     }
 
     @Override

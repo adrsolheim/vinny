@@ -45,10 +45,8 @@ public class BatchServiceImpl implements BatchService {
 
 
     @Override
-    public void add(BatchDTO batch) {
-        batchRepository.save(batch)
-                .log()
-                .subscribe(b -> log.info("Inserted {} to the database", b));
+    public Mono<Long> add(BatchDTO batch) {
+        return batchRepository.save(batch);
     }
 
     @Override

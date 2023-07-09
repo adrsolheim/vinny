@@ -31,13 +31,13 @@ public class DatabaseConfig  {
         return new MariadbConnectionFactory(conf);
     }
 
-    @Bean
-    public DatabaseClient databaseClient(ConnectionFactory connectionFactory) {
-        return DatabaseClient.builder()
-                .connectionFactory(connectionFactory)
-                .namedParameters(true)
-                .build();
-    }
+    //@Bean
+    //public DatabaseClient databaseClient(ConnectionFactory connectionFactory) {
+    //    return DatabaseClient.builder()
+    //            .connectionFactory(connectionFactory)
+    //            .namedParameters(true)
+    //            .build();
+    //}
 
     //@Bean
     //public TransactionManager transactionManager(ConnectionFactory connectionFactory) {
