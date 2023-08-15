@@ -13,6 +13,19 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>nightfly</name>
 	<description>Backend</description>
+
+
+	<profiles>
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>dev</id>
+		</profile>
+	</profiles>
 	<properties>
 		<java.version>20</java.version>
 		<maven.compiler.target>20</maven.compiler.target>
@@ -90,6 +103,19 @@
 					</exclude>
 				  </excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-help-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>show-profiles</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>active-profiles</goal>
+							</goals>
+						</execution>
+					</executions>
 			</plugin>
 		</plugins>
 	</build>
