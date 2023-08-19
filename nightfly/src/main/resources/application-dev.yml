@@ -1,6 +1,10 @@
 spring:
   web-application-type: reactive
   r2dbc:
-    url: r2dbc:h2:mem:///nightfly?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: r2dbc:h2:mem:///~/db/nightfly?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # jdbc syntax
+    #url: r2dbc:h2:mem:~/nightfly;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
+batch:
+  pageSize: 2

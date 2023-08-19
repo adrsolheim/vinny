@@ -12,6 +12,7 @@ services:
       DATABASE_HOST: nightfly_db
       DB_USER: nightfly
       DB_PASS: nightfly
+      SPRING_PROFILES_ACTIVE: prod
 
   nightfly_db:
     container_name: nightfly_db
