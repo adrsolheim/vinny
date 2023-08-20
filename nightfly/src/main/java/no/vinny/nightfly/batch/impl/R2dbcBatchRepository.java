@@ -9,12 +9,14 @@ import no.vinny.nightfly.batch.BatchObjectMapper;
 import no.vinny.nightfly.batch.BatchRepository;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.function.BiFunction;
 
+@Repository
 public class R2dbcBatchRepository implements BatchRepository {
 
     private DatabaseClient databaseClient;

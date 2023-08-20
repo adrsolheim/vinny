@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,7 +33,7 @@ public class BatchServiceMock implements BatchService {
     }
 
     @Override
-    public Flux<BatchDTO> getAll() {
+    public Flux<BatchDTO> getAll(Pageable pageable) {
         return null;
     }
 

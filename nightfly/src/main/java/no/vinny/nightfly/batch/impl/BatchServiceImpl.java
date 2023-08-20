@@ -3,6 +3,7 @@ package no.vinny.nightfly.batch.impl;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -55,9 +56,9 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Flux<BatchDTO> getAll() {
+    public Flux<BatchDTO> getAll(Pageable pageable) {
         //Flux<BatchDTO> result = batchRepository.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
-        Flux<BatchDTO> result = batchRepo.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
+        Flux<BatchDTO> result = batchRepo.findAll(pageable).delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 
         return result;

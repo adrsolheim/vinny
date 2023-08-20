@@ -1,10 +1,15 @@
 package no.vinny.nightfly.batch;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,10 +22,12 @@ public class BatchController {
     // TODO: WebClient
     // TODO: MediaType.TEXT_EVENT_STREAM_VALUE can be used with EventSource api in js
     private final BatchService batchService;
+    private final Pagination pagination;
 
     @Autowired
-    public BatchController(BatchService batchService) {
+    public BatchController(BatchService batchService, Pagination pagination) {
         this.batchService = batchService;
+        this.pagination = pagination;
     }
 
     @GetMapping("/{id}")
@@ -35,7 +42,8 @@ public class BatchController {
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<BatchDTO> batches() {
-        return batchService.getAll();
+        Pageable pageable = PageRequest.of(0, pagination.getPageSize());
+        return batchService.getAll(pageable);
     }
 
     @GetMapping("/count")
@@ -43,6 +51,7 @@ public class BatchController {
         return batchService.count();
     }
 
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/clear")
     public Mono<Long> deleteAll() {
         return batchService.deleteAll();
@@ -50,7 +59,7 @@ public class BatchController {
 
     @GetMapping("/sse")
     public Flux<ServerSentEvent<BatchDTO>> streamEvents() {
-        return batchService.getAll()
+        return batchService.getAll(PageRequest.of(0, pagination.getPageSize()))
                 .map(batch -> ServerSentEvent.<BatchDTO> builder()
                         .id(batch.getBrewfatherId())
                         .event("periodic-event")
@@ -63,5 +72,4 @@ public class BatchController {
     public Mono<Long> create(@RequestBody BatchDTO batch) {
         return batchService.add(batch);
     }
-
 }

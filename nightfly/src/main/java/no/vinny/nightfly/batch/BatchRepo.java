@@ -4,6 +4,7 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
@@ -28,9 +29,13 @@ public class BatchRepo {
 
    public static final BiFunction<Row, RowMetadata, Long> LONG_MAPPER = (row, metadata) -> (Long) row.get(0);
 
-   public Flux<Batch> findAll() {
+   public Flux<Batch> findAll(Pageable pageable) {
+      StringBuilder query = new StringBuilder();
+      query.append("SELECT id, brewfather_id, name, status FROM batch ");
+      query.append("LIMIT ").append(pageable.getPageSize());
+      query.append("OFFSET ").append(pageable.getOffset());
       return databaseClient
-              .sql("SELECT id, brewfather_id, name, status FROM batch")
+              .sql(query.toString())
               .map(BATCH_MAPPER)
               .all();
    }
