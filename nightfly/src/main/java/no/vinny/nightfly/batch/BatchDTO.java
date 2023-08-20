@@ -9,8 +9,6 @@ import lombok.Setter;
 
 @Data
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
 public class BatchDTO {
     @NotEmpty
@@ -18,5 +16,5 @@ public class BatchDTO {
     @NotEmpty
     private final String name;
     // TODO: add enum validator
-    private Batch.Status status;
+    private final String status;
 }

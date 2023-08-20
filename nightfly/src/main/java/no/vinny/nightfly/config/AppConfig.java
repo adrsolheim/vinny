@@ -3,19 +3,16 @@ package no.vinny.nightfly.config;
 import com.zaxxer.hikari.HikariDataSource;
 import no.vinny.nightfly.batch.BatchRepo;
 import no.vinny.nightfly.batch.BatchRepository;
-import no.vinny.nightfly.batch.impl.BatchRepositoryBlocking;
 import no.vinny.nightfly.batch.BatchService;
 import no.vinny.nightfly.batch.impl.BatchServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Configuration
 public class AppConfig {
-
 
     @Bean
     public BatchService batchService(BatchRepository batchRepository, BatchRepo batchRepo) {

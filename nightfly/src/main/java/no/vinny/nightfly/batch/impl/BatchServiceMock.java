@@ -22,7 +22,7 @@ public class BatchServiceMock implements BatchService {
                 BatchDTO.builder()
                         .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDO1")
                         .name("Cold IPA")
-                        .status(Batch.Status.COMPLETED)
+                        .status(Batch.Status.COMPLETED.getValue())
                         .build()
         ).delayElement(Duration.ofSeconds(3));
     }

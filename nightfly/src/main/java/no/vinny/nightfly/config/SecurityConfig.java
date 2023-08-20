@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -12,6 +15,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 // TODO: add dev profile to new noSecurity config class
 //@Profile("default")
 @EnableWebFluxSecurity
+//@EnableMethodSecurity TODO: preauth intrusive requests
 @Configuration
 public class SecurityConfig {
     @Bean

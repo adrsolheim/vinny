@@ -5,15 +5,12 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
-import no.vinny.nightfly.batch.BatchObjectMapper;
 import no.vinny.nightfly.batch.BatchRepository;
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 import java.util.function.BiFunction;
 
 @Repository
@@ -40,7 +37,7 @@ public class R2dbcBatchRepository implements BatchRepository {
                 """)
                 .bind("brewfather_id", batch.getBrewfatherId())
                 .bind("name", batch.getName())
-                .bind("status", batch.getStatus().name())
+                .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue())
                 .map((row, rowMetadata) -> row.get("id", Long.class))
                 .first();
     }

@@ -30,7 +30,7 @@ public class BatchRepositoryBlocking {
         params.addValue("id", null);
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
-        params.addValue("status", batch.getStatus().getValue());
+        params.addValue("status", Batch.Status.fromValue(batch.getStatus()).getValue());
         String sql = INSERT_BATCH;
         return jdbcTemplate.update(sql, params);
     }

@@ -1,0 +1,7 @@
+{
+  "properties": [{
+    "name": "pagination.batch.pageSize",
+    "type": "java.lang.Integer",
+    "description": "Maximum number of rows returned in a ResultSet from database"
+  }]
+}

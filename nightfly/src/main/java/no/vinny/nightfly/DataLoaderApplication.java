@@ -7,8 +7,10 @@ import no.vinny.nightfly.batch.BatchService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.Profile;
 
 
+@Profile("dev")
 @Slf4j
 public class DataLoaderApplication implements ApplicationRunner {
 
@@ -31,17 +33,17 @@ public class DataLoaderApplication implements ApplicationRunner {
         batchService.add(BatchDTO.builder()
                .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDOL")
                .name("MarisOtter SMASH")
-               .status(Batch.Status.COMPLETED)
+               .status(Batch.Status.COMPLETED.getValue())
                .build());
         batchService.add(BatchDTO.builder()
                .brewfatherId("LAXI2KWZXcU2pBpzrfg6B3Uy5940vQ")
                .name("Eldon")
-               .status(Batch.Status.COMPLETED)
+               .status(Batch.Status.COMPLETED.getValue())
                .build());
         batchService.add(BatchDTO.builder()
                .brewfatherId("NLltIcoo87foHbTz1N8rH0v0KXht6q")
                .name("Lutra")
-               .status(Batch.Status.COMPLETED)
+               .status(Batch.Status.COMPLETED.getValue())
                .build());
         log.info("RUNNING : Run complete.");
     }

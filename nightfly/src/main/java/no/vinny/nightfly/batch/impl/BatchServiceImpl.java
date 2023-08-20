@@ -47,7 +47,7 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Mono<Long> add(BatchDTO batch) {
-        return batchRepository.save(batch);
+        return batchRepo.save(batch);
     }
 
     @Override
@@ -57,7 +57,6 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Flux<BatchDTO> getAll(Pageable pageable) {
-        //Flux<BatchDTO> result = batchRepository.findAll().delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
         Flux<BatchDTO> result = batchRepo.findAll(pageable).delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 

@@ -8,14 +8,14 @@ public class BatchObjectMapper {
         return BatchDTO.builder()
                 .brewfatherId(batch.getBrewfatherId())
                 .name(batch.getName())
-                .status(batch.getStatus())
+                .status(batch.getStatus().getValue())
                 .build();
     }
     public static Batch from(BatchDTO dto) {
         return Batch.builder()
                 .brewfatherId(dto.getBrewfatherId())
                 .name(dto.getName())
-                .status(dto.getStatus())
+                .status(Batch.Status.fromValue(dto.getStatus()))
                 .build();
     }
 

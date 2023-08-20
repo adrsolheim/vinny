@@ -68,4 +68,17 @@ public class BatchRepo {
               .fetch()
               .rowsUpdated();
    }
+
+   public Mono<Long> save(BatchDTO batch) {
+      log.info("Inserting into database {}",batch);
+      return databaseClient.sql("""
+                INSERT INTO batch (brewfather_id, name, status) 
+                VALUES (:brewfather_id, :name, :status)
+                """)
+              .bind("brewfather_id", batch.getBrewfatherId())
+              .bind("name", batch.getName())
+              .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue())
+              .map((row, rowMetadata) -> row.get("id", Long.class))
+              .first();
+   }
 }

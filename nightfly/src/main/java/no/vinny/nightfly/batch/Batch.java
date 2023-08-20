@@ -5,8 +5,6 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
 public class Batch {
     private final Long id;
