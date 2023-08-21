@@ -1,22 +1,27 @@
-package no.vinny.nightfly.batch;
+package no.vinny.nightfly.batch.impl;
 
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.batch.Batch;
+import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.batch.BatchRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
-@Component
+@Repository
 @Slf4j
-public class BatchRepo {
+public class BatchRepositoryImpl implements BatchRepository {
    // TODO: replace DatabaseClient with R2dbcEntityTemplate?
    private final DatabaseClient databaseClient;
 
@@ -29,6 +34,7 @@ public class BatchRepo {
 
    public static final BiFunction<Row, RowMetadata, Long> LONG_MAPPER = (row, metadata) -> (Long) row.get(0);
 
+   @Override
    public Flux<Batch> findAll(Pageable pageable) {
       StringBuilder query = new StringBuilder();
       query.append("SELECT id, brewfather_id, name, status FROM batch ");
@@ -40,6 +46,7 @@ public class BatchRepo {
               .all();
    }
 
+   @Override
    public Mono<Batch> findById(Long id) {
       return databaseClient
               .sql("SELECT id, brewfather_id, name, status FROM batch WHERE id = :id")
@@ -48,13 +55,16 @@ public class BatchRepo {
               .one();
    }
 
-   public Mono<Batch> findByBrewfatherId(String brewfatherId) {
+   @Override
+   public Flux<Batch> findByBrewfatherId(String brewfatherId) {
       return databaseClient
               .sql("SELECT id, brewfather_id, name, status FROM batch WHERE brewfather_id = :brewfatherId")
               .bind("brewfatherId", brewfatherId)
               .map(BATCH_MAPPER)
-              .one();
+              .all();
    }
+
+   @Override
    public Mono<Long> count() {
       return databaseClient
               .sql("SELECT COUNT(id) as n FROM batch")
@@ -62,6 +72,7 @@ public class BatchRepo {
               .one();
    }
 
+   @Override
    public Mono<Long> deleteAll() {
       return databaseClient
               .sql("DELETE FROM batch")
@@ -69,8 +80,8 @@ public class BatchRepo {
               .rowsUpdated();
    }
 
+   @Override
    public Mono<Long> save(BatchDTO batch) {
-      log.info("Inserting into database {}",batch);
       return databaseClient.sql("""
                 INSERT INTO batch (brewfather_id, name, status) 
                 VALUES (:brewfather_id, :name, :status)
@@ -80,5 +91,16 @@ public class BatchRepo {
               .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue())
               .map((row, rowMetadata) -> row.get("id", Long.class))
               .first();
+   }
+
+   @Override
+   public Mono<Long> deleteById(Long id) {
+      return databaseClient.sql("""
+                DELETE FROM batch
+                WHERE id = :id
+                """)
+              .bind("id", id)
+              .fetch()
+              .rowsUpdated();
    }
 }
