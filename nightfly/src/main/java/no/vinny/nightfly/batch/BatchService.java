@@ -5,11 +5,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface BatchService {
-    public Mono<BatchDTO> get(Long id);
-    public Mono<BatchDTO> getByBrewfatherId(String id);
-    public Mono<Long> add(BatchDTO batch);
-    public Flux<BatchDTO> getAll(Pageable pageable);
-    public Mono<Long> count();
-    public Mono<Long> deleteAll();
-    public Mono<Long> sync();
+   Mono<BatchDTO> get(Long id);
+   Mono<BatchDTO> getByBrewfatherId(String id);
+   Mono<Long> add(BatchDTO batch);
+   Flux<BatchDTO> getAll(Pageable pageable);
+   Mono<Long> count();
+   Mono<Long> deleteAll();
+   Mono<Long> sync();
+   Mono<BatchDTO> update(Long id, BatchDTO batch);
+   Mono<BatchDTO> replace(Long id, BatchDTO batch);
+
 }

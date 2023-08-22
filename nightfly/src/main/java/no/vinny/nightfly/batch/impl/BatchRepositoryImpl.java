@@ -88,9 +88,27 @@ public class BatchRepositoryImpl implements BatchRepository {
                 """)
               .bind("brewfather_id", batch.getBrewfatherId())
               .bind("name", batch.getName())
-              .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue())
+              .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue().toUpperCase())
               .map((row, rowMetadata) -> row.get("id", Long.class))
               .first();
+   }
+
+   @Override
+   public Mono<Batch> update(BatchDTO batch) {
+      return databaseClient.sql("""
+                UPDATE batch 
+                SET brewfather_id = :brewfather_id, name = :name, status = :status 
+                WHERE id = :id 
+                """)
+              .bind("id", batch.getId())
+              .bind("brewfather_id", batch.getBrewfatherId())
+              .bind("name", batch.getName())
+              .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue().toUpperCase())
+              .map((row, rowMetadata) -> row.get("id", Long.class))
+              .first()
+              .flatMap(this::findById)
+              .doOnNext(b -> log.info("Batch update: {}"));
+
    }
 
    @Override

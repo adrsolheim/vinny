@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 
 public interface BatchRepository extends Repository<Batch, Long> {
     Mono<Long> save(BatchDTO batch);
+    Mono<Batch> update(BatchDTO batch);
     Flux<Batch> findAll(Pageable pageable);
     Mono<Long> deleteAll();
     Mono<Long> deleteById(Long id);

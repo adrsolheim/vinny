@@ -71,4 +71,16 @@ public class BatchServiceImpl implements BatchService {
     public Mono<Long> sync() {
        return null;
     }
+
+    @Override
+    public Mono<BatchDTO> update(Long id, BatchDTO dto) {
+        return batchRepository.findById(id)
+                .flatMap(data -> data == null ? Mono.error(new RuntimeException("Cannot update batch. Batch does not exist"))
+                        : batchRepository.update(dto).map(BatchObjectMapper::from));
+    }
+
+    @Override
+    public Mono<BatchDTO> replace(Long id, BatchDTO batch) {
+        return null;
+    }
 }

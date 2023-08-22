@@ -72,4 +72,17 @@ public class BatchController {
     public Mono<Long> create(@RequestBody BatchDTO batch) {
         return batchService.add(batch);
     }
+
+    @PutMapping(path = "/{id}", consumes = "application/json")
+    public Mono<BatchDTO> replace(@PathVariable Long id, @RequestBody BatchDTO replacementBatch) {
+        log.info("Replacement request for id {}. Batch: {}", id, replacementBatch);
+        return batchService.replace(id, replacementBatch);
+    }
+
+    @PatchMapping(path = "/{id}", consumes = "application/json")
+    public Mono<BatchDTO> update(@PathVariable Long id, @RequestBody BatchDTO update) {
+        BatchDTO updatedBatch = BatchObjectMapper.builder(update).id(id).build();
+        log.info("Update request for id {}. Batch: {}", id, updatedBatch);
+        return batchService.update(id, updatedBatch);
+    }
 }

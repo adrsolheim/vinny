@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/batches").permitAll()
+                .pathMatchers(HttpMethod.PUT, "/api/batches/**").permitAll()
+                .pathMatchers(HttpMethod.PATCH, "/api/batches/**").permitAll()
                 .and()
                 //.pathMatchers(HttpMethod.POST, "/api/**").permitAll()
                 //.anyExchange().permitAll()
