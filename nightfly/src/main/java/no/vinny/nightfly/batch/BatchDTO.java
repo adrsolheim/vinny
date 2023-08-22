@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class BatchDTO {
+    private final Long id;
     @NotEmpty
     private final String brewfatherId;
     @NotEmpty

@@ -6,6 +6,7 @@ import io.r2dbc.spi.RowMetadata;
 public class BatchObjectMapper {
     public static BatchDTO from(Batch batch) {
         return BatchDTO.builder()
+                .id(batch.getId())
                 .brewfatherId(batch.getBrewfatherId())
                 .name(batch.getName())
                 .status(batch.getStatus().getValue())
@@ -13,6 +14,7 @@ public class BatchObjectMapper {
     }
     public static Batch from(BatchDTO dto) {
         return Batch.builder()
+                .id(dto.getId())
                 .brewfatherId(dto.getBrewfatherId())
                 .name(dto.getName())
                 .status(Batch.Status.fromValue(dto.getStatus()))
@@ -26,5 +28,13 @@ public class BatchObjectMapper {
                 .name(row.get("name", String.class))
                 .status(Batch.Status.valueOf(row.get("status", String.class)))
                 .build();
+    }
+
+    public static BatchDTO.BatchDTOBuilder builder(BatchDTO dto) {
+        return BatchDTO.builder()
+                .id(dto.getId())
+                .brewfatherId(dto.getBrewfatherId())
+                .name(dto.getName())
+                .status(dto.getStatus());
     }
 }
