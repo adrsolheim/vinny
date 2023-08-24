@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.POST, "/api/batches").permitAll()
                 .pathMatchers(HttpMethod.PUT, "/api/batches/**").permitAll()
                 .pathMatchers(HttpMethod.PATCH, "/api/batches/**").permitAll()
+                .pathMatchers(HttpMethod.DELETE, "/api/batches/**").permitAll()
                 .and()
                 .build();
     }

@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-
 @Slf4j
 @Service
 public class BatchServiceImpl implements BatchService {
@@ -60,6 +59,10 @@ public class BatchServiceImpl implements BatchService {
         return result;
     }
 
+    @Override
+    public Mono<Long> delete(Long id) {
+       return batchRepository.deleteById(id);
+    }
 
     @Override
     public Mono<Long> deleteAll() {

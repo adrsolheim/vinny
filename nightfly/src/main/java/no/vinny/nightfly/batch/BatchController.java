@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,6 +47,12 @@ public class BatchController {
     @GetMapping("/count")
     public Mono<Long> count() {
         return batchService.count();
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<Long> delete(@PathVariable Long id) {
+        log.info("Request for deleting batch id {}", id);
+        return batchService.delete(id);
     }
 
     //@PreAuthorize("hasRole('ADMIN')")

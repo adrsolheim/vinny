@@ -10,6 +10,7 @@ public interface BatchService {
    Mono<Long> add(BatchDTO batch);
    Flux<BatchDTO> getAll(Pageable pageable);
    Mono<Long> count();
+   Mono<Long> delete(Long id);
    Mono<Long> deleteAll();
    Mono<Long> sync();
    Mono<BatchDTO> update(Long id, BatchDTO batch);
