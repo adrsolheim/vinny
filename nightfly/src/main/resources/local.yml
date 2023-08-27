@@ -1,0 +1,4 @@
+supabase:
+  url: local
+  anon: local
+  jwt_secret: local
