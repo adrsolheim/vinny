@@ -12,3 +12,5 @@ spring:
 pagination:
   batch:
     pageSize: 20
+authentication:
+  enabled: false

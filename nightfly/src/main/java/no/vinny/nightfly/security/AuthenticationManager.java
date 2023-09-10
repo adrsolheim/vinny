@@ -9,6 +9,10 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 
     private SupabaseAuthService supabaseAuthService;
 
+    public AuthenticationManager(SupabaseAuthService supabaseAuthService) {
+        this.supabaseAuthService = supabaseAuthService;
+    }
+
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
         return Mono.justOrEmpty(authentication)

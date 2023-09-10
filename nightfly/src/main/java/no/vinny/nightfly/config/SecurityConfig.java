@@ -2,6 +2,7 @@ package no.vinny.nightfly.config;
 
 import no.vinny.nightfly.security.AuthenticationManager;
 import no.vinny.nightfly.security.JwtAuthenticationConverter;
+import no.vinny.nightfly.security.SupabaseAuthService;
 import no.vinny.nightfly.util.RequestExceptionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,19 +39,19 @@ public class SecurityConfig {
                 // TODO: enable csrf
                 .csrf().disable()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .pathMatchers(HttpMethod.POST, "/api/batches").permitAll()
-                .pathMatchers(HttpMethod.PUT, "/api/batches/**").permitAll()
-                .pathMatchers(HttpMethod.PATCH, "/api/batches/**").permitAll()
-                .pathMatchers(HttpMethod.DELETE, "/api/batches/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/api/**").authenticated()
+                .pathMatchers(HttpMethod.POST, "/api/batches").authenticated()
+                .pathMatchers(HttpMethod.PUT, "/api/batches/**").authenticated()
+                .pathMatchers(HttpMethod.PATCH, "/api/batches/**").authenticated()
+                .pathMatchers(HttpMethod.DELETE, "/api/batches/**").authenticated()
                 .anyExchange().permitAll()
                 .and()
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() {
-        return new AuthenticationManager();
+    public AuthenticationManager authenticationManager(SupabaseAuthService supabaseAuthService) {
+        return new AuthenticationManager(supabaseAuthService);
     }
 
     @Bean

@@ -8,4 +8,13 @@ SPRING_PROFILES_ACTIVE=dev
 
   
 For running the app locally a set of key/value properties can be defined in `local.yml` to enable certain features.
-Secret properties are likely to reside here.
+Secret properties are likely to reside here and will enable the app to connect to external services.
+```
+# local.yml
+authentication:
+  enabled: true
+supabase:
+  url: <SUPABASE_URL>
+  anon: <ANON_KEY>
+  jwt_secret: <SUPABASE_SECRET>
+```
