@@ -39,7 +39,7 @@ public class SecurityConfig {
                 // TODO: enable csrf
                 .csrf().disable()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.GET, "/api/**").authenticated()
+                .pathMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/batches").authenticated()
                 .pathMatchers(HttpMethod.PUT, "/api/batches/**").authenticated()
                 .pathMatchers(HttpMethod.PATCH, "/api/batches/**").authenticated()

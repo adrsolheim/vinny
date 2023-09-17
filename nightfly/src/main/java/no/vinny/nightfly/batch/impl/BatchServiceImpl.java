@@ -15,16 +15,18 @@ import java.time.Duration;
 public class BatchServiceImpl implements BatchService {
 
     private final BatchRepository batchRepository;
+    private final Mapper.ToDTO toDTO;
 
     @Autowired
-    public BatchServiceImpl(BatchRepository batchRepository) {
+    public BatchServiceImpl(BatchRepository batchRepository, Mapper.ToDTO toDTO) {
         this.batchRepository = batchRepository;
+        this.toDTO = toDTO;
     }
 
     @Override
     public Mono<BatchDTO> get(Long id) {
         log.info("Fetching batch of id {}..", id);
-        return batchRepository.findById(id).delayElement(Duration.ofSeconds(3)).map(BatchObjectMapper::from);
+        return batchRepository.findById(id).delayElement(Duration.ofSeconds(3)).map(toDTO);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class BatchServiceImpl implements BatchService {
         return batchRepository
                 .findByBrewfatherId(id)
                 .singleOrEmpty()
-                .map(BatchObjectMapper::from)
+                .map(toDTO)
                 .doOnSuccess((val) -> log.info("Found 1 element matching brewfatherId={}", id));
         //result.publish().autoConnect(1).hasElement().subscribe((hasElement) -> {
         //    log.info("Found {} elements matching brewfatherId={}", hasElement ? "1" : "no", id);
@@ -53,7 +55,7 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Flux<BatchDTO> getAll(Pageable pageable) {
-        Flux<BatchDTO> result = batchRepository.findAll(pageable).delayElements(Duration.ofMillis(200)).map(BatchObjectMapper::from);
+        Flux<BatchDTO> result = batchRepository.findAll(pageable).delayElements(Duration.ofMillis(200)).map(toDTO);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 
         return result;
@@ -79,7 +81,7 @@ public class BatchServiceImpl implements BatchService {
     public Mono<BatchDTO> update(Long id, BatchDTO dto) {
         return batchRepository.findById(id)
                 .flatMap(data -> data == null ? Mono.error(new RuntimeException("Cannot update batch. Batch does not exist"))
-                        : batchRepository.update(dto).map(BatchObjectMapper::from));
+                        : batchRepository.update(dto).map(toDTO));
     }
 
     @Override
