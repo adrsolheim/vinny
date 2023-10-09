@@ -9,7 +9,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchService;
+import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
 import org.mariadb.r2dbc.MariadbConnectionConfiguration;
 import org.mariadb.r2dbc.MariadbConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class DatabaseConfig  {
     private Environment env;
 
     @Bean
-    @Profile("!dev")
+    @Profile("prod")
     public ConnectionFactory connectionFactory() {
        MariadbConnectionConfiguration conf = MariadbConnectionConfiguration.builder()
                .host(env.getProperty("spring.r2dbc.host"))
@@ -53,9 +55,9 @@ public class DatabaseConfig  {
     }
 
     @Bean
-    @Profile("dev")
+    @Profile("!prod")
     public ConnectionFactory h2ConnectionFactory() {
-        log.info("Initializing H2 connection factory");
+        log.info("Initializing H2 connection factory: {}", env.getProperty("spring.r2dbc.url"));
         ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(env.getProperty("spring.r2dbc.url"));
         return ConnectionFactoryBuilder.withOptions(options.mutate())
                 .username("sa")
@@ -100,4 +102,5 @@ public class DatabaseConfig  {
                 .namedParameters(true)
                 .build();
     }
+
 }
