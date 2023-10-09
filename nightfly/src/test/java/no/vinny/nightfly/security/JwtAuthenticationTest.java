@@ -6,8 +6,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,6 +13,8 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
+
+import static org.mockito.Mockito.mock;
 
 //@TestPropertySource(properties = {
 //        "supabase.jwt_secret=onetwothreefourfivesixseveneightnine"
@@ -37,6 +37,7 @@ class JwtAuthenticationTest {
 
     @BeforeAll
     void setup() {
+        supabaseAuthService = mock(SupabaseAuthService.class);
         this.now = Instant.parse("2023-12-03T10:15:30.00Z");
         this.TWO_DAYS_AGO = todayPlusDays(-2);
         this.TODAY        = todayPlusDays(0);
