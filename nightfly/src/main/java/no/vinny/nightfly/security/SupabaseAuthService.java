@@ -21,7 +21,7 @@ public class SupabaseAuthService {
         String keyString = jwtUtil.fetchSecretKeyString();
         try {
             Jwt<JwsHeader, Claims> parse = Jwts.parserBuilder()
-                    .setSigningKey(keyString)
+                    .setSigningKey(keyString.getBytes())
                     .requireIssuer("supabase")
                     .setAllowedClockSkewSeconds(30L) // allow a margin 30 sec difference
                     .build()

@@ -14,10 +14,13 @@ public class SupabaseUser implements UserDetails {
     //private final Map<String, String> appMetadata;
     //private final Map<String, String> userMetadata;
     private final String token;
-    private final Integer id;
+    private final String id;
     private final String role;
-    private final String email;
-    private final String phone;
+    private final String issuer;
+    //private final String role;
+    //private final String email;
+    //private final String phone;
+
     //private final String avatarUrl;
     //private final String userName;
     //private final String fullName;
@@ -36,8 +39,9 @@ public class SupabaseUser implements UserDetails {
         //userMetadata = (Map<String, String>) unmodifiableMap(claims.get("user_metadata", HashMap.class));
 
         // Registered Claims
-        claims.get("iss", String.class);
-        id = claims.get("sub", Integer.class);
+        issuer = claims.get("iss", String.class);
+        id = claims.get("sub", String.class);
+        role = claims.get("role", String.class);
         claims.get("exp", Integer.class);
         claims.get("iat", Integer.class);
         //provider = appMetadata.getOrDefault("provider", "");
@@ -46,9 +50,10 @@ public class SupabaseUser implements UserDetails {
         claims.get("typ", String.class);
 
         // Claims
-        role = claims.get("role", String.class);
-        email = claims.get("email", String.class);
-        phone = claims.get("phone", String.class);
+        //role = claims.get("role", String.class);
+        //email = claims.get("email", String.class);
+        //phone = claims.get("phone", String.class);
+
         //avatarUrl = userMetadata.containsKey("avatar_url") ? userMetadata.get("avatar_url") : null; // default url?
         //fullName = userMetadata.get("full_name");
         //userName = userMetadata.containsKey("user_name") ? userMetadata.get("user_name") : email;
@@ -72,7 +77,15 @@ public class SupabaseUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return claims.getSubject();
+    }
+
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     @Override

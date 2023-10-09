@@ -12,8 +12,11 @@ import java.util.Base64;
 @Component
 public class JwtUtil {
 
-    @Value("${supabase.jwt_secret}")
     private String jwtSecret;
+
+    public JwtUtil(@Value("${supabase.jwt_secret}") String jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
 
     public String fetchSecretKeyString() {
         log.info("jwt_secret: {}", jwtSecret);
