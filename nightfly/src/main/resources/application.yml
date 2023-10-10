@@ -2,6 +2,8 @@ spring:
   threads:
     virtual:
       enabled: true
+  r2dbc:
+    enabled: false
 supabase:
   url: ${SUPABASE_URL}
   anon: ${SUPABASE_ANON_KEY}

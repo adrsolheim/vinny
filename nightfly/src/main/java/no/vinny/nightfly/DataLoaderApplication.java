@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Profile;
 @Slf4j
 public class DataLoaderApplication implements ApplicationRunner {
 
-    private final AsyncBatchService batchService;
+    private final AsyncBatchService asyncBatchService;
 
-    public DataLoaderApplication(AsyncBatchService batchService) {
-        this.batchService = batchService;
+    public DataLoaderApplication(AsyncBatchService asyncBatchService) {
+        this.asyncBatchService = asyncBatchService;
     }
 
 
@@ -30,17 +30,17 @@ public class DataLoaderApplication implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("RUNNING : Inserting into database..");
-        batchService.add(BatchDTO.builder()
+        asyncBatchService.add(BatchDTO.builder()
                .brewfatherId("HY27A73dYWZNMxapgE4UdljPtNvDOL")
                .name("MarisOtter SMASH")
                .status(Batch.Status.COMPLETED.getValue())
                .build());
-        batchService.add(BatchDTO.builder()
+        asyncBatchService.add(BatchDTO.builder()
                .brewfatherId("LAXI2KWZXcU2pBpzrfg6B3Uy5940vQ")
                .name("Eldon")
                .status(Batch.Status.COMPLETED.getValue())
                .build());
-        batchService.add(BatchDTO.builder()
+        asyncBatchService.add(BatchDTO.builder()
                .brewfatherId("NLltIcoo87foHbTz1N8rH0v0KXht6q")
                .name("Lutra")
                .status(Batch.Status.COMPLETED.getValue())

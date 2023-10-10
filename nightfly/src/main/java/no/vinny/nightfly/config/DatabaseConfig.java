@@ -29,10 +29,10 @@ public class DatabaseConfig  {
     @Profile("prod")
     public ConnectionFactory connectionFactory() {
        MariadbConnectionConfiguration conf = MariadbConnectionConfiguration.builder()
-               .host(env.getProperty("spring.r2dbc.host"))
-               .database(env.getProperty("spring.r2dbc.database"))
-               .username(env.getProperty("spring.r2dbc.username"))
-               .password(env.getProperty("spring.r2dbc.password"))
+               .host(env.getProperty("spring.datasource.jdbc-url"))
+               .database(env.getProperty("spring.datasource.database"))
+               .username(env.getProperty("spring.datasource.username"))
+               .password(env.getProperty("spring.datasource.password"))
                .build();
        log.info("Initializing DB config {}", conf);
        return new MariadbConnectionFactory(conf);
@@ -41,8 +41,8 @@ public class DatabaseConfig  {
     @Bean
     @Profile("!prod")
     public ConnectionFactory h2ConnectionFactory() {
-        log.info("Initializing H2 connection factory: {}", env.getProperty("spring.r2dbc.url"));
-        ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(env.getProperty("spring.r2dbc.url"));
+        log.info("Initializing H2 connection factory: {}", env.getProperty("spring.datasource.jdbc-url"));
+        ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(env.getProperty("spring.datasource.jdbc-url"));
         return ConnectionFactoryBuilder.withOptions(options.mutate())
                 .username("sa")
                 .password("")

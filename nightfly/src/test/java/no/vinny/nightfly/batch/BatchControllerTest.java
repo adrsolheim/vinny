@@ -23,14 +23,14 @@ class BatchControllerTest {
     @MockBean
     private SupabaseAuthService supabaseAuthService;
     @MockBean
-    private AsyncBatchService batchService;
+    private AsyncBatchService asyncBatchService;
     @MockBean
     private Pagination pagination;
 
     @BeforeEach
     void setUp(ApplicationContext context) {
         supabaseAuthService = mock(SupabaseAuthService.class);
-        batchService = mock(AsyncBatchService.class);
+        asyncBatchService = mock(AsyncBatchService.class);
         pagination = mock(Pagination.class);
         testClient = WebTestClient
                 .bindToApplicationContext(context)

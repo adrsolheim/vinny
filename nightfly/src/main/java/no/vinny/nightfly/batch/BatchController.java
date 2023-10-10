@@ -19,51 +19,51 @@ public class BatchController {
 
     // TODO: WebClient
     // TODO: MediaType.TEXT_EVENT_STREAM_VALUE can be used with EventSource api in js
-    private final AsyncBatchService batchService;
+    private final AsyncBatchService asyncBatchService;
     private final Pagination pagination;
 
     @Autowired
-    public BatchController(AsyncBatchService batchService, Pagination pagination) {
-        this.batchService = batchService;
+    public BatchController(AsyncBatchService asyncBatchService, Pagination pagination) {
+        this.asyncBatchService = asyncBatchService;
         this.pagination = pagination;
     }
 
     @GetMapping("/{id}")
     public Mono<BatchDTO> batch(@PathVariable Long id) {
-        return batchService.get(id);
+        return asyncBatchService.get(id);
     }
 
     @GetMapping("/brewfather/{id}")
     public Mono<BatchDTO> batch(@PathVariable String id) {
-        return batchService.getByBrewfatherId(id);
+        return asyncBatchService.getByBrewfatherId(id);
     }
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<BatchDTO> batches() {
         Pageable pageable = PageRequest.of(0, pagination.getPageSize());
-        return batchService.getAll(pageable);
+        return asyncBatchService.getAll(pageable);
     }
 
     @GetMapping("/count")
     public Mono<Long> count() {
-        return batchService.count();
+        return asyncBatchService.count();
     }
 
     @DeleteMapping("/{id}")
     public Mono<Long> delete(@PathVariable Long id) {
         log.info("Request for deleting batch id {}", id);
-        return batchService.delete(id);
+        return asyncBatchService.delete(id);
     }
 
     //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/clear")
     public Mono<Long> deleteAll() {
-        return batchService.deleteAll();
+        return asyncBatchService.deleteAll();
     }
 
     @GetMapping("/sse")
     public Flux<ServerSentEvent<BatchDTO>> streamEvents() {
-        return batchService.getAll(PageRequest.of(0, pagination.getPageSize()))
+        return asyncBatchService.getAll(PageRequest.of(0, pagination.getPageSize()))
                 .map(batch -> ServerSentEvent.<BatchDTO> builder()
                         .id(batch.getBrewfatherId())
                         .event("periodic-event")
@@ -74,19 +74,19 @@ public class BatchController {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Long> create(@RequestBody BatchDTO batch) {
-        return batchService.add(batch);
+        return asyncBatchService.add(batch);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public Mono<BatchDTO> replace(@PathVariable Long id, @RequestBody BatchDTO replacementBatch) {
         log.info("Replacement request for id {}. Batch: {}", id, replacementBatch);
-        return batchService.replace(id, replacementBatch);
+        return asyncBatchService.replace(id, replacementBatch);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public Mono<BatchDTO> update(@PathVariable Long id, @RequestBody BatchDTO update) {
         BatchDTO updatedBatch = BatchObjectMapper.builder(update).id(id).build();
         log.info("Update request for id {}. Batch: {}", id, updatedBatch);
-        return batchService.update(id, updatedBatch);
+        return asyncBatchService.update(id, updatedBatch);
     }
 }
