@@ -3,7 +3,6 @@ package no.vinny.nightfly.batch.impl;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchRowMapper;
-import no.vinny.nightfly.batch.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

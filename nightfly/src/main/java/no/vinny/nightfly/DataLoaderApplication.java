@@ -3,7 +3,7 @@ package no.vinny.nightfly;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
-import no.vinny.nightfly.batch.BatchService;
+import no.vinny.nightfly.batch.AsyncBatchService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Profile;
 @Slf4j
 public class DataLoaderApplication implements ApplicationRunner {
 
-    private final BatchService batchService;
+    private final AsyncBatchService batchService;
 
-    public DataLoaderApplication(BatchService batchService) {
+    public DataLoaderApplication(AsyncBatchService batchService) {
         this.batchService = batchService;
     }
 

@@ -19,11 +19,11 @@ public class BatchController {
 
     // TODO: WebClient
     // TODO: MediaType.TEXT_EVENT_STREAM_VALUE can be used with EventSource api in js
-    private final BatchService batchService;
+    private final AsyncBatchService batchService;
     private final Pagination pagination;
 
     @Autowired
-    public BatchController(BatchService batchService, Pagination pagination) {
+    public BatchController(AsyncBatchService batchService, Pagination pagination) {
         this.batchService = batchService;
         this.pagination = pagination;
     }

@@ -1,36 +1,20 @@
 package no.vinny.nightfly.config;
 
-import io.r2dbc.h2.H2ConnectionConfiguration;
-import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
-import io.r2dbc.h2.H2ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.batch.Batch;
-import no.vinny.nightfly.batch.BatchDTO;
-import no.vinny.nightfly.batch.BatchRepository;
-import no.vinny.nightfly.batch.BatchService;
-import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
 import org.mariadb.r2dbc.MariadbConnectionConfiguration;
 import org.mariadb.r2dbc.MariadbConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.r2dbc.ConnectionFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
-import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
-import no.vinny.nightfly.batch.BatchRepository;
+import no.vinny.nightfly.batch.AsyncBatchRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
@@ -18,7 +18,7 @@ import java.util.function.BiFunction;
 @RequiredArgsConstructor
 @Repository
 @Slf4j
-public class BatchRepositoryImpl implements BatchRepository {
+public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    // TODO: replace DatabaseClient with R2dbcEntityTemplate?
    private final DatabaseClient databaseClient;
 

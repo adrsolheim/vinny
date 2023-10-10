@@ -12,26 +12,26 @@ import java.time.Duration;
 
 @Slf4j
 @Service
-public class BatchServiceImpl implements BatchService {
+public class AsyncBatchServiceImpl implements AsyncBatchService {
 
-    private final BatchRepository batchRepository;
+    private final AsyncBatchRepository asyncBatchRepository;
     private final Mapper.ToDTO toDTO;
 
     @Autowired
-    public BatchServiceImpl(BatchRepository batchRepository, Mapper.ToDTO toDTO) {
-        this.batchRepository = batchRepository;
+    public AsyncBatchServiceImpl(AsyncBatchRepository asyncBatchRepository, Mapper.ToDTO toDTO) {
+        this.asyncBatchRepository = asyncBatchRepository;
         this.toDTO = toDTO;
     }
 
     @Override
     public Mono<BatchDTO> get(Long id) {
         log.info("Fetching batch of id {}..", id);
-        return batchRepository.findById(id).delayElement(Duration.ofSeconds(3)).map(toDTO);
+        return asyncBatchRepository.findById(id).delayElement(Duration.ofSeconds(3)).map(toDTO);
     }
 
     @Override
     public Mono<BatchDTO> getByBrewfatherId(String id) {
-        return batchRepository
+        return asyncBatchRepository
                 .findByBrewfatherId(id)
                 .singleOrEmpty()
                 .map(toDTO)
@@ -45,17 +45,17 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Mono<Long> add(BatchDTO batch) {
-        return batchRepository.save(batch);
+        return asyncBatchRepository.save(batch);
     }
 
     @Override
     public Mono<Long> count() {
-        return batchRepository.count();
+        return asyncBatchRepository.count();
     }
 
     @Override
     public Flux<BatchDTO> getAll(Pageable pageable) {
-        Flux<BatchDTO> result = batchRepository.findAll(pageable).delayElements(Duration.ofMillis(200)).map(toDTO);
+        Flux<BatchDTO> result = asyncBatchRepository.findAll(pageable).delayElements(Duration.ofMillis(200)).map(toDTO);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 
         return result;
@@ -63,12 +63,12 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Mono<Long> delete(Long id) {
-       return batchRepository.deleteById(id);
+       return asyncBatchRepository.deleteById(id);
     }
 
     @Override
     public Mono<Long> deleteAll() {
-        return batchRepository.deleteAll();
+        return asyncBatchRepository.deleteAll();
     }
 
     // TODO: Sync mechanism with brewfather
@@ -79,9 +79,9 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Mono<BatchDTO> update(Long id, BatchDTO dto) {
-        return batchRepository.findById(id)
+        return asyncBatchRepository.findById(id)
                 .flatMap(data -> data == null ? Mono.error(new RuntimeException("Cannot update batch. Batch does not exist"))
-                        : batchRepository.update(dto).map(toDTO));
+                        : asyncBatchRepository.update(dto).map(toDTO));
     }
 
     @Override

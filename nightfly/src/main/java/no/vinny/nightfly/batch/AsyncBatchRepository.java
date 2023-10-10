@@ -5,7 +5,7 @@ import org.springframework.data.repository.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface BatchRepository extends Repository<Batch, Long> {
+public interface AsyncBatchRepository extends Repository<Batch, Long> {
     Mono<Long> save(BatchDTO batch);
     Mono<Batch> update(BatchDTO batch);
     Flux<Batch> findAll(Pageable pageable);
