@@ -10,6 +10,10 @@ public interface BatchRepository {
 
     int delete(Long id);
 
+    void update(BatchDTO batch);
+
+    Long count();
+
     Optional<Batch> findById(Long id);
 
     Optional<Batch> findByBrewfatherId(String id);

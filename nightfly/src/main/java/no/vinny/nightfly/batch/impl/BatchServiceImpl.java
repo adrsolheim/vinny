@@ -1,5 +1,6 @@
 package no.vinny.nightfly.batch.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class BatchServiceImpl implements BatchService {
 
     private final BatchRepository batchRepository;
@@ -45,7 +47,7 @@ public class BatchServiceImpl implements BatchService {
     //TODO: implement rest
     @Override
     public Long count() {
-        return null;
+        return batchRepository.count();
     }
 
     @Override
@@ -64,8 +66,17 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchDTO update(Long id, BatchDTO batch) {
-        return null;
+    public BatchDTO update(BatchDTO batch) {
+        if (batch.getId() == null) {
+            throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
+        }
+        BatchDTO batchDTO = get(batch.getId());
+        if (batchDTO == null) {
+            log.info("UPDATE: Batch not found. Skipping update..");
+            return null;
+        }
+        batchRepository.update(batch);
+        return get(batch.getId());
     }
 
     @Override
