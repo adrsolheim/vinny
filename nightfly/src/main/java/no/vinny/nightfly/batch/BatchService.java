@@ -14,7 +14,6 @@ public interface BatchService {
    Long count();
    int delete(Long id);
    Long deleteAll();
-   Long sync();
    BatchDTO update(BatchDTO batch);
    BatchDTO replace(Long id, BatchDTO batch);
 

@@ -61,11 +61,6 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Long sync() {
-        return null;
-    }
-
-    @Override
     public BatchDTO update(BatchDTO batch) {
         if (batch.getId() == null) {
             throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
