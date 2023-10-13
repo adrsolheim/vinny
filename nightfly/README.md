@@ -18,3 +18,7 @@ supabase:
   anon: <ANON_KEY>
   jwt_secret: <SUPABASE_SECRET>
 ```
+
+## Jobs
+
+Regular applications should be run with the profile `cron`
