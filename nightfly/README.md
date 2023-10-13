@@ -17,6 +17,9 @@ supabase:
   url: <SUPABASE_URL>
   anon: <ANON_KEY>
   jwt_secret: <SUPABASE_SECRET>
+brewfather:
+  api_key: <BREWFATHER_API_KEY>
+  user_id: <BREWFATHER_USER_ID>
 ```
 
 ## Jobs
