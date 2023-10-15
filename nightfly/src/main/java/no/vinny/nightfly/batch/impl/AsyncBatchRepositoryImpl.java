@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.AsyncBatchRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
@@ -16,11 +18,13 @@ import reactor.core.publisher.Mono;
 import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
-@Repository
+@Repository("AsyncBatchRepository")
 @Slf4j
 public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    // TODO: replace DatabaseClient with R2dbcEntityTemplate?
-   private final DatabaseClient databaseClient;
+   @Autowired
+   @Qualifier("asyncDatabaseClient")
+   private final DatabaseClient asyncDatabaseClient;
 
    public static final BiFunction<Row, RowMetadata, Batch> BATCH_MAPPER = (row, metadata) -> Batch.builder()
            .id(row.get("id", Long.class))
@@ -37,7 +41,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
       query.append("SELECT id, brewfather_id, name, status FROM batch ");
       query.append("LIMIT ").append(pageable.getPageSize());
       query.append("OFFSET ").append(pageable.getOffset());
-      return databaseClient
+      return asyncDatabaseClient
               .sql(query.toString())
               .map(BATCH_MAPPER)
               .all();
@@ -45,7 +49,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Mono<Batch> findById(Long id) {
-      return databaseClient
+      return asyncDatabaseClient
               .sql("SELECT id, brewfather_id, name, status FROM batch WHERE id = :id")
               .bind("id", id)
               .map(BATCH_MAPPER)
@@ -54,7 +58,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Flux<Batch> findByBrewfatherId(String brewfatherId) {
-      return databaseClient
+      return asyncDatabaseClient
               .sql("SELECT id, brewfather_id, name, status FROM batch WHERE brewfather_id = :brewfatherId")
               .bind("brewfatherId", brewfatherId)
               .map(BATCH_MAPPER)
@@ -63,7 +67,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Mono<Long> count() {
-      return databaseClient
+      return asyncDatabaseClient
               .sql("SELECT COUNT(id) as n FROM batch")
               .map(LONG_MAPPER)
               .one();
@@ -71,7 +75,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Mono<Long> deleteAll() {
-      return databaseClient
+      return asyncDatabaseClient
               .sql("DELETE FROM batch")
               .fetch()
               .rowsUpdated();
@@ -79,7 +83,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Mono<Long> save(BatchDTO batch) {
-      return databaseClient.sql("""
+      return asyncDatabaseClient.sql("""
                 INSERT INTO batch (brewfather_id, name, status) 
                 VALUES (:brewfather_id, :name, :status)
                 """)
@@ -92,7 +96,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Mono<Batch> update(BatchDTO batch) {
-      return databaseClient.sql("""
+      return asyncDatabaseClient.sql("""
                 UPDATE batch 
                 SET brewfather_id = :brewfather_id, name = :name, status = :status 
                 WHERE id = :id 
@@ -110,7 +114,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
 
    @Override
    public Mono<Long> deleteById(Long id) {
-      return databaseClient.sql("""
+      return asyncDatabaseClient.sql("""
                 DELETE FROM batch
                 WHERE id = :id
                 """)

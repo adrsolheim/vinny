@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 public class AppConfig {
 
     @Bean
-    public AsyncBatchService batchService(AsyncBatchRepository asyncBatchRepository) {
+    public AsyncBatchService asyncBatchService(AsyncBatchRepository asyncBatchRepository) {
         return new AsyncBatchServiceImpl(asyncBatchRepository, new Mapper.ToDTO());
     }
 

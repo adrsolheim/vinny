@@ -5,17 +5,17 @@ import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository("BatchRepository")
 public class BatchRepositoryImpl implements BatchRepository {
 
     private static final String BATCH_COLUMNS = "id, brewfather_id, name, status";

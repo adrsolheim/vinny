@@ -6,11 +6,13 @@ import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchService;
 import no.vinny.nightfly.batch.Mapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Service("BatchService")
 public class BatchServiceImpl implements BatchService {
 
     private final BatchRepository batchRepository;

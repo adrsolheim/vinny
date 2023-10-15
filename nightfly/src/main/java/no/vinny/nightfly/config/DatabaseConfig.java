@@ -1,14 +1,19 @@
 package no.vinny.nightfly.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import lombok.extern.slf4j.Slf4j;
+import org.mariadb.jdbc.MariaDbDataSource;
 import org.mariadb.r2dbc.MariadbConnectionConfiguration;
 import org.mariadb.r2dbc.MariadbConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.r2dbc.ConnectionFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
@@ -16,6 +21,9 @@ import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
 
 @Slf4j
 @Configuration
@@ -25,24 +33,46 @@ public class DatabaseConfig  {
     @Autowired
     private Environment env;
 
+    @Profile("prod")
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        MariaDbDataSource dataSource = new MariaDbDataSource(env.getProperty("spring.datasource.jdbc-url"));
+        dataSource.setUser(env.getProperty("spring.datasource.username"));
+        dataSource.setUser(env.getProperty("spring.datasource.password"));
+        return dataSource;
+    }
+
+    @Profile("!prod")
+    @Bean
+    public DataSource h2DataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(env.getProperty("spring.datasource.jdbc-url"));
+        config.setUsername(env.getProperty("spring.datasource.username"));
+        config.setPassword(env.getProperty("spring.datasource.password"));
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(5);
+        return new HikariDataSource(config);
+    }
+
     @Bean
     @Profile("prod")
     public ConnectionFactory connectionFactory() {
        MariadbConnectionConfiguration conf = MariadbConnectionConfiguration.builder()
-               .host(env.getProperty("spring.datasource.jdbc-url"))
-               .database(env.getProperty("spring.datasource.database"))
-               .username(env.getProperty("spring.datasource.username"))
-               .password(env.getProperty("spring.datasource.password"))
+               .host(env.getProperty("spring.r2dbc.url"))
+               .database(env.getProperty("spring.r2dbc.database"))
+               .username(env.getProperty("spring.r2dbc.username"))
+               .password(env.getProperty("spring.r2dbc.password"))
                .build();
        log.info("Initializing DB config {}", conf);
        return new MariadbConnectionFactory(conf);
     }
 
     @Bean
+    @Primary
     @Profile("!prod")
     public ConnectionFactory h2ConnectionFactory() {
-        log.info("Initializing H2 connection factory: {}", env.getProperty("spring.datasource.jdbc-url"));
-        ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(env.getProperty("spring.datasource.jdbc-url"));
+        log.info("Initializing H2 connection factory: {}", env.getProperty("spring.r2dbc.url"));
+        ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(env.getProperty("spring.r2dbc.url"));
         return ConnectionFactoryBuilder.withOptions(options.mutate())
                 .username("sa")
                 .password("")
@@ -79,6 +109,7 @@ public class DatabaseConfig  {
     //    };
     //}
 
+    @Primary
     @Bean
     public DatabaseClient databaseClient(ConnectionFactory connectionFactory) {
         return DatabaseClient.builder()
@@ -87,4 +118,21 @@ public class DatabaseConfig  {
                 .build();
     }
 
+    @Bean
+    public DatabaseClient asyncDatabaseClient(@Qualifier("asyncH2ConnectionFactory") ConnectionFactory asyncH2ConnectionFactory) {
+        return DatabaseClient.builder()
+                .connectionFactory(asyncH2ConnectionFactory)
+                .namedParameters(true)
+                .build();
+    }
+    @Bean
+    @Profile("!prod")
+    public ConnectionFactory asyncH2ConnectionFactory() {
+        log.info("Initializing H2 connection factory: {}", env.getProperty("spring.r2dbc.url"));
+        ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(env.getProperty("spring.r2dbc.url"));
+        return ConnectionFactoryBuilder.withOptions(options.mutate())
+                .username(env.getProperty("spring.r2dbc.username"))
+                .password(env.getProperty("spring.r2dbc.password"))
+                .build();
+    }
 }

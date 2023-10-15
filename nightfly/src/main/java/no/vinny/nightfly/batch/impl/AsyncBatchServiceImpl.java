@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 
 @Slf4j
-@Service
+@Service("AsyncBatchService")
 public class AsyncBatchServiceImpl implements AsyncBatchService {
 
     private final AsyncBatchRepository asyncBatchRepository;
