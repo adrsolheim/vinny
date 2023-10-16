@@ -1,10 +1,9 @@
 package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import no.vinny.nightfly.batch.AsyncBatchRepository;
-import no.vinny.nightfly.batch.AsyncBatchService;
-import no.vinny.nightfly.batch.Mapper;
+import no.vinny.nightfly.batch.*;
 import no.vinny.nightfly.batch.impl.AsyncBatchServiceImpl;
+import no.vinny.nightfly.batch.impl.BatchServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +16,11 @@ public class AppConfig {
     @Bean
     public AsyncBatchService asyncBatchService(AsyncBatchRepository asyncBatchRepository) {
         return new AsyncBatchServiceImpl(asyncBatchRepository, new Mapper.ToDTO());
+    }
+
+    @Bean
+    public BatchService batchService(BatchRepository batchRepository) {
+        return new BatchServiceImpl(batchRepository, new Mapper.ToDTO());
     }
 
     @Bean
