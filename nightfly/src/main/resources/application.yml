@@ -1,4 +1,7 @@
 spring:
+  config:
+    # Local development properties outside version control
+    import: optional:classpath:local.yml
   threads:
     virtual:
       enabled: true
