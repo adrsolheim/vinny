@@ -5,6 +5,7 @@ import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchService;
 import no.vinny.nightfly.batch.Mapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
