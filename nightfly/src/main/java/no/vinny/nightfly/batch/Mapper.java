@@ -25,7 +25,7 @@ public class Mapper {
                     .id(batchDTO.getId())
                     .brewfatherId(batchDTO.getBrewfatherId())
                     .name(batchDTO.getName())
-                    .status(no.vinny.nightfly.batch.Batch.Status.fromValue(batchDTO.getStatus()))
+                    .status(BatchStatus.fromValue(batchDTO.getStatus()))
                     .build();
         }
     }

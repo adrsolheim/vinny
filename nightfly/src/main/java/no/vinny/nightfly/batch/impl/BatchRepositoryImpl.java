@@ -1,9 +1,6 @@
 package no.vinny.nightfly.batch.impl;
 
-import no.vinny.nightfly.batch.Batch;
-import no.vinny.nightfly.batch.BatchDTO;
-import no.vinny.nightfly.batch.BatchRepository;
-import no.vinny.nightfly.batch.BatchRowMapper;
+import no.vinny.nightfly.batch.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,7 +30,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("id", null);
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
-        params.addValue("status", Batch.Status.fromValue(batch.getStatus()).getValue());
+        params.addValue("status", BatchStatus.fromValue(batch.getStatus()).getValue());
         return jdbcTemplate.update(INSERT_BATCH, params);
     }
 

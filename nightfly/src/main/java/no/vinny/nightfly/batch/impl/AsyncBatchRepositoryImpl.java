@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.Batch;
 import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.AsyncBatchRepository;
+import no.vinny.nightfly.batch.BatchStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
            .id(row.get("id", Long.class))
            .brewfatherId(row.get("brewfather_id", String.class))
            .name(row.get("name", String.class))
-           .status(row.get("status", String.class) == null ? null : Batch.Status.valueOf(row.get("status", String.class)))
+           .status(row.get("status", String.class) == null ? null : BatchStatus.valueOf(row.get("status", String.class)))
            .build();
 
    public static final BiFunction<Row, RowMetadata, Long> LONG_MAPPER = (row, metadata) -> (Long) row.get(0);
@@ -89,7 +90,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
                 """)
               .bind("brewfather_id", batch.getBrewfatherId())
               .bind("name", batch.getName())
-              .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue().toUpperCase())
+              .bind("status", BatchStatus.fromValue(batch.getStatus()).getValue().toUpperCase())
               .map((row, rowMetadata) -> row.get("id", Long.class))
               .first();
    }
@@ -104,7 +105,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
               .bind("id", batch.getId())
               .bind("brewfather_id", batch.getBrewfatherId())
               .bind("name", batch.getName())
-              .bind("status", Batch.Status.fromValue(batch.getStatus()).getValue().toUpperCase())
+              .bind("status", BatchStatus.fromValue(batch.getStatus()).name())
               .map((row, rowMetadata) -> row.get("id", Long.class))
               .first()
               .flatMap(this::findById)

@@ -17,7 +17,7 @@ public class BatchObjectMapper {
                 .id(dto.getId())
                 .brewfatherId(dto.getBrewfatherId())
                 .name(dto.getName())
-                .status(Batch.Status.fromValue(dto.getStatus()))
+                .status(BatchStatus.fromValue(dto.getStatus()))
                 .build();
     }
 
@@ -26,7 +26,7 @@ public class BatchObjectMapper {
                 .id(row.get("id", Long.class))
                 .brewfatherId(row.get("brewfather_id", String.class))
                 .name(row.get("name", String.class))
-                .status(Batch.Status.valueOf(row.get("status", String.class)))
+                .status(BatchStatus.fromValue(row.get("status", String.class)))
                 .build();
     }
 
