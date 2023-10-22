@@ -29,14 +29,15 @@ public class BatchController {
         this.pagination = pagination;
     }
 
+    // TODO: return message if missing
     @GetMapping("/{id}")
     public BatchDTO batch(@PathVariable Long id) {
-        return batchService.get(id);
+        return batchService.get(id).orElse(null);
     }
 
     @GetMapping("/brewfather/{id}")
     public BatchDTO batch(@PathVariable String id) {
-        return batchService.getByBrewfatherId(id);
+        return batchService.getByBrewfatherId(id).orElse(null);
     }
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)

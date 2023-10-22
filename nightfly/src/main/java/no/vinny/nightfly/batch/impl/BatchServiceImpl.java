@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,13 +26,13 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchDTO get(Long id) {
-        return batchRepository.findById(id).map(toDTO).orElse(null);
+    public Optional<BatchDTO> get(Long id) {
+        return batchRepository.findById(id).map(toDTO);
     }
 
     @Override
-    public BatchDTO getByBrewfatherId(String brewfatherId) {
-        return batchRepository.findByBrewfatherId(brewfatherId).map(toDTO).orElse(null);
+    public Optional<BatchDTO> getByBrewfatherId(String brewfatherId) {
+        return batchRepository.findByBrewfatherId(brewfatherId).map(toDTO);
     }
 
     @Override
@@ -68,13 +69,25 @@ public class BatchServiceImpl implements BatchService {
         if (batch.getId() == null) {
             throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
         }
-        BatchDTO batchDTO = get(batch.getId());
-        if (batchDTO == null) {
+        Optional<BatchDTO> batchDTO = get(batch.getId());
+        if (batchDTO.isEmpty()) {
             log.info("UPDATE: Batch not found. Skipping update..");
             return null;
         }
         batchRepository.update(batch);
-        return get(batch.getId());
+        return get(batch.getId()).orElse(null); // TODO: throw exception with description here
+    }
+
+    @Override
+    public BatchDTO upsert(BatchDTO batch) {
+        if (batch.getId() != null) {
+            return update(batch);
+        }
+        BatchDTO updated = getByBrewfatherId(batch.getBrewfatherId()).map(this::update).orElse(null);
+        if (updated == null) {
+            return add(batch);
+        }
+        return updated;
     }
 
     @Override
