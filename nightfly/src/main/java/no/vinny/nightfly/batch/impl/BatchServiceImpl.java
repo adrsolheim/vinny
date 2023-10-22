@@ -69,13 +69,28 @@ public class BatchServiceImpl implements BatchService {
         if (batch.getId() == null) {
             throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
         }
-        Optional<BatchDTO> batchDTO = get(batch.getId());
-        if (batchDTO.isEmpty()) {
+        Optional<BatchDTO> existingBatch = get(batch.getId());
+        if (existingBatch.isEmpty()) {
             log.info("UPDATE: Batch not found. Skipping update..");
             return null;
         }
-        batchRepository.update(batch);
+        batchRepository.update(mergeNonNull(batch, existingBatch.get()));
         return get(batch.getId()).orElse(null); // TODO: throw exception with description here
+    }
+
+    /**
+     * @param update    select all non null properties
+     * @param old       select properties missing from update
+     *
+     * @return          merged batch eligible to be persisted as a batch update
+     */
+    private BatchDTO mergeNonNull(BatchDTO update, BatchDTO old) {
+        return BatchDTO.builder()
+                .id(old.getId())
+                .brewfatherId(update.getBrewfatherId() == null ? old.getBrewfatherId() : update.getBrewfatherId())
+                .name(update.getName() == null ? old.getName() : update.getName())
+                .status(update.getStatus() == null ? old.getStatus() : update.getStatus())
+                .build();
     }
 
     @Override
@@ -83,11 +98,10 @@ public class BatchServiceImpl implements BatchService {
         if (batch.getId() != null) {
             return update(batch);
         }
-        BatchDTO updated = getByBrewfatherId(batch.getBrewfatherId()).map(this::update).orElse(null);
-        if (updated == null) {
-            return add(batch);
-        }
-        return updated;
+        getByBrewfatherId(batch.getBrewfatherId()).ifPresent(existing -> batch.setId(existing.getId()));
+        return batch.getId() != null ?
+                update(batch) : add(batch) == 1 ?
+                getByBrewfatherId(batch.getBrewfatherId()).orElse(null) : null;
     }
 
     @Override
