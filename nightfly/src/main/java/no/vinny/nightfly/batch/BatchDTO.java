@@ -11,11 +11,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class BatchDTO {
-    private final Long id;
+    private Long id;
     @NotEmpty
-    private final String brewfatherId;
+    private String brewfatherId;
     @NotEmpty
-    private final String name;
+    private String name;
     // TODO: add enum validator
-    private final String status;
+    private String status;
 }

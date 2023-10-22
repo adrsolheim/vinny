@@ -13,7 +13,7 @@ public class Mapper {
                     .id(batch.getId())
                     .brewfatherId(batch.getBrewfatherId())
                     .name(batch.getName())
-                    .status(batch.getStatus().getValue())
+                    .status(batch.getStatus() == null ? null : batch.getStatus().getValue())
                     .build();
         }
     }

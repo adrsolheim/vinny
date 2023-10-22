@@ -25,6 +25,9 @@ public enum BatchStatus {
 
     @JsonCreator
     public static BatchStatus fromValue(String value) {
+        if (value == null) {
+            return null;
+        }
         for (BatchStatus s : BatchStatus.values()) {
             if (s.toString().equalsIgnoreCase(value)) {
                 return s;

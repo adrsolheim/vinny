@@ -42,6 +42,10 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     public void update(BatchDTO batch) {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batch));
+        params.addValue("id", batch.getId());
+        params.addValue("brewfather_id", batch.getBrewfatherId());
+        params.addValue("name", batch.getName());
+        params.addValue("status", batch.getStatus() == null ? null : BatchStatus.fromValue(batch.getStatus()).getValue());
         String sql = "UPDATE batch SET "
                 + "brewfather_id = :brewfather_id "
                 + "name = :name "
