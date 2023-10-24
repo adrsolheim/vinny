@@ -33,16 +33,15 @@ public class DatabaseConfig  {
     @Autowired
     private Environment env;
 
-    @Profile("prod")
-    @Bean
-    public DataSource dataSource() throws SQLException {
-        MariaDbDataSource dataSource = new MariaDbDataSource(env.getProperty("spring.datasource.jdbc-url"));
-        dataSource.setUser(env.getProperty("spring.datasource.username"));
-        dataSource.setUser(env.getProperty("spring.datasource.password"));
-        return dataSource;
-    }
+    //@Profile("prod")
+    //@Bean
+    //public DataSource dataSource() throws SQLException {
+    //    MariaDbDataSource dataSource = new MariaDbDataSource(env.getProperty("spring.datasource.jdbc-url"));
+    //    dataSource.setUser(env.getProperty("spring.datasource.username"));
+    //    dataSource.setUser(env.getProperty("spring.datasource.password"));
+    //    return dataSource;
+    //}
 
-    @Profile("!prod")
     @Bean
     public DataSource h2DataSource() {
         HikariConfig config = new HikariConfig();

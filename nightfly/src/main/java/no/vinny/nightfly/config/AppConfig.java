@@ -8,12 +8,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+@Import({Mapper.ToDTO.class, Mapper.ToBatch.class, Mapper.JsonToDTO.class})
 @Configuration
 public class AppConfig {
 
     @Bean
+    @Profile("reactive")
     public AsyncBatchService asyncBatchService(AsyncBatchRepository asyncBatchRepository) {
         return new AsyncBatchServiceImpl(asyncBatchRepository, new Mapper.ToDTO());
     }
