@@ -1,4 +1,5 @@
 spring:
+  web-application-type: none
   config:
     # Local development properties outside version control
     import: optional:classpath:local.yml

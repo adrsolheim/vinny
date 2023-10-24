@@ -40,7 +40,7 @@ public class BatchController {
         return batchService.getByBrewfatherId(id).orElse(null);
     }
 
-    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping
     public List<BatchDTO> batches() {
         Pageable pageable = PageRequest.of(0, pagination.getPageSize());
         return batchService.getAll(pageable);
