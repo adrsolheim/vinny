@@ -23,7 +23,7 @@ public enum BatchStatus {
         return this.value;
     }
 
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static BatchStatus fromValue(String value) {
         if (value == null) {
             return null;

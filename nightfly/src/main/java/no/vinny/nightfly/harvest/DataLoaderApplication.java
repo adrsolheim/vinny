@@ -1,13 +1,19 @@
 package no.vinny.nightfly.harvest;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
+import no.vinny.nightfly.batch.impl.BatchServiceImpl;
+import no.vinny.nightfly.config.AppConfig;
+import no.vinny.nightfly.config.DatabaseConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 
+@Import({BatchServiceImpl.class, BatchRepositoryImpl.class, AppConfig.class})
 @SpringBootApplication(scanBasePackages = {"no.vinny.nightfly.harvest"})
 @Slf4j
 public class DataLoaderApplication implements ApplicationRunner {

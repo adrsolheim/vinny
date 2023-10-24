@@ -1,5 +1,6 @@
 package no.vinny.nightfly.batch;
 
+import no.vinny.nightfly.brewfather.BatchJson;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
@@ -17,6 +18,19 @@ public class Mapper {
                     .build();
         }
     }
+
+    @Service
+    public static class JsonToDTO implements Function<BatchJson, BatchDTO> {
+        @Override
+        public BatchDTO apply(BatchJson batch) {
+            return BatchDTO.builder()
+                    .brewfatherId(batch.getBrewfatherId())
+                    .name(batch.getRecipe() == null ? null : batch.getRecipe().getName())
+                    .status(batch.getStatus() == null ? null : batch.getStatus().getValue())
+                    .build();
+        }
+    }
+
     @Service
     public static class ToBatch implements Function<BatchDTO, Batch> {
         @Override
