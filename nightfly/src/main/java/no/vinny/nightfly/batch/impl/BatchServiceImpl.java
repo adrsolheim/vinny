@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -105,7 +106,18 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchDTO replace(Long id, BatchDTO batch) {
-        return null;
+    public BatchDTO replace(BatchDTO batch) {
+        if (batch.getId() == null) {
+            log.warn("Unable to replace batch. Missing id {}", batch);
+            return null;
+        }
+        Optional<BatchDTO> batchById = get(batch.getId());
+        Optional<BatchDTO> batchByBrewfatherId = getByBrewfatherId(batch.getBrewfatherId());
+        if (batchByBrewfatherId.isPresent() && !Objects.equals(batchById.get().getId(), batchByBrewfatherId.get().getId())) {
+            log.warn("Cannot replace update batch {}. Batch with brewfather id already exist: {}", batch.getId(), batchByBrewfatherId);
+            return null;
+        }
+        batchRepository.update(batch);
+        return get(batch.getId()).get();
     }
 }

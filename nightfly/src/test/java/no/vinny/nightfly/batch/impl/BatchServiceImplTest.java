@@ -117,10 +117,6 @@ class BatchServiceImplTest {
         Assertions.assertEquals(5L, count);
     }
 
-    private Optional<BatchDTO> findById(Long id) {
-        int i = id.intValue();
-        return i < 0 || i >= batchesList().size() ? Optional.empty() : Optional.of(batchesList().get(i));
-    }
     private List<BatchDTO> batchesList() {
         List<String> bids = List.of(
                 "13574ef0d58b50fab38ec841efe39df4",

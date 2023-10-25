@@ -71,14 +71,15 @@ public class BatchController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public BatchDTO replace(@PathVariable Long id, @RequestBody BatchDTO replacementBatch) {
+        replacementBatch.setId(id);
         log.info("Replacement request for id {}. Batch: {}", id, replacementBatch);
-        return batchService.replace(id, replacementBatch);
+        return batchService.replace(replacementBatch);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public BatchDTO update(@PathVariable Long id, @RequestBody BatchDTO update) {
-        BatchDTO updatedBatch = BatchObjectMapper.builder(update).id(id).build();
-        log.info("Update request for id {}. Batch: {}", id, updatedBatch);
-        return batchService.update(updatedBatch);
+    public BatchDTO update(@PathVariable Long id, @RequestBody BatchDTO updateBatch) {
+        updateBatch.setId(id);
+        log.info("Update request for id {}. Batch: {}", id, updateBatch);
+        return batchService.update(updateBatch);
     }
 }
