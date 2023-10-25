@@ -10,11 +10,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 
 @Import({BatchServiceImpl.class, BatchRepositoryImpl.class, AppConfig.class})
 @SpringBootApplication(scanBasePackages = {"no.vinny.nightfly.harvest"})
+@ConditionalOnProperty(name = "cron.runner.enabled", havingValue = "true")
 @Slf4j
 public class DataLoaderApplication implements ApplicationRunner {
 

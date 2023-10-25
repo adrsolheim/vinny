@@ -6,6 +6,9 @@ spring:
   threads:
     virtual:
       enabled: true
+cron:
+  runner:
+    enabled: false
 supabase:
   url: ${SUPABASE_URL}
   anon: ${SUPABASE_ANON_KEY}
