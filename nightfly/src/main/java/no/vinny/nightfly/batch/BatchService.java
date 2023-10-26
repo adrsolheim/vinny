@@ -14,7 +14,6 @@ public interface BatchService {
    List<BatchDTO> getAll(Pageable pageable);
    Long count();
    int delete(Long id);
-   Long deleteAll();
    BatchDTO update(BatchDTO batch);
    BatchDTO upsert(BatchDTO batch);
    BatchDTO replace(BatchDTO batch);

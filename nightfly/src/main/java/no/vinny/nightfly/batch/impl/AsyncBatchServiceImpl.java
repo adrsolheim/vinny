@@ -67,17 +67,6 @@ public class AsyncBatchServiceImpl implements AsyncBatchService {
     }
 
     @Override
-    public Mono<Long> deleteAll() {
-        return asyncBatchRepository.deleteAll();
-    }
-
-    // TODO: Sync mechanism with brewfather
-    @Override
-    public Mono<Long> sync() {
-       return null;
-    }
-
-    @Override
     public Mono<BatchDTO> update(Long id, BatchDTO dto) {
         return asyncBatchRepository.findById(id)
                 .flatMap(data -> data == null ? Mono.error(new RuntimeException("Cannot update batch. Batch does not exist"))

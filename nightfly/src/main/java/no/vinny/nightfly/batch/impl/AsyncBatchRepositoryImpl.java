@@ -75,14 +75,6 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    }
 
    @Override
-   public Mono<Long> deleteAll() {
-      return asyncDatabaseClient
-              .sql("DELETE FROM batch")
-              .fetch()
-              .rowsUpdated();
-   }
-
-   @Override
    public Mono<Long> save(BatchDTO batch) {
       return asyncDatabaseClient.sql("""
                 INSERT INTO batch (brewfather_id, name, status) 

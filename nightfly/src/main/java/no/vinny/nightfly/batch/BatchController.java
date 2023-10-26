@@ -57,12 +57,6 @@ public class BatchController {
         return batchService.delete(id);
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/clear")
-    public Long deleteAll() {
-        return batchService.deleteAll();
-    }
-
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public int create(@RequestBody BatchDTO batch) {
