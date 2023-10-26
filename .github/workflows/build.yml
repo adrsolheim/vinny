@@ -22,6 +22,8 @@ jobs:
 
       - name: Install project
         run: mvn install
+        working-directory: ./nightfly
 
       - name: Run tests
         run: mvn --batch-mode --update-snapshots verify
+        working-directory: ./nightfly
