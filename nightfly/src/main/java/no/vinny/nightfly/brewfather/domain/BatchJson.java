@@ -1,11 +1,10 @@
-package no.vinny.nightfly.brewfather;
+package no.vinny.nightfly.brewfather.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import no.vinny.nightfly.batch.BatchStatus;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Data
 public class BatchJson {

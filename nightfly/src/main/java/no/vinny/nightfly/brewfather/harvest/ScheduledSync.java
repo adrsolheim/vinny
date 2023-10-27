@@ -1,8 +1,8 @@
-package no.vinny.nightfly.harvest;
+package no.vinny.nightfly.brewfather.harvest;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.*;
-import no.vinny.nightfly.brewfather.BatchJson;
+import no.vinny.nightfly.brewfather.domain.BatchJson;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

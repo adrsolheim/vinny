@@ -3,7 +3,7 @@ package no.vinny.nightfly;
 import no.vinny.nightfly.config.AppConfig;
 import no.vinny.nightfly.config.DatabaseConfig;
 import no.vinny.nightfly.config.SecurityConfig;
-import no.vinny.nightfly.harvest.BrewfatherSettings;
+import no.vinny.nightfly.brewfather.harvest.BrewfatherSettings;
 import no.vinny.nightfly.security.JwtAuthenticationConverter;
 import no.vinny.nightfly.util.RequestExceptionInterceptor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

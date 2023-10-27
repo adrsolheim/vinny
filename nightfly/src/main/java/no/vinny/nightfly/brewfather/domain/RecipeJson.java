@@ -1,4 +1,4 @@
-package no.vinny.nightfly.brewfather;
+package no.vinny.nightfly.brewfather.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -41,6 +41,7 @@ public class RecipeJson {
     private String brewingStyle;
     // add water
 
+    @Data
     public static class Fermentable {
         @JsonProperty("_id")
         private String brewfatherId;
@@ -56,6 +57,7 @@ public class RecipeJson {
         private String userNotes;
     }
 
+    @Data
     public static class Hop {
         @JsonProperty("_id")
         private String brewfatherId;
@@ -74,6 +76,7 @@ public class RecipeJson {
         private String year; // TODO: type?
     }
 
+    @Data
     public static class Yeast {
         @JsonProperty("_id")
         private String brewfatherId;

@@ -1,6 +1,6 @@
 package no.vinny.nightfly.batch;
 
-import no.vinny.nightfly.brewfather.BatchJson;
+import no.vinny.nightfly.brewfather.domain.BatchJson;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;

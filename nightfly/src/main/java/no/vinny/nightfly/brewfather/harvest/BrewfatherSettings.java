@@ -1,4 +1,4 @@
-package no.vinny.nightfly.harvest;
+package no.vinny.nightfly.brewfather.harvest;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
