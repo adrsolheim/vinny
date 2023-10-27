@@ -31,6 +31,12 @@ public class ScheduledSync {
 
     public void start() {
         log.info("Starting scheduled sync..");
+        syncBatches();
+        log.info("Stopping scheduled sync");
+    }
+
+    private void syncBatches() {
+        log.info("=== Syncing Batches ===");
         List<BatchJson> syncedBatches = new ArrayList<>();
         importBatches().stream()
                 .forEach(batchJson -> {
@@ -40,7 +46,6 @@ public class ScheduledSync {
                     }
                 });
         log.info("Synced {} batches", syncedBatches.size());
-        log.info("Stopping scheduled sync");
     }
 
     private List<BatchJson> importBatches() {
