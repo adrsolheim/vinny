@@ -38,7 +38,8 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public int add(BatchDTO batch) {
-        return batchRepository.insert(batch);
+        Optional<BatchDTO> existingBatch = getByBrewfatherId(batch.getBrewfatherId());
+        return existingBatch.isPresent() ? 0 : batchRepository.insert(batch);
     }
 
     // TODO: Return pagedlist

@@ -65,8 +65,8 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     public Optional<Batch> findByBrewfatherId(String id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
-        List<Batch> resultList = jdbcTemplate.query(SELECT_BATCH + " WHERE brewfather_id=:id", params, new BatchRowMapper());
+        params.addValue("brewfatherId", id);
+        List<Batch> resultList = jdbcTemplate.query(SELECT_BATCH + " WHERE brewfather_id=:brewfatherId", params, new BatchRowMapper());
         if (resultList.isEmpty()) {
             return Optional.empty();
         }
@@ -83,7 +83,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     private Map<String, Object> convertToMap(BatchDTO batch) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", batch.getId());
-        batchMap.put("brewfather_id", batch.getBrewfatherId());
+        batchMap.put("brewfatherId", batch.getBrewfatherId());
         batchMap.put("name", batch.getName());
         batchMap.put("status", batch.getStatus());
         return batchMap;
