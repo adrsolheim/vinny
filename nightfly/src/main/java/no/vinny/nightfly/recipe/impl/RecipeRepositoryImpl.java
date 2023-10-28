@@ -1,5 +1,6 @@
 package no.vinny.nightfly.recipe.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.recipe.RecipeDTO;
 import no.vinny.nightfly.recipe.RecipeRepository;
 import no.vinny.nightfly.recipe.RecipeRowMapper;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class RecipeRepositoryImpl implements RecipeRepository {
 
     private static final String RECIPE_COLUMNS = "id, brewfather_id, name";
@@ -43,9 +45,9 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public void update(RecipeDTO recipe) {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(recipe));
-        String sql = "UPDATE batch SET "
+        String sql = "UPDATE recipe SET "
                 + "brewfather_id = :brewfatherId, "
-                + "name = :name, "
+                + "name = :name "
                 + "WHERE id = :id";
         jdbcTemplate.update(sql, params);
     }
@@ -63,10 +65,11 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public Optional<RecipeDTO> findByBrewfatherId(String id) {
+    public Optional<RecipeDTO> findByBrewfatherId(String brewfatherId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("brewfatherId", id);
-        return Optional.of(jdbcTemplate.queryForObject(SELECT_RECIPE + " WHERE brewfather_id=:brewfatherId", params, new RecipeRowMapper()));
+        params.addValue("brewfatherId", brewfatherId);
+        List<RecipeDTO> resultList = jdbcTemplate.query(SELECT_RECIPE + " WHERE brewfather_id = :brewfatherId", params, new RecipeRowMapper());
+        return resultList.size() == 1 ? Optional.of(resultList.get(0)) : Optional.empty();
     }
 
     @Override
