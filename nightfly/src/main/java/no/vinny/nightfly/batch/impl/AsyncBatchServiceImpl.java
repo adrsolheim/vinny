@@ -15,18 +15,18 @@ import java.time.Duration;
 public class AsyncBatchServiceImpl implements AsyncBatchService {
 
     private final AsyncBatchRepository asyncBatchRepository;
-    private final Mapper.ToDTO toDTO;
+    private final Mapper.BatchToDTO batchToDTO;
 
     @Autowired
-    public AsyncBatchServiceImpl(AsyncBatchRepository asyncBatchRepository, Mapper.ToDTO toDTO) {
+    public AsyncBatchServiceImpl(AsyncBatchRepository asyncBatchRepository, Mapper.BatchToDTO batchToDTO) {
         this.asyncBatchRepository = asyncBatchRepository;
-        this.toDTO = toDTO;
+        this.batchToDTO = batchToDTO;
     }
 
     @Override
     public Mono<BatchDTO> get(Long id) {
         log.info("Fetching batch of id {}..", id);
-        return asyncBatchRepository.findById(id).delayElement(Duration.ofSeconds(3)).map(toDTO);
+        return asyncBatchRepository.findById(id).delayElement(Duration.ofSeconds(3)).map(batchToDTO);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AsyncBatchServiceImpl implements AsyncBatchService {
         return asyncBatchRepository
                 .findByBrewfatherId(id)
                 .singleOrEmpty()
-                .map(toDTO)
+                .map(batchToDTO)
                 .doOnSuccess((val) -> log.info("Found 1 element matching brewfatherId={}", id));
         //result.publish().autoConnect(1).hasElement().subscribe((hasElement) -> {
         //    log.info("Found {} elements matching brewfatherId={}", hasElement ? "1" : "no", id);
@@ -55,7 +55,7 @@ public class AsyncBatchServiceImpl implements AsyncBatchService {
 
     @Override
     public Flux<BatchDTO> getAll(Pageable pageable) {
-        Flux<BatchDTO> result = asyncBatchRepository.findAll(pageable).delayElements(Duration.ofMillis(200)).map(toDTO);
+        Flux<BatchDTO> result = asyncBatchRepository.findAll(pageable).delayElements(Duration.ofMillis(200)).map(batchToDTO);
         result.publish().autoConnect(1).count().subscribe((size) -> log.info("Fetching {} batches from database", size));
 
         return result;
@@ -70,7 +70,7 @@ public class AsyncBatchServiceImpl implements AsyncBatchService {
     public Mono<BatchDTO> update(Long id, BatchDTO dto) {
         return asyncBatchRepository.findById(id)
                 .flatMap(data -> data == null ? Mono.error(new RuntimeException("Cannot update batch. Batch does not exist"))
-                        : asyncBatchRepository.update(dto).map(toDTO));
+                        : asyncBatchRepository.update(dto).map(batchToDTO));
     }
 
     @Override

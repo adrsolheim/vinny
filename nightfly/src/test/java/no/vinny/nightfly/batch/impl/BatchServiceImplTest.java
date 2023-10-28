@@ -18,7 +18,7 @@ class BatchServiceImplTest {
     BatchService batchService;
     BatchRepository batchRepository;
     Mapper.ToBatch toBatch;
-    Mapper.ToDTO toDTO;
+    Mapper.BatchToDTO batchToDTO;
     List<BatchDTO> batchesById;
     Map<String, BatchDTO> batchesByBrewfatherId;
 
@@ -27,7 +27,7 @@ class BatchServiceImplTest {
         batchesById = batchesList();
         batchesByBrewfatherId = batchesMap();
         toBatch = new Mapper.ToBatch();
-        toDTO = new Mapper.ToDTO();
+        batchToDTO = new Mapper.BatchToDTO();
 
         batchRepository = new BatchRepository() {
             @Override
@@ -80,7 +80,7 @@ class BatchServiceImplTest {
                 return batchesById.stream().map(toBatch).collect(Collectors.toList());
             }
         };
-        batchService = new BatchServiceImpl(batchRepository, toDTO);
+        batchService = new BatchServiceImpl(batchRepository, batchToDTO);
     }
 
     @Test

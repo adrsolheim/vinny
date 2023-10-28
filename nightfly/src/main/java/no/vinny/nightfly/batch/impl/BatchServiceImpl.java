@@ -5,7 +5,6 @@ import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchService;
 import no.vinny.nightfly.batch.Mapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +18,21 @@ import java.util.stream.Collectors;
 public class BatchServiceImpl implements BatchService {
 
     private final BatchRepository batchRepository;
-    private final Mapper.ToDTO toDTO;
+    private final Mapper.BatchToDTO batchToDTO;
 
-    public BatchServiceImpl(BatchRepository batchRepository, Mapper.ToDTO toDTO) {
+    public BatchServiceImpl(BatchRepository batchRepository, Mapper.BatchToDTO batchToDTO) {
         this.batchRepository = batchRepository;
-        this.toDTO = toDTO;
+        this.batchToDTO = batchToDTO;
     }
 
     @Override
     public Optional<BatchDTO> get(Long id) {
-        return batchRepository.findById(id).map(toDTO);
+        return batchRepository.findById(id).map(batchToDTO);
     }
 
     @Override
     public Optional<BatchDTO> getByBrewfatherId(String brewfatherId) {
-        return batchRepository.findByBrewfatherId(brewfatherId).map(toDTO);
+        return batchRepository.findByBrewfatherId(brewfatherId).map(batchToDTO);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class BatchServiceImpl implements BatchService {
     @Override
     public List<BatchDTO> getAll(Pageable pageable) {
         return batchRepository.findAll().stream()
-                .map(toDTO)
+                .map(batchToDTO)
                 .collect(Collectors.toList());
     }
 
