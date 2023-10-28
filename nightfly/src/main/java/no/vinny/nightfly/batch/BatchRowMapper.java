@@ -11,7 +11,7 @@ public class BatchRowMapper implements RowMapper<Batch> {
     public Batch mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Batch(
                 rs.getLong("id"),
-                rs.getString("brewfatherId"),
+                rs.getString("brewfather_id"),
                 rs.getString("name"),
                 rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null
         );
