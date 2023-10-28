@@ -5,6 +5,8 @@ import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
 import no.vinny.nightfly.batch.impl.BatchServiceImpl;
 import no.vinny.nightfly.brewfather.harvest.ScheduledSync;
 import no.vinny.nightfly.config.AppConfig;
+import no.vinny.nightfly.recipe.impl.RecipeRepositoryImpl;
+import no.vinny.nightfly.recipe.impl.RecipeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -14,7 +16,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 
-@Import({BatchServiceImpl.class, BatchRepositoryImpl.class, AppConfig.class})
+@Import({AppConfig.class,
+        BatchServiceImpl.class,
+        BatchRepositoryImpl.class,
+        RecipeServiceImpl.class,
+        RecipeRepositoryImpl.class})
 @SpringBootApplication(scanBasePackages = {"no.vinny.nightfly.brewfather"})
 @ConditionalOnProperty(name = "cron.runner.enabled", havingValue = "true")
 @Slf4j
