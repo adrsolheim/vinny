@@ -7,3 +7,9 @@ CREATE TABLE nightfly.batch (
     name VARCHAR(100),
     status VARCHAR(30)
     );
+
+CREATE TABLE nightfly.recipe (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    brewfather_id VARCHAR(50) UNIQUE,
+    name VARCHAR(100)
+    );
