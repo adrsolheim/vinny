@@ -1,7 +1,6 @@
 package no.vinny.nightfly.recipe.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.batch.BatchDTO;
 import no.vinny.nightfly.recipe.RecipeDTO;
 import no.vinny.nightfly.recipe.RecipeRepository;
 import no.vinny.nightfly.recipe.RecipeService;
