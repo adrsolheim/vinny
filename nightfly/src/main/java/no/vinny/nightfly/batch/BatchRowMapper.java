@@ -13,7 +13,8 @@ public class BatchRowMapper implements RowMapper<Batch> {
                 rs.getLong("id"),
                 rs.getString("brewfather_id"),
                 rs.getString("name"),
-                rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null
+                rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null,
+                null
         );
 
     }

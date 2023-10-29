@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import no.vinny.nightfly.recipe.RecipeDTO;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,5 @@ public class BatchDTO {
     private String name;
     // TODO: add enum validator
     private String status;
+    private RecipeDTO recipe;
 }

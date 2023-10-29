@@ -15,9 +15,9 @@ import java.util.Optional;
 @Repository("BatchRepository")
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS = "id, brewfather_id, name, status";
+    private static final String BATCH_COLUMNS = "id, brewfather_id, name, status, recipe";
     private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + " FROM batch";
-    private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status) VALUES (:brewfatherId, :name, :status)";
+    private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -30,6 +30,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", BatchStatus.fromValue(batch.getStatus()).getValue());
+        params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return jdbcTemplate.update(INSERT_BATCH, params);
     }
 
@@ -45,10 +46,12 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("brewfather_id", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus() == null ? null : BatchStatus.fromValue(batch.getStatus()).getValue());
+        params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         String sql = "UPDATE batch SET "
                 + "brewfather_id = :brewfather_id, "
                 + "name = :name, "
                 + "status = :status "
+                + "recipe = :recipe "
                 + "WHERE id = :id";
         jdbcTemplate.update(sql, params);
     }
@@ -86,6 +89,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         batchMap.put("brewfatherId", batch.getBrewfatherId());
         batchMap.put("name", batch.getName());
         batchMap.put("status", batch.getStatus());
+        batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return batchMap;
     }
 }
