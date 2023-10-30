@@ -2,7 +2,6 @@ package no.vinny.nightfly.batch.impl;
 
 import no.vinny.nightfly.batch.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,12 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.StringTemplate.STR;
+
 @Repository("BatchRepository")
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS = "id, brewfather_id, name, status, recipe";
-    private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + " FROM batch";
-    private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
+    private static final String SELECT_BATCH = SQLTemplater.batchQuery(true, true);
+    private static final String SELECT_BATCH_ONLY = SQLTemplater.batchQuery(true, false);
+    private static final String INSERT_BATCH = SQLTemplater.batchInsert();
+    private static final String UPDATE_BATCH = SQLTemplater.batchUpdate();
+    private static final String BATCH_COUNT = SQLTemplater.batchCount();
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -43,33 +46,27 @@ public class BatchRepositoryImpl implements BatchRepository {
     public void update(BatchDTO batch) {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batch));
         params.addValue("id", batch.getId());
-        params.addValue("brewfather_id", batch.getBrewfatherId());
+        params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus() == null ? null : BatchStatus.fromValue(batch.getStatus()).getValue());
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
-        String sql = "UPDATE batch SET "
-                + "brewfather_id = :brewfather_id, "
-                + "name = :name, "
-                + "status = :status "
-                + "recipe = :recipe "
-                + "WHERE id = :id";
-        jdbcTemplate.update(sql, params);
+        jdbcTemplate.update(UPDATE_BATCH, params);
     }
 
     public Long count() {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM batch", Map.of(), Long.class);
+        return jdbcTemplate.queryForObject(BATCH_COUNT, Map.of(), Long.class);
     }
 
     public Optional<Batch> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return Optional.of(jdbcTemplate.queryForObject(SELECT_BATCH + " WHERE id=" + id, params, new BatchRowMapper()));
+        return Optional.of(jdbcTemplate.queryForObject(SELECT_BATCH_ONLY + " WHERE id=" + id, params, new BatchRowMapper()));
     }
 
     public Optional<Batch> findByBrewfatherId(String id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", id);
-        List<Batch> resultList = jdbcTemplate.query(SELECT_BATCH + " WHERE brewfather_id=:brewfatherId", params, new BatchRowMapper());
+        List<Batch> resultList = jdbcTemplate.query( SELECT_BATCH + " WHERE b.brewfather_id=:brewfatherId", params, new BatchRowMapper());
         if (resultList.isEmpty()) {
             return Optional.empty();
         }
@@ -80,7 +77,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     public List<Batch> findAll() {
-        return jdbcTemplate.query(SELECT_BATCH, new BatchRowMapper());
+        return jdbcTemplate.query(SELECT_BATCH_ONLY, new BatchRowMapper());
     }
 
     private Map<String, Object> convertToMap(BatchDTO batch) {
