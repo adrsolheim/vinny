@@ -1,13 +1,14 @@
 package no.vinny.nightfly.batch;
 
 public class SQLTemplater {
+
     public static String batchQuery(Boolean includeId, Boolean includeRecipe) {
         includeId = includeId == null ? true : includeId;
         includeRecipe = includeRecipe == null ? true : includeRecipe;
         return STR
                 ."""
-                SELECT \{batchColumns(includeId)}, \{recipeColumns(includeRecipe)} FROM batch b
-                \{includeRecipe ? " LEFT JOIN recipe r on r.id = b.recipe" : ""}
+                SELECT \{batchColumns(includeId, includeRecipe)} \{recipeColumns(includeRecipe)} FROM batch b
+                \{includeRecipe ? " LEFT JOIN recipe r on r.id = b.recipe " : ""}
                 """;
     }
 
@@ -23,11 +24,13 @@ public class SQLTemplater {
         return "SELECT COUNT(*) FROM batch";
     }
 
-    private static String batchColumns(boolean includeId) {
-        String columns = "b.brewfather_id, b.name, b.status, b.recipe";
-        return includeId ? "b.id, " + columns : columns;
+    private static String batchColumns(boolean includeId, boolean includeRecipe) {
+        String columns = "b.brewfather_id, b.name, b.status";
+        columns = includeRecipe ? columns + ", b.recipe" : columns;
+        columns = includeId ? "b.id, " + columns : columns;
+        return columns;
     }
     private static String recipeColumns(boolean includeRecipe) {
-        return includeRecipe ? "r.id, r.brewfather_id, r.name" : "";
+        return includeRecipe ? ", r.id, r.brewfather_id, r.name" : "";
     }
 }
