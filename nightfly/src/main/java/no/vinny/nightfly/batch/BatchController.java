@@ -24,7 +24,7 @@ public class BatchController {
     private final Pagination pagination;
 
     @Autowired
-    public BatchController(@Qualifier("BatchService") BatchService batchService, Pagination pagination) {
+    public BatchController(BatchService batchService, Pagination pagination) {
         this.batchService = batchService;
         this.pagination = pagination;
     }
