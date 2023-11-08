@@ -17,6 +17,7 @@ public class Mapper {
                     .brewfatherId(batch.getBrewfatherId())
                     .name(batch.getName())
                     .status(batch.getStatus() == null ? null : batch.getStatus().getValue())
+                    .packaging(batch.getPackaging())
                     .build();
         }
     }
@@ -42,6 +43,7 @@ public class Mapper {
                     .brewfatherId(batchDTO.getBrewfatherId())
                     .name(batchDTO.getName())
                     .status(BatchStatus.fromValue(batchDTO.getStatus()))
+                    .packaging(batchDTO.getPackaging())
                     .build();
         }
     }

@@ -2,6 +2,7 @@ package no.vinny.nightfly.batch;
 
 import no.vinny.nightfly.batch.domain.Batch;
 import no.vinny.nightfly.batch.domain.BatchStatus;
+import no.vinny.nightfly.batch.domain.Packaging;
 import no.vinny.nightfly.recipe.domain.RecipeDTO;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -18,6 +19,7 @@ public class BatchRowMapper implements RowMapper<Batch> {
                 rs.getString("brewfather_id"),
                 rs.getString("name"),
                 rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null,
+                rs.getObject("packaging") == null ? null : Packaging.valueOf(rs.getString("packaging")),
                 mapRecipe(rs)
         );
     }

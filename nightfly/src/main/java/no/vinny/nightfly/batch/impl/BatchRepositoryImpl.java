@@ -4,6 +4,7 @@ import no.vinny.nightfly.batch.*;
 import no.vinny.nightfly.batch.domain.Batch;
 import no.vinny.nightfly.batch.domain.BatchDTO;
 import no.vinny.nightfly.batch.domain.BatchStatus;
+import no.vinny.nightfly.batch.domain.Packaging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,6 +51,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus() == null ? null : BatchStatus.fromValue(batch.getStatus()).getValue());
+        params.addValue("packaging", Optional.of(batch.getPackaging()).map(Packaging::name).orElse(null));
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         jdbcTemplate.update(UPDATE_BATCH, params);
     }
@@ -87,6 +89,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         batchMap.put("brewfatherId", batch.getBrewfatherId());
         batchMap.put("name", batch.getName());
         batchMap.put("status", batch.getStatus());
+        batchMap.put("packaging", Optional.of(batch.getPackaging()).map(Packaging::name).orElse(null));
         batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return batchMap;
     }

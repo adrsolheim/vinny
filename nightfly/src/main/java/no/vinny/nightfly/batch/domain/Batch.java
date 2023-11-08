@@ -11,6 +11,7 @@ public class Batch {
     private final String brewfatherId;
     private final String name;
     private final BatchStatus status;
+    private final Packaging packaging;
     private RecipeDTO recipe;
     // TODO: filter batches for display on frontend
 }

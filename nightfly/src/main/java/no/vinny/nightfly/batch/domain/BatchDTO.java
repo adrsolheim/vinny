@@ -17,5 +17,6 @@ public class BatchDTO {
     private String name;
     // TODO: add enum validator
     private String status;
+    private Packaging packaging;
     private RecipeDTO recipe;
 }
