@@ -1,5 +1,7 @@
 package no.vinny.nightfly.batch;
 
+import no.vinny.nightfly.batch.domain.Batch;
+import no.vinny.nightfly.batch.domain.BatchDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
 import reactor.core.publisher.Flux;

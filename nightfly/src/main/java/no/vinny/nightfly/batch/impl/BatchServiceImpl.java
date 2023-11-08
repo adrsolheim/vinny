@@ -1,10 +1,10 @@
 package no.vinny.nightfly.batch.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.batch.domain.BatchDTO;
 import no.vinny.nightfly.batch.BatchRepository;
 import no.vinny.nightfly.batch.BatchService;
-import no.vinny.nightfly.batch.Mapper;
+import no.vinny.nightfly.batch.domain.Mapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

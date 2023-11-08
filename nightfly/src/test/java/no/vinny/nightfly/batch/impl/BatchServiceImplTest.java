@@ -1,6 +1,9 @@
 package no.vinny.nightfly.batch.impl;
 
 import no.vinny.nightfly.batch.*;
+import no.vinny.nightfly.batch.domain.Batch;
+import no.vinny.nightfly.batch.domain.BatchDTO;
+import no.vinny.nightfly.batch.domain.Mapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

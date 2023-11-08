@@ -1,6 +1,9 @@
 package no.vinny.nightfly.batch.impl;
 
 import no.vinny.nightfly.batch.*;
+import no.vinny.nightfly.batch.domain.Batch;
+import no.vinny.nightfly.batch.domain.BatchDTO;
+import no.vinny.nightfly.batch.domain.BatchStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

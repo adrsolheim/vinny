@@ -1,6 +1,8 @@
 package no.vinny.nightfly.batch;
 
-import no.vinny.nightfly.recipe.RecipeDTO;
+import no.vinny.nightfly.batch.domain.Batch;
+import no.vinny.nightfly.batch.domain.BatchStatus;
+import no.vinny.nightfly.recipe.domain.RecipeDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

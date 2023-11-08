@@ -1,7 +1,7 @@
-package no.vinny.nightfly.batch;
+package no.vinny.nightfly.batch.domain;
 
 import lombok.*;
-import no.vinny.nightfly.recipe.RecipeDTO;
+import no.vinny.nightfly.recipe.domain.RecipeDTO;
 
 @Data
 @AllArgsConstructor

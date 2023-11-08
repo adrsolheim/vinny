@@ -1,5 +1,6 @@
 package no.vinny.nightfly.recipe;
 
+import no.vinny.nightfly.recipe.domain.RecipeDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

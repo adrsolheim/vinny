@@ -1,17 +1,13 @@
 package no.vinny.nightfly.batch;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.batch.domain.BatchDTO;
 import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 

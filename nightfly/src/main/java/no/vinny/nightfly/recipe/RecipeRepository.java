@@ -1,7 +1,6 @@
 package no.vinny.nightfly.recipe;
 
-import no.vinny.nightfly.batch.Batch;
-import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.recipe.domain.RecipeDTO;
 
 import java.util.List;
 import java.util.Optional;

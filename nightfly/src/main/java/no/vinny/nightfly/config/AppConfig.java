@@ -2,6 +2,7 @@ package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import no.vinny.nightfly.batch.*;
+import no.vinny.nightfly.batch.domain.Mapper;
 import no.vinny.nightfly.batch.impl.AsyncBatchServiceImpl;
 import no.vinny.nightfly.batch.impl.BatchServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;

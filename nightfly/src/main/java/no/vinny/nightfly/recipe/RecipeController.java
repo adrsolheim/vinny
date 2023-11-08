@@ -2,6 +2,7 @@ package no.vinny.nightfly.recipe;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.config.Pagination;
+import no.vinny.nightfly.recipe.domain.RecipeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

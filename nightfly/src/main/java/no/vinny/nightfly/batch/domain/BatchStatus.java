@@ -1,4 +1,4 @@
-package no.vinny.nightfly.batch;
+package no.vinny.nightfly.batch.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;

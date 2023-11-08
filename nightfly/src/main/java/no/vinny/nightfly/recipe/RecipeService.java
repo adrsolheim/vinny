@@ -1,6 +1,6 @@
 package no.vinny.nightfly.recipe;
 
-import no.vinny.nightfly.batch.BatchDTO;
+import no.vinny.nightfly.recipe.domain.RecipeDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
