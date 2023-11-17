@@ -85,6 +85,13 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.query(SELECT_BATCH_ONLY, new BatchRowMapper());
     }
 
+    @Override
+    public List<Batch> findByTapStatus(TapStatus status) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tapStatus", status.name());
+        return jdbcTemplate.query(SELECT_BATCH_ONLY + " WHERE b.tap_status = :tapStatus", params, new BatchRowMapper());
+    }
+
     private Map<String, Object> convertToMap(BatchDTO batch) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", batch.getId());

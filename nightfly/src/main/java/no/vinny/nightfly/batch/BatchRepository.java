@@ -2,6 +2,7 @@ package no.vinny.nightfly.batch;
 
 import no.vinny.nightfly.batch.domain.Batch;
 import no.vinny.nightfly.batch.domain.BatchDTO;
+import no.vinny.nightfly.taphouse.TapStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,6 @@ public interface BatchRepository {
     Optional<Batch> findByBrewfatherId(String id);
 
     List<Batch> findAll();
+
+    List<Batch> findByTapStatus(TapStatus status);
 }
