@@ -13,7 +13,7 @@ public class SQLTemplater {
     }
 
     public static String batchInsert() {
-        return "INSERT INTO batch (brewfather_id, name, status, packaging, recipe) VALUES (:brewfatherId, :name, :status, :packaging, :recipe)";
+        return "INSERT INTO batch (brewfather_id, name, status, tap_status, packaging, recipe) VALUES (:brewfatherId, :name, :status, :packaging, :recipe)";
     }
 
     public static String batchUpdate() {
@@ -25,7 +25,7 @@ public class SQLTemplater {
     }
 
     private static String batchColumns(boolean includeId, boolean includeRecipe) {
-        String columns = "b.brewfather_id, b.name, b.status, b.packaging";
+        String columns = "b.brewfather_id, b.name, b.status, b.tap_status, b.packaging";
         columns = includeRecipe ? columns + ", b.recipe" : columns;
         columns = includeId ? "b.id, " + columns : columns;
         return columns;

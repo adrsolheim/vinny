@@ -2,6 +2,7 @@ package no.vinny.nightfly.batch.domain;
 
 import lombok.*;
 import no.vinny.nightfly.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.taphouse.TapStatus;
 
 @Data
 @AllArgsConstructor
@@ -11,6 +12,7 @@ public class Batch {
     private final String brewfatherId;
     private final String name;
     private final BatchStatus status;
+    private final TapStatus tapStatus;
     private final Packaging packaging;
     private RecipeDTO recipe;
     // TODO: filter batches for display on frontend

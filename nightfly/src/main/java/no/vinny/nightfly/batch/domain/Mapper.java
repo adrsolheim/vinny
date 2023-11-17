@@ -43,6 +43,7 @@ public class Mapper {
                     .brewfatherId(batchDTO.getBrewfatherId())
                     .name(batchDTO.getName())
                     .status(BatchStatus.fromValue(batchDTO.getStatus()))
+                    .tapStatus(null)
                     .packaging(batchDTO.getPackaging())
                     .build();
         }

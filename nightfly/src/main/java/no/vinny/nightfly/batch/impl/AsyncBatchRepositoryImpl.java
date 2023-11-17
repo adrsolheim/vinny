@@ -8,6 +8,7 @@ import no.vinny.nightfly.batch.domain.Batch;
 import no.vinny.nightfly.batch.domain.BatchDTO;
 import no.vinny.nightfly.batch.AsyncBatchRepository;
 import no.vinny.nightfly.batch.domain.BatchStatus;
+import no.vinny.nightfly.taphouse.TapStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
            .brewfatherId(row.get("brewfather_id", String.class))
            .name(row.get("name", String.class))
            .status(row.get("status", String.class) == null ? null : BatchStatus.valueOf(row.get("status", String.class)))
+           .tapStatus(row.get("tap_status", String.class) == null ? null : TapStatus.valueOf(row.get("tap_status", String.class)))
            .build();
 
    public static final BiFunction<Row, RowMetadata, Long> LONG_MAPPER = (row, metadata) -> (Long) row.get(0);
@@ -39,7 +41,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    @Override
    public Flux<Batch> findAll(Pageable pageable) {
       StringBuilder query = new StringBuilder();
-      query.append("SELECT id, brewfather_id, name, status FROM batch ");
+      query.append("SELECT id, brewfather_id, name, status, tap_status FROM batch ");
       query.append("LIMIT ").append(pageable.getPageSize());
       query.append("OFFSET ").append(pageable.getOffset());
       return asyncDatabaseClient
@@ -51,7 +53,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    @Override
    public Mono<Batch> findById(Long id) {
       return asyncDatabaseClient
-              .sql("SELECT id, brewfather_id, name, status FROM batch WHERE id = :id")
+              .sql("SELECT id, brewfather_id, name, status, tap_status FROM batch WHERE id = :id")
               .bind("id", id)
               .map(BATCH_MAPPER)
               .one();
@@ -60,7 +62,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    @Override
    public Flux<Batch> findByBrewfatherId(String brewfatherId) {
       return asyncDatabaseClient
-              .sql("SELECT id, brewfather_id, name, status FROM batch WHERE brewfather_id = :brewfatherId")
+              .sql("SELECT id, brewfather_id, name, status, tap_status FROM batch WHERE brewfather_id = :brewfatherId")
               .bind("brewfatherId", brewfatherId)
               .map(BATCH_MAPPER)
               .all();
