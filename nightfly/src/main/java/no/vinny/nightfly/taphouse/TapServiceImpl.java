@@ -23,11 +23,12 @@ public class TapServiceImpl implements TapService {
     public List<Tap> findOnTap() {
         return findBatchesOnTap().stream()
                 .map(this::from)
+                .sorted()
                 .collect(Collectors.toList());
     }
 
     private Tap from(Batch batch) {
-        return new Tap(batch.getName());
+        return new Tap(batch.getTap(), batch.getName());
     }
 
 
