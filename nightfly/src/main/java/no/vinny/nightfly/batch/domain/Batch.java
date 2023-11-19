@@ -15,5 +15,6 @@ public class Batch {
     private final TapStatus tapStatus;
     private final Packaging packaging;
     private RecipeDTO recipe;
+    private Long tap;
     // TODO: filter batches for display on frontend
 }

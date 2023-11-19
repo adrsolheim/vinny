@@ -19,4 +19,5 @@ public class BatchDTO {
     private String status;
     private Packaging packaging;
     private RecipeDTO recipe;
+    private Long tap;
 }

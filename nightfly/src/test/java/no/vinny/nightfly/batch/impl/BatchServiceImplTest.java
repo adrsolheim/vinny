@@ -4,6 +4,7 @@ import no.vinny.nightfly.batch.*;
 import no.vinny.nightfly.batch.domain.Batch;
 import no.vinny.nightfly.batch.domain.BatchDTO;
 import no.vinny.nightfly.batch.domain.Mapper;
+import no.vinny.nightfly.taphouse.TapStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,11 @@ class BatchServiceImplTest {
             @Override
             public List<Batch> findAll() {
                 return batchesById.stream().map(toBatch).collect(Collectors.toList());
+            }
+
+            @Override
+            public List<Batch> findByTapStatus(TapStatus status) {
+                return null;
             }
         };
         batchService = new BatchServiceImpl(batchRepository, batchToDTO);

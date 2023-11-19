@@ -22,7 +22,8 @@ public class BatchRowMapper implements RowMapper<Batch> {
                 rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null,
                 rs.getObject("tap_status") == null ? null : TapStatus.valueOf(rs.getString("tap_status")),
                 rs.getObject("packaging") == null ? null : Packaging.valueOf(rs.getString("packaging")),
-                mapRecipe(rs)
+                mapRecipe(rs),
+                rs.getObject("tap") == null ? null : rs.getLong("tap")
         );
     }
 

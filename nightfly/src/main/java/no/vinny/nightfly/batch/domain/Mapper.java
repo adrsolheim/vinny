@@ -18,6 +18,7 @@ public class Mapper {
                     .name(batch.getName())
                     .status(batch.getStatus() == null ? null : batch.getStatus().getValue())
                     .packaging(batch.getPackaging())
+                    .tap(batch.getTap())
                     .build();
         }
     }
@@ -44,6 +45,7 @@ public class Mapper {
                     .name(batchDTO.getName())
                     .status(BatchStatus.fromValue(batchDTO.getStatus()))
                     .tapStatus(null)
+                    .tap(batchDTO.getTap())
                     .packaging(batchDTO.getPackaging())
                     .build();
         }
