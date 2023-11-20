@@ -12,6 +12,14 @@ public class SQLTemplater {
                 """;
     }
 
+    public static String tapQuery() {
+        return STR."""
+                SELECT \{tapColumns()}, \{batchColumns(true,false)} FROM tap t
+                LEFT JOIN batch b on b.id = t.batch
+                ORDER BY t.id ASC
+                """;
+    }
+
     public static String batchInsert() {
         return "INSERT INTO batch (brewfather_id, name, status, tap_status, packaging, recipe, tap) VALUES (:brewfatherId, :name, :status, :packaging, :recipe, :tap)";
     }
@@ -32,5 +40,9 @@ public class SQLTemplater {
     }
     private static String recipeColumns(boolean includeRecipe) {
         return includeRecipe ? ", r.id, r.brewfather_id, r.name" : "";
+    }
+
+    private static String tapColumns() {
+        return "t.id";
     }
 }

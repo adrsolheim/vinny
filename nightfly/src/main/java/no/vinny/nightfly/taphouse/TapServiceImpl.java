@@ -10,27 +10,13 @@ import java.util.stream.Collectors;
 @Service
 public class TapServiceImpl implements TapService {
 
-    private final BatchRepository batchRepository;
+    private final TapRepository tapRepository;
 
-    public TapServiceImpl(BatchRepository batchRepository) {
-        this.batchRepository = batchRepository;
+    public TapServiceImpl(TapRepository tapRepository) {
+        this.tapRepository = tapRepository;
     }
 
-    private List<Batch> findBatchesOnTap() {
-        return batchRepository.findByTapStatus(TapStatus.SERVING);
+    public List<Tap> findAll() {
+        return tapRepository.findAll();
     }
-
-    public List<Tap> findOnTap() {
-        return findBatchesOnTap().stream()
-                .map(this::from)
-                .sorted()
-                .collect(Collectors.toList());
-    }
-
-    private Tap from(Batch batch) {
-        return new Tap(batch.getTap(), batch.getName());
-    }
-
-
-
 }

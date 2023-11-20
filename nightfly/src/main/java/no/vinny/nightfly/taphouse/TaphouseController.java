@@ -18,7 +18,7 @@ public class TaphouseController {
     }
 
     @GetMapping
-    public List<Tap> onTap() {
-        return tapService.findOnTap();
+    public List<Tap> allTaps() {
+        return tapService.findAll();
     }
 }

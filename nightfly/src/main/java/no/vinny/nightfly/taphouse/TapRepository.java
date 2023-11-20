@@ -2,7 +2,6 @@ package no.vinny.nightfly.taphouse;
 
 import java.util.List;
 
-public interface TapService {
-
+public interface TapRepository {
     List<Tap> findAll();
 }
