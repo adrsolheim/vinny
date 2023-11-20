@@ -5,7 +5,9 @@ DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS tap;
 
 CREATE TABLE IF NOT EXISTS tap (
-    id TINYINT PRIMARY KEY
+    id TINYINT NOT NULL PRIMARY KEY,
+    batch BIGINT,
+    FOREIGN KEY batch REFERENCES batch(id)
 );
 
 CREATE TABLE IF NOT EXISTS recipe (
@@ -23,8 +25,7 @@ CREATE TABLE IF NOT EXISTS batch (
     packaging VARCHAR(20),
     recipe BIGINT,
     tap TINYINT,
-    FOREIGN KEY (recipe) REFERENCES recipe(id),
-    FOREIGN KEY (tap) REFERENCES tap(id)
+    FOREIGN KEY (recipe) REFERENCES recipe(id)
 );
 
 INSERT INTO tap (id) VALUES (1);
