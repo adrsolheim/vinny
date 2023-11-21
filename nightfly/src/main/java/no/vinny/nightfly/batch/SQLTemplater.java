@@ -43,6 +43,6 @@ public class SQLTemplater {
     }
 
     private static String tapColumns() {
-        return "t.id";
+        return "t.id, t.batch";
     }
 }
