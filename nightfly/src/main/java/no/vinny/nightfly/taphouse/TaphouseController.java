@@ -21,4 +21,9 @@ public class TaphouseController {
     public List<Tap> allTaps() {
         return tapService.findAll();
     }
+
+    @GetMapping("/active")
+    public List<Tap> activeTaps() {
+        return tapService.findActive();
+    }
 }

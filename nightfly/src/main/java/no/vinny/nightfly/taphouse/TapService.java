@@ -5,4 +5,5 @@ import java.util.List;
 public interface TapService {
 
     List<Tap> findAll();
+    List<Tap> findActive();
 }
