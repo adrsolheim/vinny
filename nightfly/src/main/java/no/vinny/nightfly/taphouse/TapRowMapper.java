@@ -11,15 +11,15 @@ import java.sql.SQLException;
 public class TapRowMapper implements RowMapper<Tap> {
     @Override
     public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Tap(rs.getLong("t.id"), mapBatch(rs));
+        return new Tap(rs.getObject("tId", Long.class), mapBatch(rs));
     }
 
     private Batch mapBatch(ResultSet rs) throws SQLException {
-        if (rs.getObject("t.batch") == null) {
+        if (rs.getObject("tBatch") == null) {
             return null;
         }
         return new Batch(
-                rs.getLong("id"),
+                rs.getLong("bId"),
                 rs.getString("brewfather_id"),
                 rs.getString("name"),
                 rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null,

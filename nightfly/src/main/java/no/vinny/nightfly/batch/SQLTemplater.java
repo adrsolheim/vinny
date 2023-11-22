@@ -35,7 +35,7 @@ public class SQLTemplater {
     private static String batchColumns(boolean includeId, boolean includeRecipe) {
         String columns = "b.brewfather_id, b.name, b.status, b.tap_status, b.packaging, b.tap";
         columns = includeRecipe ? columns + ", b.recipe" : columns;
-        columns = includeId ? "b.id, " + columns : columns;
+        columns = includeId ? "b.id bId, " + columns : columns;
         return columns;
     }
     private static String recipeColumns(boolean includeRecipe) {
@@ -43,6 +43,6 @@ public class SQLTemplater {
     }
 
     private static String tapColumns() {
-        return "t.id, t.batch";
+        return "t.id tId, t.batch tBatch";
     }
 }
