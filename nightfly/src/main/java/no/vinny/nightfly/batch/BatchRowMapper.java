@@ -28,7 +28,7 @@ public class BatchRowMapper implements RowMapper<Batch> {
     }
 
     private RecipeDTO mapRecipe(ResultSet rs) throws SQLException {
-        if (!columnExist("b_recipe", rs) || rs.getObject("b_recipe") == null) {
+        if (!columnExist("recipe", rs) || rs.getObject("b_recipe") == null) {
             return null;
         }
         return RecipeDTO.builder()

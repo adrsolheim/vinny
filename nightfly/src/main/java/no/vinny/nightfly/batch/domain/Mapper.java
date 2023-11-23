@@ -48,6 +48,7 @@ public class Mapper {
                     .tapStatus(null)
                     .tap(batchDTO.getTap())
                     .packaging(batchDTO.getPackaging())
+                    .recipe(batchDTO.getRecipe())
                     .build();
         }
     }
