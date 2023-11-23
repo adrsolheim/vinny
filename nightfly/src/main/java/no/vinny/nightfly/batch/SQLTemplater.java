@@ -7,9 +7,14 @@ public class SQLTemplater {
         includeRecipe = includeRecipe == null ? true : includeRecipe;
         return STR
                 ."""
-                SELECT \{batchColumns(includeId, includeRecipe)} \{recipeColumns(includeRecipe)} FROM batch b
+                SELECT \{batchColumns(includeId, includeRecipe)} \{batchRecipeColumns(includeRecipe)} FROM batch b
                 \{includeRecipe ? " LEFT JOIN recipe r on r.id = b.recipe " : ""}
                 """;
+    }
+
+    public static String recipeQuery() {
+        return STR."SELECT \{recipeColumns()} FROM recipe r";
+
     }
 
     public static String tapQuery() {
@@ -38,8 +43,17 @@ public class SQLTemplater {
         columns = includeId ? "b.id b_id, " + columns : columns;
         return columns;
     }
-    private static String recipeColumns(boolean includeRecipe) {
-        return includeRecipe ? ", r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name" : "";
+
+    public static String recipeInsert() {
+        return STR."INSERT INTO recipe (brewfather_id, name) VALUES (:brewfatherId, :name)";
+    }
+
+    private static String batchRecipeColumns(boolean includeRecipe) {
+        return includeRecipe ? STR.", \{recipeColumns()}" : "";
+    }
+
+    private static String recipeColumns() {
+        return "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name";
     }
 
     private static String tapColumns() {

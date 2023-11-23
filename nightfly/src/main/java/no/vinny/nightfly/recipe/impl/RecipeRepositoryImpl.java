@@ -1,6 +1,7 @@
 package no.vinny.nightfly.recipe.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.batch.SQLTemplater;
 import no.vinny.nightfly.recipe.domain.RecipeDTO;
 import no.vinny.nightfly.recipe.RecipeRepository;
 import no.vinny.nightfly.recipe.RecipeRowMapper;
@@ -17,9 +18,8 @@ import java.util.Optional;
 @Slf4j
 public class RecipeRepositoryImpl implements RecipeRepository {
 
-    private static final String RECIPE_COLUMNS = "id, brewfather_id, name";
-    private static final String SELECT_RECIPE = "SELECT " + RECIPE_COLUMNS + " FROM recipe";
-    private static final String INSERT_RECIPE = "INSERT INTO recipe (brewfather_id, name) VALUES (:brewfatherId, :name)";
+    private static final String SELECT_RECIPE = SQLTemplater.recipeQuery();
+    private static final String INSERT_RECIPE = SQLTemplater.recipeInsert();
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
