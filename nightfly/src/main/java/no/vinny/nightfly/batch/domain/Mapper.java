@@ -19,6 +19,7 @@ public class Mapper {
                     .status(batch.getStatus() == null ? null : batch.getStatus().getValue())
                     .packaging(batch.getPackaging())
                     .tap(batch.getTap())
+                    .recipe(batch.getRecipe())
                     .build();
         }
     }
