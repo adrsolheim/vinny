@@ -10,9 +10,9 @@ public class RecipeRowMapper implements RowMapper<RecipeDTO> {
     @Override
     public RecipeDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return RecipeDTO.builder()
-                .id(rs.getLong("id"))
-                .brewfatherId(rs.getString("brewfather_id"))
-                .name(rs.getString("name"))
+                .id(rs.getLong("r_id"))
+                .brewfatherId(rs.getString("r_brewfather_id"))
+                .name(rs.getString("r_name"))
                 .build();
     }
 }

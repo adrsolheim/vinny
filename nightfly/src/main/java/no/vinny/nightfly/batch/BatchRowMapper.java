@@ -16,25 +16,25 @@ public class BatchRowMapper implements RowMapper<Batch> {
     @Override
     public Batch mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Batch(
-                rs.getLong("id"),
-                rs.getString("brewfather_id"),
-                rs.getString("name"),
-                rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null,
-                rs.getObject("tap_status") == null ? null : TapStatus.valueOf(rs.getString("tap_status")),
-                rs.getObject("packaging") == null ? null : Packaging.valueOf(rs.getString("packaging")),
+                rs.getLong("b_id"),
+                rs.getString("b_brewfather_id"),
+                rs.getString("b_name"),
+                rs.getObject("b_status") != null ? BatchStatus.valueOf(rs.getString("b_status").toUpperCase()) : null,
+                rs.getObject("b_tap_status") == null ? null : TapStatus.valueOf(rs.getString("b_tap_status")),
+                rs.getObject("b_packaging") == null ? null : Packaging.valueOf(rs.getString("b_packaging")),
                 mapRecipe(rs),
-                rs.getObject("tap") == null ? null : rs.getLong("tap")
+                rs.getObject("b_tap") == null ? null : rs.getLong("b_tap")
         );
     }
 
     private RecipeDTO mapRecipe(ResultSet rs) throws SQLException {
-        if (!columnExist("recipe", rs) || rs.getObject("recipe") == null) {
+        if (!columnExist("b_recipe", rs) || rs.getObject("b_recipe") == null) {
             return null;
         }
         return RecipeDTO.builder()
-                .id(rs.getLong("r.id"))
-                .brewfatherId(rs.getString("r.brewfather_id"))
-                .name(rs.getString("r.name"))
+                .id(rs.getLong("r_id"))
+                .brewfatherId(rs.getString("r_brewfather_id"))
+                .name(rs.getString("r_name"))
                 .build();
     }
 

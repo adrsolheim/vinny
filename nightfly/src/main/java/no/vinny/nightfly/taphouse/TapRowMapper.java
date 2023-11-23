@@ -11,22 +11,22 @@ import java.sql.SQLException;
 public class TapRowMapper implements RowMapper<Tap> {
     @Override
     public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Tap(rs.getObject("tId", Long.class), mapBatch(rs));
+        return new Tap(rs.getObject("t_id", Long.class), mapBatch(rs));
     }
 
     private Batch mapBatch(ResultSet rs) throws SQLException {
-        if (rs.getObject("tBatch") == null) {
+        if (rs.getObject("t_batch") == null) {
             return null;
         }
         return new Batch(
-                rs.getLong("bId"),
-                rs.getString("brewfather_id"),
-                rs.getString("name"),
-                rs.getObject("status") != null ? BatchStatus.valueOf(rs.getString("status").toUpperCase()) : null,
-                rs.getObject("tap_status") == null ? null : TapStatus.valueOf(rs.getString("tap_status")),
-                rs.getObject("packaging") == null ? null : Packaging.valueOf(rs.getString("packaging")),
+                rs.getLong("b_id"),
+                rs.getString("b_brewfather_id"),
+                rs.getString("b_name"),
+                rs.getObject("b_status") != null ? BatchStatus.valueOf(rs.getString("b_status").toUpperCase()) : null,
+                rs.getObject("b_tap_status") == null ? null : TapStatus.valueOf(rs.getString("b_tap_status")),
+                rs.getObject("b_packaging") == null ? null : Packaging.valueOf(rs.getString("b_packaging")),
                 null,
-                rs.getObject("tap") == null ? null : rs.getLong("tap")
+                rs.getObject("b_tap") == null ? null : rs.getLong("b_tap")
         );
     }
 }
