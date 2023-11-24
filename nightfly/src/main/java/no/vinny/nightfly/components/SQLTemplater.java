@@ -1,4 +1,4 @@
-package no.vinny.nightfly.components.batch;
+package no.vinny.nightfly.components;
 
 public class SQLTemplater {
 

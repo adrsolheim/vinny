@@ -1,7 +1,7 @@
 package no.vinny.nightfly.components.recipe.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.components.batch.SQLTemplater;
+import no.vinny.nightfly.components.SQLTemplater;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
