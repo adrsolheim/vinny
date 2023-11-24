@@ -2,9 +2,13 @@ package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import no.vinny.nightfly.batch.*;
-import no.vinny.nightfly.batch.domain.Mapper;
-import no.vinny.nightfly.batch.impl.AsyncBatchServiceImpl;
-import no.vinny.nightfly.batch.impl.BatchServiceImpl;
+import no.vinny.nightfly.components.batch.AsyncBatchRepository;
+import no.vinny.nightfly.components.batch.AsyncBatchService;
+import no.vinny.nightfly.components.batch.BatchRepository;
+import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.batch.domain.Mapper;
+import no.vinny.nightfly.components.batch.impl.AsyncBatchServiceImpl;
+import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;

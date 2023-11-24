@@ -1,10 +1,12 @@
 package no.vinny.nightfly.batch.impl;
 
-import no.vinny.nightfly.batch.*;
-import no.vinny.nightfly.batch.domain.Batch;
-import no.vinny.nightfly.batch.domain.BatchDTO;
-import no.vinny.nightfly.batch.domain.Mapper;
-import no.vinny.nightfly.taphouse.TapStatus;
+import no.vinny.nightfly.components.batch.BatchRepository;
+import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.batch.domain.Batch;
+import no.vinny.nightfly.components.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.domain.Mapper;
+import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
+import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

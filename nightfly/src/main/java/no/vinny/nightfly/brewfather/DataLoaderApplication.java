@@ -1,12 +1,12 @@
 package no.vinny.nightfly.brewfather;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.batch.impl.BatchRepositoryImpl;
-import no.vinny.nightfly.batch.impl.BatchServiceImpl;
+import no.vinny.nightfly.components.batch.impl.BatchRepositoryImpl;
+import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import no.vinny.nightfly.brewfather.harvest.ScheduledSync;
 import no.vinny.nightfly.config.AppConfig;
-import no.vinny.nightfly.recipe.impl.RecipeRepositoryImpl;
-import no.vinny.nightfly.recipe.impl.RecipeServiceImpl;
+import no.vinny.nightfly.components.recipe.impl.RecipeRepositoryImpl;
+import no.vinny.nightfly.components.recipe.impl.RecipeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

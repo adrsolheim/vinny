@@ -2,12 +2,13 @@ package no.vinny.nightfly.brewfather.harvest;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.batch.*;
-import no.vinny.nightfly.batch.domain.BatchDTO;
-import no.vinny.nightfly.batch.domain.Mapper;
+import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.brewfather.domain.RecipeJson;
-import no.vinny.nightfly.recipe.domain.RecipeDTO;
-import no.vinny.nightfly.recipe.RecipeService;
+import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.RecipeService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

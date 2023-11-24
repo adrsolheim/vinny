@@ -1,6 +1,8 @@
 package no.vinny.nightfly.batch;
 
-import no.vinny.nightfly.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.BatchController;
+import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.batch.domain.BatchDTO;
 import no.vinny.nightfly.config.Pagination;
 import no.vinny.nightfly.security.SupabaseAuthService;
 import org.mockito.Mock;
