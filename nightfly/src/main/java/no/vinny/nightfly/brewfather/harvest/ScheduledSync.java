@@ -1,7 +1,6 @@
 package no.vinny.nightfly.brewfather.harvest;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.batch.*;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.BatchDTO;
 import no.vinny.nightfly.components.batch.domain.Mapper;

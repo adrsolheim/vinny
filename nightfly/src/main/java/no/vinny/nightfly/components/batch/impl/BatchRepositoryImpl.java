@@ -1,6 +1,5 @@
 package no.vinny.nightfly.components.batch.impl;
 
-import no.vinny.nightfly.batch.*;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.SQLTemplater;

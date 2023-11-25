@@ -1,7 +1,6 @@
 package no.vinny.nightfly.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import no.vinny.nightfly.batch.*;
 import no.vinny.nightfly.components.batch.AsyncBatchRepository;
 import no.vinny.nightfly.components.batch.AsyncBatchService;
 import no.vinny.nightfly.components.batch.BatchRepository;
