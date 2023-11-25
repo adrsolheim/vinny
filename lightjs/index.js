@@ -18,10 +18,22 @@ function header() {
 
 async function fetchData(url, resource) {
     request = req(url+resource);
-    return await fetch(request);
+    const response = await fetch(request);
+    const data = await response.json();
+
+    const ul = document.getElementById("results")
+    const jsonList = JSON.stringify(data);
+    const list = JSON.parse(jsonList);
+    for (let x in list) {
+        let li = document.createElement("li");
+        li.innerHTML = JSON.stringify(list[x]);
+        ul.append(li);
+    }
+
+    return data;
 }
 
-let par = document.querySelector("p")
 baseUrl = "http://localhost:8080/api"
-fetchData(baseUrl, "/batches").then(data => par.textContent = data.json())
+fetchData(baseUrl, "/batches").finally(() => console.log("done!"))
+
 
