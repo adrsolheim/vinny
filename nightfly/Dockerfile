@@ -1,4 +1,4 @@
-FROM openjdk:20-slim as builder
+FROM eclipse-temurin:21-jdk-ubi9-minimal as builder
 
 WORKDIR /jarlayers
 ARG JAR_FILE=target/*.jar
@@ -8,7 +8,7 @@ RUN java -Djarmode=layertools -jar app.jar extract
 
 
 
-FROM openjdk:20-slim
+FROM eclipse-temurin:21-jre-ubi9-minimal
 
 WORKDIR /app
 COPY --from=builder jarlayers/dependencies/ ./
@@ -17,4 +17,4 @@ COPY --from=builder jarlayers/snapshot-dependencies/ ./
 COPY --from=builder jarlayers/application/ ./
 EXPOSE 8080
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "--enable-preview", "org.springframework.boot.loader.JarLauncher"]
