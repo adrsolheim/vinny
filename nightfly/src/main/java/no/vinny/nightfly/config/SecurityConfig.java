@@ -16,7 +16,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf((csrf) -> csrf.disable())
-                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((request) -> { request
                     .anyRequest().permitAll();
                     //.requestMatchers(HttpMethod.POST, "/api/batches").authenticated()
