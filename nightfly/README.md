@@ -22,6 +22,14 @@ brewfather:
   user_id: <BREWFATHER_USER_ID>
 ```
 
+## Docker local
+To run separately from dependent services (e.g. database) enable `dev` profile
+```
+docker build -t nightfly .
+docker run -e SPRING_PROFILES_ACTIVE=dev -dp 8080:8080 nightfly
+```
+
+
 ## Jobs
 
 Regular applications should be run with the profile `cron`
