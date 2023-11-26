@@ -16,6 +16,7 @@ public class TapRepositoryImpl implements TapRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final String TAP_QUERY = SQLTemplater.tapQuery();
+    private final String TAP_UPDATE = SQLTemplater.tapUpdate();
     private final TapRowMapper mapper;
 
     public TapRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -25,11 +26,18 @@ public class TapRepositoryImpl implements TapRepository {
 
     @Override
     public Tap find(Long tap) {
-        return jdbcTemplate.queryForObject(TAP_QUERY + " WHERE id = :tap", new MapSqlParameterSource(Map.of("id", tap)), mapper);
+        String sql = TAP_QUERY + " WHERE t.id = :tap";
+        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(Map.of("tap", tap)), mapper);
     }
 
     @Override
     public List<Tap> findAll() {
         return jdbcTemplate.query(TAP_QUERY, mapper);
+    }
+
+    @Override
+    public int update(Tap tap) {
+        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "batch", tap.getBatch()));
+        return jdbcTemplate.update(TAP_UPDATE, params);
     }
 }

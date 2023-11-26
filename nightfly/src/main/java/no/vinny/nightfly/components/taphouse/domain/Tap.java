@@ -1,14 +1,15 @@
 package no.vinny.nightfly.components.taphouse.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import no.vinny.nightfly.components.batch.domain.Batch;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Data
 public class Tap implements Comparable<Tap> {
-    private final Long id;
-    private final Batch batch;
+    private Long id;
+    private Batch batch;
 
     @Override
     public int compareTo(Tap other) {

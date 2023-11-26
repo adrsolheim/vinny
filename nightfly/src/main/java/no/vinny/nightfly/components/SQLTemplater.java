@@ -21,8 +21,11 @@ public class SQLTemplater {
         return STR."""
                 SELECT \{tapColumns()}, \{batchColumns(true,false)} FROM tap t
                 LEFT JOIN batch b on b.id = t.batch
-                ORDER BY t.id ASC
                 """;
+    }
+
+    public static String tapUpdate() {
+        return "UPDATE tap SET batch = :batch WHERE id = :id ";
     }
 
     public static String batchInsert() {

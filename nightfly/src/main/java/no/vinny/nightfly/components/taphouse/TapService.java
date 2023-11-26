@@ -10,4 +10,5 @@ public interface TapService {
     Optional<Tap> find(Long tap);
     List<Tap> findAll();
     List<Tap> findActive();
+    Tap connectBatch(Long tap, Long batchId);
 }

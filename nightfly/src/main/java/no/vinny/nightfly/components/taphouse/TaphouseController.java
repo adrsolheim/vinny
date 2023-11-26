@@ -22,12 +22,17 @@ public class TaphouseController {
     }
 
     @GetMapping("/{tap}")
-    public Tap get(Long tap) {
+    public Tap get(@PathVariable Long tap) {
         return tapService.find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
     }
 
     @GetMapping("/active")
     public List<Tap> activeTaps() {
         return tapService.findActive();
+    }
+
+    @PostMapping("{tap}/connect/{batchId}")
+    public Tap connectBatch(@PathVariable Long tap, @PathVariable Long batchId) {
+        return tapService.connectBatch(tap, batchId);
     }
 }
