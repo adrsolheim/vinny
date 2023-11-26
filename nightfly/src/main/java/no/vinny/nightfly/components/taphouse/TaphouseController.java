@@ -1,9 +1,8 @@
 package no.vinny.nightfly.components.taphouse;
 
 import no.vinny.nightfly.components.taphouse.domain.Tap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import no.vinny.nightfly.util.exception.ResourceNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +19,11 @@ public class TaphouseController {
     @GetMapping
     public List<Tap> allTaps() {
         return tapService.findAll();
+    }
+
+    @GetMapping("/{tap}")
+    public Tap get(Long tap) {
+        return tapService.find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
     }
 
     @GetMapping("/active")
