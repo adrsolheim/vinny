@@ -3,7 +3,7 @@ package no.vinny.nightfly.components.batch;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.batch.domain.Packaging;
-import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -27,11 +27,11 @@ public class BatchRowMapper implements RowMapper<Batch> {
         );
     }
 
-    private RecipeDTO mapRecipe(ResultSet rs) throws SQLException {
+    private Recipe mapRecipe(ResultSet rs) throws SQLException {
         if (!columnExist("recipe", rs) || rs.getObject("b_recipe") == null) {
             return null;
         }
-        return RecipeDTO.builder()
+        return Recipe.builder()
                 .id(rs.getLong("r_id"))
                 .brewfatherId(rs.getString("r_brewfather_id"))
                 .name(rs.getString("r_name"))

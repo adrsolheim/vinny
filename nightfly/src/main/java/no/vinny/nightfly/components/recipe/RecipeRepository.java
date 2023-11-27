@@ -1,22 +1,22 @@
 package no.vinny.nightfly.components.recipe;
 
-import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface RecipeRepository {
-    int insert(RecipeDTO recipe);
+    int insert(Recipe recipe);
 
     int delete(Long id);
 
-    void update(RecipeDTO recipe);
+    void update(Recipe recipe);
 
     Long count();
 
-    Optional<RecipeDTO> findById(Long id);
+    Optional<Recipe> findById(Long id);
 
-    Optional<RecipeDTO> findByBrewfatherId(String id);
+    Optional<Recipe> findByBrewfatherId(String id);
 
-    List<RecipeDTO> findAll();
+    List<Recipe> findAll();
 }

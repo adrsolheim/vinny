@@ -2,7 +2,7 @@ package no.vinny.nightfly.components.batch.domain;
 
 import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.brewfather.domain.RecipeJson;
-import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
@@ -22,11 +22,11 @@ public class Mapper {
     }
 
     @Service
-    public static class RecipeJsonToDTO implements Function<RecipeJson, RecipeDTO> {
+    public static class RecipeJsonToDTO implements Function<RecipeJson, Recipe> {
 
         @Override
-        public RecipeDTO apply(RecipeJson recipeJson) {
-            return RecipeDTO.builder()
+        public Recipe apply(RecipeJson recipeJson) {
+            return Recipe.builder()
                     .brewfatherId(recipeJson.getBrewfatherId())
                     .name(recipeJson.getName())
                     .build();

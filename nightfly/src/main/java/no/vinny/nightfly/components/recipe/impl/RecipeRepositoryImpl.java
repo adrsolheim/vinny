@@ -3,7 +3,7 @@ package no.vinny.nightfly.components.recipe.impl;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.SQLTemplater;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
-import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,7 +28,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public int insert(RecipeDTO recipe) {
+    public int insert(Recipe recipe) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", recipe.getBrewfatherId());
         params.addValue("name", recipe.getName());
@@ -43,7 +43,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public void update(RecipeDTO recipe) {
+    public void update(Recipe recipe) {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(recipe));
         String sql = "UPDATE recipe SET "
                 + "brewfather_id = :brewfatherId, "
@@ -58,26 +58,26 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public Optional<RecipeDTO> findById(Long id) {
+    public Optional<Recipe> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         return Optional.of(jdbcTemplate.queryForObject(SELECT_RECIPE + " WHERE id=:id", params, new RecipeRowMapper()));
     }
 
     @Override
-    public Optional<RecipeDTO> findByBrewfatherId(String brewfatherId) {
+    public Optional<Recipe> findByBrewfatherId(String brewfatherId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", brewfatherId);
-        List<RecipeDTO> resultList = jdbcTemplate.query(SELECT_RECIPE + " WHERE brewfather_id = :brewfatherId", params, new RecipeRowMapper());
+        List<Recipe> resultList = jdbcTemplate.query(SELECT_RECIPE + " WHERE brewfather_id = :brewfatherId", params, new RecipeRowMapper());
         return resultList.size() == 1 ? Optional.of(resultList.get(0)) : Optional.empty();
     }
 
     @Override
-    public List<RecipeDTO> findAll() {
+    public List<Recipe> findAll() {
         return jdbcTemplate.query(SELECT_RECIPE, new RecipeRowMapper());
     }
 
-    private Map<String, Object> convertToMap(RecipeDTO recipe) {
+    private Map<String, Object> convertToMap(Recipe recipe) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", recipe.getId());
         batchMap.put("brewfatherId", recipe.getBrewfatherId());

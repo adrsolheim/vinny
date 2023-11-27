@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class RecipeDTO {
+public class Recipe {
     private Long id;
     @NotEmpty
     private String brewfatherId;

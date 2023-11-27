@@ -1,7 +1,7 @@
 package no.vinny.nightfly.components.recipe;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,17 +27,17 @@ public class RecipeController {
 
     // TODO: return message if missing
     @GetMapping("/{id}")
-    public RecipeDTO recipe(@PathVariable Long id) {
+    public Recipe recipe(@PathVariable Long id) {
         return recipeService.get(id).orElse(null);
     }
 
     @GetMapping("/brewfather/{id}")
-    public RecipeDTO recipe(@PathVariable String id) {
+    public Recipe recipe(@PathVariable String id) {
         return recipeService.getByBrewfatherId(id).orElse(null);
     }
 
     @GetMapping
-    public List<RecipeDTO> recipes() {
+    public List<Recipe> recipes() {
         Pageable pageable = PageRequest.of(0, pagination.getPageSize());
         return recipeService.getAll(pageable);
     }
@@ -55,19 +55,19 @@ public class RecipeController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public int create(@RequestBody RecipeDTO recipe) {
+    public int create(@RequestBody Recipe recipe) {
         return recipeService.add(recipe);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public RecipeDTO replace(@PathVariable Long id, @RequestBody RecipeDTO replacementRecipe) {
+    public Recipe replace(@PathVariable Long id, @RequestBody Recipe replacementRecipe) {
         replacementRecipe.setId(id);
         log.info("Replacement request for id {}. Recipe: {}", id, replacementRecipe);
         return recipeService.replace(replacementRecipe);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public RecipeDTO update(@PathVariable Long id, @RequestBody RecipeDTO updateRecipe) {
+    public Recipe update(@PathVariable Long id, @RequestBody Recipe updateRecipe) {
         updateRecipe.setId(id);
         log.info("Update request for id {}. Recipe: {}", id, updateRecipe);
         return recipeService.update(updateRecipe);

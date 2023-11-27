@@ -6,7 +6,7 @@ import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.brewfather.domain.RecipeJson;
-import no.vinny.nightfly.components.recipe.domain.RecipeDTO;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.components.recipe.RecipeService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -96,15 +96,15 @@ public class ScheduledSync {
     }
 
     private boolean sync(RecipeJson recipeJson) {
-        Optional<RecipeDTO> byBrewfatherId = recipeService.getByBrewfatherId(recipeJson.getBrewfatherId());
+        Optional<Recipe> byBrewfatherId = recipeService.getByBrewfatherId(recipeJson.getBrewfatherId());
         if (byBrewfatherId.isEmpty()) {
             recipeService.add(recipeJsonToDTO.apply(recipeJson));
             return true;
         }
-        RecipeDTO existingRecipe = byBrewfatherId.get();
-        RecipeDTO updatedRecipe = recipeJsonToDTO.apply(recipeJson);
+        Recipe existingRecipe = byBrewfatherId.get();
+        Recipe updatedRecipe = recipeJsonToDTO.apply(recipeJson);
         updatedRecipe.setId(existingRecipe.getId());
-        RecipeDTO updateResult = recipeService.update(updatedRecipe);
+        Recipe updateResult = recipeService.update(updatedRecipe);
         return !Objects.equals(existingRecipe, updateResult);
     }
 
