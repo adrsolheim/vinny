@@ -4,7 +4,6 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.SQLTemplater;
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.batch.domain.Packaging;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -33,11 +32,11 @@ public class BatchRepositoryImpl implements BatchRepository {
        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int insert(BatchDTO batch) {
+    public int insert(Batch batch) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
-        params.addValue("status", BatchStatus.fromValue(batch.getStatus()).getValue());
+        params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
         params.addValue("tap_status", TapStatus.WAITING.name());
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return jdbcTemplate.update(INSERT_BATCH, params);
@@ -49,12 +48,12 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.update("DELETE FROM batch WHERE id=:id", params);
     }
 
-    public void update(BatchDTO batch) {
+    public void update(Batch batch) {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batch));
         params.addValue("id", batch.getId());
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
-        params.addValue("status", batch.getStatus() == null ? null : BatchStatus.fromValue(batch.getStatus()).getValue());
+        params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
         params.addValue("packaging", Optional.of(batch.getPackaging()).map(Packaging::name).orElse(null));
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         jdbcTemplate.update(UPDATE_BATCH, params);
@@ -94,7 +93,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.query(SELECT_BATCH_ONLY + " WHERE b.tap_status = :tapStatus", params, new BatchRowMapper());
     }
 
-    private Map<String, Object> convertToMap(BatchDTO batch) {
+    private Map<String, Object> convertToMap(Batch batch) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", batch.getId());
         batchMap.put("brewfatherId", batch.getBrewfatherId());

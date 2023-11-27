@@ -3,7 +3,7 @@ package no.vinny.nightfly.batch.impl;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -18,26 +18,25 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
+import static no.vinny.nightfly.components.batch.domain.BatchStatus.FERMENTING;
+
 
 class BatchServiceImplTest {
 
     BatchService batchService;
     BatchRepository batchRepository;
-    Mapper.ToBatch toBatch;
-    Mapper.BatchToDTO batchToDTO;
-    List<BatchDTO> batchesById;
-    Map<String, BatchDTO> batchesByBrewfatherId;
+    List<Batch> batchesById;
+    Map<String, Batch> batchesByBrewfatherId;
 
     @BeforeEach
     void setup() {
         batchesById = batchesList();
         batchesByBrewfatherId = batchesMap();
-        toBatch = new Mapper.ToBatch();
-        batchToDTO = new Mapper.BatchToDTO();
 
         batchRepository = new BatchRepository() {
             @Override
-            public int insert(BatchDTO batch) {
+            public int insert(Batch batch) {
                 batch.setId(Long.valueOf(batchesById.size()));
                 batchesById.add(batch);
                 batchesByBrewfatherId.put(batch.getBrewfatherId(), batch);
@@ -50,7 +49,7 @@ class BatchServiceImplTest {
             }
 
             @Override
-            public void update(BatchDTO batch) {
+            public void update(Batch batch) {
                 if (batch.getId() == null) {
                     throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
                 }
@@ -70,20 +69,20 @@ class BatchServiceImplTest {
                 if (id < 0 || id >= batchesList().size()) {
                     return Optional.empty();
                 }
-                return Optional.of(batchesById.get(id.intValue())).map(toBatch);
+                return Optional.of(batchesById.get(id.intValue()));
             }
 
             @Override
             public Optional<Batch> findByBrewfatherId(String id) {
                 if (batchesByBrewfatherId.containsKey(id)) {
-                    return Optional.of(batchesByBrewfatherId.get(id)).map(toBatch);
+                    return Optional.of(batchesByBrewfatherId.get(id));
                 }
                 return Optional.empty();
             }
 
             @Override
             public List<Batch> findAll() {
-                return batchesById.stream().map(toBatch).collect(Collectors.toList());
+                return batchesById.stream().collect(Collectors.toList());
             }
 
             @Override
@@ -91,36 +90,36 @@ class BatchServiceImplTest {
                 return null;
             }
         };
-        batchService = new BatchServiceImpl(batchRepository, batchToDTO);
+        batchService = new BatchServiceImpl(batchRepository);
     }
 
     @Test
     void upsert_update_batch() {
-        BatchDTO expected = BatchDTO.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").status("Completed").build();
-        BatchDTO update   = BatchDTO.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").build();
+        Batch expected = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").status(COMPLETED).build();
+        Batch update   = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").build();
 
-        BatchDTO result = batchService.upsert(update);
+        Batch result = batchService.upsert(update);
         Assertions.assertEquals(expected, result);
     }
 
     @Test
     void upsert_add_new_batch() {
-        BatchDTO expected = BatchDTO.builder().id(4L).name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status("Fermenting").build();
-        BatchDTO insert   = BatchDTO.builder().name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status("Fermenting").build();
+        Batch expected = Batch.builder().id(4L).name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
+        Batch insert   = Batch.builder().name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
 
-        BatchDTO result = batchService.upsert(insert);
+        Batch result = batchService.upsert(insert);
         Assertions.assertEquals(expected, result);
     }
 
     @Test
     void upsert_one_update_one_insert() {
-        BatchDTO expectedInsert = BatchDTO.builder().id(4L).name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status("Fermenting").build();
-        BatchDTO insert         = BatchDTO.builder().name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status("Fermenting").build();
-        BatchDTO update         = BatchDTO.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").build();
-        BatchDTO expectedUpdate = BatchDTO.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").status("Completed").build();
+        Batch expectedInsert = Batch.builder().id(4L).name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
+        Batch insert         = Batch.builder().name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
+        Batch update         = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").build();
+        Batch expectedUpdate = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").status(COMPLETED).build();
 
-        BatchDTO insertResult = batchService.upsert(insert);
-        BatchDTO updateResult = batchService.upsert(update);
+        Batch insertResult = batchService.upsert(insert);
+        Batch updateResult = batchService.upsert(update);
         Long count = batchService.count();
 
         Assertions.assertEquals(expectedInsert, insertResult);
@@ -128,30 +127,30 @@ class BatchServiceImplTest {
         Assertions.assertEquals(5L, count);
     }
 
-    private List<BatchDTO> batchesList() {
+    private List<Batch> batchesList() {
         List<String> bids = List.of(
                 "13574ef0d58b50fab38ec841efe39df4",
                 "5eb63bbbe01eeed093cb22bb8f5acdc3",
                 "b96b878ad72f56709dbb5628e1cea18d",
                 "16e63f4d464ccd3c6014adad3dec89d5");
-        List<BatchDTO> batches = new ArrayList<>();
+        List<Batch> batches = new ArrayList<>();
         int i = 0;
         for(String b : bids) {
-            batches.add(BatchDTO.builder()
+            batches.add(Batch.builder()
                     .id(Long.valueOf(i))
                     .brewfatherId(bids.get(i))
                     .name("TestBeer")
-                    .status("Completed")
+                    .status(COMPLETED)
                     .build());
             i++;
         }
         return batches;
     }
 
-    private Optional<BatchDTO> findByBrewfatherId(String brewfatherId) {
+    private Optional<Batch> findByBrewfatherId(String brewfatherId) {
         return Optional.of(batchesMap().computeIfAbsent(brewfatherId, k -> null));
     }
-    private Map<String, BatchDTO> batchesMap() {
-        return batchesList().stream().collect(Collectors.toMap(BatchDTO::getBrewfatherId, Function.identity()));
+    private Map<String, Batch> batchesMap() {
+        return batchesList().stream().collect(Collectors.toMap(Batch::getBrewfatherId, Function.identity()));
     }
 }

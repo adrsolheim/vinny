@@ -2,7 +2,7 @@ package no.vinny.nightfly.batch;
 
 import no.vinny.nightfly.components.batch.BatchController;
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.config.Pagination;
 import no.vinny.nightfly.security.SupabaseAuthService;
 import org.mockito.Mock;
@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
+import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
 
 
 @ActiveProfiles(value = "dev")
@@ -47,14 +47,14 @@ class BatchControllerTest {
                 .perform(MockMvcRequestBuilders.get("/api/batches"))
                 .andExpect(status().isUnauthorized());
     }*/
-    private List<BatchDTO> batchDTOList() {
-        List<BatchDTO> batches = new ArrayList<>();
+    private List<Batch> batchDTOList() {
+        List<Batch> batches = new ArrayList<>();
         for(int i = 0; i < 5; i++) {
-            BatchDTO batch = BatchDTO.builder()
+            Batch batch = Batch.builder()
                                 .id(Long.valueOf(i*10))
                                 .name("Foo"+i)
                                 .brewfatherId("BID"+i)
-                                .status("COMPLETED")
+                                .status(COMPLETED)
                                 .build();
             batches.add(batch);
         }

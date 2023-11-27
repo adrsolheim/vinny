@@ -16,22 +16,20 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@Import({Mapper.BatchToDTO.class,
-        Mapper.ToBatch.class,
-        Mapper.BatchJsonToDTO.class,
-        Mapper.RecipeJsonToDTO.class})
+@Import({Mapper.BatchJsonToDTO.class,
+         Mapper.RecipeJsonToDTO.class})
 @Configuration
 public class AppConfig {
 
     @Bean
     @Profile("reactive")
     public AsyncBatchService asyncBatchService(AsyncBatchRepository asyncBatchRepository) {
-        return new AsyncBatchServiceImpl(asyncBatchRepository, new Mapper.BatchToDTO());
+        return new AsyncBatchServiceImpl(asyncBatchRepository);
     }
 
     @Bean
     public BatchService batchService(BatchRepository batchRepository) {
-        return new BatchServiceImpl(batchRepository, new Mapper.BatchToDTO());
+        return new BatchServiceImpl(batchRepository);
     }
 
     @Bean

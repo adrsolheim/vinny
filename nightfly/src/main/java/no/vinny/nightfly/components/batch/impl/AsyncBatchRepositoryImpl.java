@@ -5,7 +5,6 @@ import io.r2dbc.spi.RowMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
 import no.vinny.nightfly.components.batch.AsyncBatchRepository;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -77,20 +76,20 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
    }
 
    @Override
-   public Mono<Long> save(BatchDTO batch) {
+   public Mono<Long> save(Batch batch) {
       return asyncDatabaseClient.sql("""
                 INSERT INTO batch (brewfather_id, name, status) 
                 VALUES (:brewfather_id, :name, :status)
                 """)
               .bind("brewfather_id", batch.getBrewfatherId())
               .bind("name", batch.getName())
-              .bind("status", BatchStatus.fromValue(batch.getStatus()).getValue().toUpperCase())
+              .bind("status", batch.getStatus() == null ? null : batch.getStatus().name())
               .map((row, rowMetadata) -> row.get("id", Long.class))
               .first();
    }
 
    @Override
-   public Mono<Batch> update(BatchDTO batch) {
+   public Mono<Batch> update(Batch batch) {
       return asyncDatabaseClient.sql("""
                 UPDATE batch 
                 SET brewfather_id = :brewfather_id, name = :name, status = :status 
@@ -99,7 +98,7 @@ public class AsyncBatchRepositoryImpl implements AsyncBatchRepository {
               .bind("id", batch.getId())
               .bind("brewfather_id", batch.getBrewfatherId())
               .bind("name", batch.getName())
-              .bind("status", BatchStatus.fromValue(batch.getStatus()).name())
+              .bind("status", batch.getStatus() == null ? null : batch.getStatus().name())
               .map((row, rowMetadata) -> row.get("id", Long.class))
               .first()
               .flatMap(this::findById)

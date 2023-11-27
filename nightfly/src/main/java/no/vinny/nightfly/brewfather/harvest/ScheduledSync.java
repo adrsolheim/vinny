@@ -2,7 +2,7 @@ package no.vinny.nightfly.brewfather.harvest;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.brewfather.domain.RecipeJson;
@@ -109,15 +109,15 @@ public class ScheduledSync {
     }
 
     private boolean sync(BatchJson batchJson) {
-        Optional<BatchDTO> byBrewfatherId = batchService.getByBrewfatherId(batchJson.getBrewfatherId());
+        Optional<Batch> byBrewfatherId = batchService.getByBrewfatherId(batchJson.getBrewfatherId());
         if (byBrewfatherId.isEmpty()) {
             batchService.add(batchJsonToDTO.apply(batchJson));
             return true;
         }
-        BatchDTO existingBatch = byBrewfatherId.get();
-        BatchDTO updatedBatch = batchJsonToDTO.apply(batchJson);
+        Batch existingBatch = byBrewfatherId.get();
+        Batch updatedBatch = batchJsonToDTO.apply(batchJson);
         updatedBatch.setId(existingBatch.getId());
-        BatchDTO updateResult = batchService.update(updatedBatch);
+        Batch updateResult = batchService.update(updatedBatch);
         return !Objects.equals(existingBatch, updateResult);
     }
 }

@@ -1,18 +1,17 @@
 package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BatchRepository {
-    int insert(BatchDTO batch);
+    int insert(Batch batch);
 
     int delete(Long id);
 
-    void update(BatchDTO batch);
+    void update(Batch batch);
 
     Long count();
 

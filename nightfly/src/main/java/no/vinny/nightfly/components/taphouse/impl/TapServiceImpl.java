@@ -2,7 +2,7 @@ package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
+import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
@@ -21,17 +21,10 @@ public class TapServiceImpl implements TapService {
 
     private final TapRepository tapRepository;
     private final BatchService batchService;
-    private final Mapper.BatchToDTO batchToDTO;
-    private final Mapper.ToBatch dtoToBatch;
 
-    public TapServiceImpl(TapRepository tapRepository,
-                          BatchService batchService,
-                          Mapper.BatchToDTO batchToDTO,
-                          Mapper.ToBatch dtoToBatch) {
+    public TapServiceImpl(TapRepository tapRepository, BatchService batchService) {
         this.tapRepository = tapRepository;
         this.batchService = batchService;
-        this.batchToDTO = batchToDTO;
-        this.dtoToBatch = dtoToBatch;
     }
 
     @Override
@@ -55,20 +48,20 @@ public class TapServiceImpl implements TapService {
     @Override
     public Tap connectBatch(Long tap, Long batchId) {
         Tap taphandle = find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
-        BatchDTO batchDTO = Optional.of(batchService.get(batchId))
+        Batch batch = Optional.of(batchService.get(batchId))
                 .get()
                 .orElseThrow(() -> new ResourceNotFoundException("Batch not found: " + batchId));
-        if (batchDTO.getTap() != null) {
-            throw new OperationFailedException("Batch already connected to tap " + batchDTO.getTap());
+        if (batch.getTap() != null) {
+            throw new OperationFailedException("Batch already connected to tap " + batch.getTap());
         }
         if (taphandle.getBatch() != null) {
-            BatchDTO oldBatch = batchToDTO.apply(taphandle.getBatch());
-            oldBatch.setStatus("ARCHIVED");
+            Batch oldBatch = taphandle.getBatch();
+            oldBatch.setStatus(BatchStatus.ARCHIVED);
             batchService.update(oldBatch);
         }
-        batchDTO.setTap(tap);
-        taphandle.setBatch(dtoToBatch.apply(batchDTO));
-        batchService.update(batchDTO);
+        batch.setTap(tap);
+        taphandle.setBatch(batch);
+        batchService.update(batch);
         update(taphandle);
 
         return taphandle;

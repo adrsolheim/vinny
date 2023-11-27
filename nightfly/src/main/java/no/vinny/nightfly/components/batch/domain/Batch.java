@@ -8,12 +8,12 @@ import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 @AllArgsConstructor
 @Builder
 public class Batch {
-    private final Long id;
-    private final String brewfatherId;
-    private final String name;
-    private final BatchStatus status;
-    private final TapStatus tapStatus;
-    private final Packaging packaging;
+    private Long id;
+    private String brewfatherId;
+    private String name;
+    private BatchStatus status;
+    private TapStatus tapStatus;
+    private Packaging packaging;
     private RecipeDTO recipe;
     private Long tap;
     // TODO: filter batches for display on frontend

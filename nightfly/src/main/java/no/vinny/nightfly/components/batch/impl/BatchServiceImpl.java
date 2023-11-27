@@ -1,9 +1,9 @@
 package no.vinny.nightfly.components.batch.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.components.batch.domain.BatchDTO;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,34 +18,31 @@ import java.util.stream.Collectors;
 public class BatchServiceImpl implements BatchService {
 
     private final BatchRepository batchRepository;
-    private final Mapper.BatchToDTO batchToDTO;
 
-    public BatchServiceImpl(BatchRepository batchRepository, Mapper.BatchToDTO batchToDTO) {
+    public BatchServiceImpl(BatchRepository batchRepository) {
         this.batchRepository = batchRepository;
-        this.batchToDTO = batchToDTO;
     }
 
     @Override
-    public Optional<BatchDTO> get(Long id) {
-        return batchRepository.findById(id).map(batchToDTO);
+    public Optional<Batch> get(Long id) {
+        return batchRepository.findById(id);
     }
 
     @Override
-    public Optional<BatchDTO> getByBrewfatherId(String brewfatherId) {
-        return batchRepository.findByBrewfatherId(brewfatherId).map(batchToDTO);
+    public Optional<Batch> getByBrewfatherId(String brewfatherId) {
+        return batchRepository.findByBrewfatherId(brewfatherId);
     }
 
     @Override
-    public int add(BatchDTO batch) {
-        Optional<BatchDTO> existingBatch = getByBrewfatherId(batch.getBrewfatherId());
+    public int add(Batch batch) {
+        Optional<Batch> existingBatch = getByBrewfatherId(batch.getBrewfatherId());
         return existingBatch.isPresent() ? 0 : batchRepository.insert(batch);
     }
 
     // TODO: Return pagedlist
     @Override
-    public List<BatchDTO> getAll(Pageable pageable) {
+    public List<Batch> getAll(Pageable pageable) {
         return batchRepository.findAll().stream()
-                .map(batchToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -61,11 +58,11 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchDTO update(BatchDTO batch) {
+    public Batch update(Batch batch) {
         if (batch.getId() == null) {
             throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
         }
-        Optional<BatchDTO> existingBatch = get(batch.getId());
+        Optional<Batch> existingBatch = get(batch.getId());
         if (existingBatch.isEmpty()) {
             log.info("UPDATE: Batch not found. Skipping update..");
             return null;
@@ -80,8 +77,8 @@ public class BatchServiceImpl implements BatchService {
      *
      * @return          merged batch eligible to be persisted as a batch update
      */
-    private BatchDTO mergeNonNull(BatchDTO update, BatchDTO old) {
-        return BatchDTO.builder()
+    private Batch mergeNonNull(Batch update, Batch old) {
+        return Batch.builder()
                 .id(old.getId())
                 .brewfatherId(update.getBrewfatherId() == null ? old.getBrewfatherId() : update.getBrewfatherId())
                 .name(update.getName() == null ? old.getName() : update.getName())
@@ -90,7 +87,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchDTO upsert(BatchDTO batch) {
+    public Batch upsert(Batch batch) {
         if (batch.getId() != null) {
             return update(batch);
         }
@@ -101,13 +98,13 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchDTO replace(BatchDTO batch) {
+    public Batch replace(Batch batch) {
         if (batch.getId() == null) {
             log.warn("Unable to replace batch. Missing id {}", batch);
             return null;
         }
-        Optional<BatchDTO> batchById = get(batch.getId());
-        Optional<BatchDTO> batchByBrewfatherId = getByBrewfatherId(batch.getBrewfatherId());
+        Optional<Batch> batchById = get(batch.getId());
+        Optional<Batch> batchByBrewfatherId = getByBrewfatherId(batch.getBrewfatherId());
         if (batchByBrewfatherId.isPresent() && !Objects.equals(batchById.get().getId(), batchByBrewfatherId.get().getId())) {
             log.warn("Cannot replace update batch {}. Batch with brewfather id already exist: {}", batch.getId(), batchByBrewfatherId);
             return null;
