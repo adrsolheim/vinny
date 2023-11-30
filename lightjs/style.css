@@ -3,7 +3,7 @@ body {
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0.5em;
     text-align: start;
     color: white;
     word-wrap: break-word;
@@ -27,8 +27,9 @@ button {
     border: none;
     text-decoration: none;
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 10px;
+    left: 10px;
+
 }
 div.cards {
     display:flex;
@@ -38,7 +39,8 @@ div.cards div {
     border: solid;
     border-width: 0.75em;
     border-color: grey;
-    padding: 0.5em;
+    padding: 1em;
+    padding-bottom: 50px;
 }
 .title {
     text-align: center;
@@ -46,13 +48,12 @@ div.cards div {
 .card {
     width: 33%;
     flex: 1;
+    position: relative;
+    background-color:  #ae9691;
 }
 .left-col {
-    background-color:  #ae9691;
 }
 .center-col {
-    background-color: #ae9691;
 }
 .right-col {
-    background-color:  #ae9691;
 }
