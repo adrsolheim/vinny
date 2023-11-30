@@ -7,7 +7,7 @@ body {
     text-align: start;
     color: white;
     word-wrap: break-word;
-    background-color: grey;
+    background-color: #615491;
     float: left;
 }
 ul {
@@ -23,7 +23,7 @@ div {
 button {
     padding: .75em 1.5em;
     color: white;
-    background-color: #665552;
+    background-color: #5C4B99;
     border: none;
     text-decoration: none;
     position: absolute;
@@ -38,7 +38,7 @@ div.cards div {
     position: relative;
     border: solid;
     border-width: 0.75em;
-    border-color: grey;
+    border-color: #615491;
     padding: 1em;
     padding-bottom: 50px;
 }
@@ -49,7 +49,8 @@ div.cards div {
     width: 33%;
     flex: 1;
     position: relative;
-    background-color:  #ae9691;
+    background-color:  #8076a3;
+
 }
 .left-col {
 }
