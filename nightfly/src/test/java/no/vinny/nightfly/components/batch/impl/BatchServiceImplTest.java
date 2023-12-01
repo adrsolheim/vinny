@@ -1,4 +1,4 @@
-package no.vinny.nightfly.batch.impl;
+package no.vinny.nightfly.components.batch.impl;
 
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
@@ -11,16 +11,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
 import static no.vinny.nightfly.components.batch.domain.BatchStatus.FERMENTING;
-
 
 class BatchServiceImplTest {
 
@@ -128,23 +128,19 @@ class BatchServiceImplTest {
     }
 
     private List<Batch> batchesList() {
-        List<String> bids = List.of(
-                "13574ef0d58b50fab38ec841efe39df4",
-                "5eb63bbbe01eeed093cb22bb8f5acdc3",
-                "b96b878ad72f56709dbb5628e1cea18d",
-                "16e63f4d464ccd3c6014adad3dec89d5");
-        List<Batch> batches = new ArrayList<>();
-        int i = 0;
-        for(String b : bids) {
-            batches.add(Batch.builder()
-                    .id(Long.valueOf(i))
-                    .brewfatherId(bids.get(i))
-                    .name("TestBeer")
-                    .status(COMPLETED)
-                    .build());
-            i++;
-        }
-        return batches;
+        AtomicLong i = new AtomicLong(0);
+        return Stream.of(
+                        "13574ef0d58b50fab38ec841efe39df4",
+                        "5eb63bbbe01eeed093cb22bb8f5acdc3",
+                        "b96b878ad72f56709dbb5628e1cea18d",
+                        "16e63f4d464ccd3c6014adad3dec89d5")
+                .map(bid -> Batch.builder()
+                        .id(i.incrementAndGet())
+                        .brewfatherId(bid)
+                        .name("TestBeer")
+                        .status(COMPLETED)
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private Optional<Batch> findByBrewfatherId(String brewfatherId) {

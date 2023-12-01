@@ -1,4 +1,4 @@
-package no.vinny.nightfly.batch;
+package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.components.batch.BatchController;
 import no.vinny.nightfly.components.batch.BatchService;
