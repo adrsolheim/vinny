@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -57,10 +58,17 @@ class TapServiceImplTest {
     }
     @Test
     void find() {
+        Optional<Tap> connectedTap = tapService.find(3L);
+
+        assertTrue(connectedTap.isPresent());
+        assertEquals(connectedTap.get().getBatch().getTapStatus(), TapStatus.CONNECTED);
     }
 
     @Test
     void findAll() {
+        List<Tap> all = tapService.findAll();
+
+        assertEquals(4, all.size());
     }
 
     @Test
@@ -68,6 +76,9 @@ class TapServiceImplTest {
         List<Tap> active = tapService.findActive();
 
         assertEquals(3, active.size());
+        assertTrue(active.contains(new Tap(1L, batchesList().get(0))));
+        assertTrue(active.contains(new Tap(2L, batchesList().get(1))));
+        assertTrue(active.contains(new Tap(3L, batchesList().get(2))));
     }
 
     @Test
