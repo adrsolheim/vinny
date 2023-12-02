@@ -135,7 +135,7 @@ class BatchServiceImplTest {
                         "b96b878ad72f56709dbb5628e1cea18d",
                         "16e63f4d464ccd3c6014adad3dec89d5")
                 .map(bid -> Batch.builder()
-                        .id(i.incrementAndGet())
+                        .id(i.getAndIncrement())
                         .brewfatherId(bid)
                         .name("TestBeer")
                         .status(COMPLETED)

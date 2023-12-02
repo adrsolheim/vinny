@@ -8,6 +8,7 @@ import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -31,7 +32,7 @@ class TapServiceImplTest {
     BatchService batchService = mock(BatchService.class);
     Map<Long, Tap> taps;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         taps = taps();
 
@@ -97,7 +98,7 @@ class TapServiceImplTest {
                                     "b96b878ad72f56709dbb5628e1cea18d",
                                     "16e63f4d464ccd3c6014adad3dec89d5")
                             .map(bid -> Batch.builder()
-                                    .id(i.incrementAndGet())
+                                    .id(i.getAndIncrement())
                                     .brewfatherId(bid)
                                     .name("Pilsner")
                                     .status(COMPLETED)
