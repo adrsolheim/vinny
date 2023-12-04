@@ -61,4 +61,3 @@ populateCategories(categories).then(() => {
         createButtons(category);
     }
 })
-//fetchData("http://localhost:8080/api","/batches")

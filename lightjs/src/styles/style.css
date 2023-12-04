@@ -19,16 +19,21 @@ li {
 div {
     box-sizing: border-box;
 }
-button {
+button, input.btn {
     padding: .75em 1.5em;
     color: white;
-    background-color: #5C4B99;
     border: none;
     text-decoration: none;
     position: absolute;
     bottom: 10px;
     left: 10px;
 
+}
+button {
+    background-color: #5C4B99;
+}
+input.btn {
+    background-color: #3e3368;
 }
 div.cards {
     display:flex;
