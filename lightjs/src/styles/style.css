@@ -24,16 +24,18 @@ button, input.btn {
     color: white;
     border: none;
     text-decoration: none;
-    position: absolute;
     bottom: 10px;
     left: 10px;
 
 }
 button {
     background-color: #5C4B99;
+    position: absolute;
 }
 input.btn {
+    margin: 1em 1em 1em 0em;
     background-color: #3e3368;
+    position: relative;
 }
 div.cards {
     display:flex;
