@@ -66,7 +66,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     public Optional<Batch> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return Optional.of(jdbcTemplate.queryForObject(SELECT_BATCH_ONLY + " WHERE b.id = :id", params, new BatchRowMapper()));
+        return Optional.of(jdbcTemplate.queryForObject(SELECT_BATCH + " WHERE b.id = :id", params, new BatchRowMapper()));
     }
 
     public Optional<Batch> findByBrewfatherId(String id) {
@@ -83,7 +83,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     public List<Batch> findAll() {
-        return jdbcTemplate.query(SELECT_BATCH_ONLY, new BatchRowMapper());
+        return jdbcTemplate.query(SELECT_BATCH, new BatchRowMapper());
     }
 
     @Override
