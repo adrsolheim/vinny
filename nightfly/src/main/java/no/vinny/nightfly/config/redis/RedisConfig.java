@@ -95,7 +95,7 @@ public class RedisConfig implements CachingConfigurer {
 
   @Bean
   @Qualifier("batch-template")
-  public RedisTemplate<String, Batch> personRedisTemplate(RedisConnectionFactory connectionFactory) {
+  public RedisTemplate<String, Batch> redisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, Batch> redisTemplate = new RedisTemplate<>();
     ObjectMapper objectMapper = createObjectMapper();
     //GZippingJackson2JsonRedisSerializer redisSerializer = new GZippingJackson2JsonRedisSerializer(objectMapper);

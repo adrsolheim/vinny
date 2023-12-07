@@ -64,6 +64,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     public Optional<Batch> findById(Long id) {
+        stall();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         return Optional.of(jdbcTemplate.queryForObject(SELECT_BATCH + " WHERE b.id = :id", params, new BatchRowMapper()));
@@ -102,5 +103,13 @@ public class BatchRepositoryImpl implements BatchRepository {
         batchMap.put("packaging", Optional.of(batch.getPackaging()).map(Packaging::name).orElse(null));
         batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return batchMap;
+    }
+
+    private void stall() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
