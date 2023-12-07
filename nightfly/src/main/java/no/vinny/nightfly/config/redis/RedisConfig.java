@@ -51,15 +51,14 @@ public class RedisConfig implements CachingConfigurer {
   public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory, RedisCacheConfiguration cacheConfiguration) {
     return RedisCacheManager.builder(connectionFactory)
         .cacheDefaults(cacheConfiguration)
-        .initialCacheNames(Set.of("tutorial", "person"))
+        .initialCacheNames(Set.of("batch"))
         .build();
   }
 
   @Bean
   public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
     return (builder) -> builder
-            .withCacheConfiguration("person", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(30L)))
-            .withCacheConfiguration("tutorial", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(60L)));
+            .withCacheConfiguration("batch", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(30L)));
   }
 
   @Bean

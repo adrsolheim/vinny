@@ -10,6 +10,8 @@ import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,10 @@ import java.util.stream.Stream;
 
 import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
 import static no.vinny.nightfly.components.batch.domain.BatchStatus.FERMENTING;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class BatchServiceImplTest {
 
@@ -90,7 +96,10 @@ class BatchServiceImplTest {
                 return null;
             }
         };
-        batchService = new BatchServiceImpl(batchRepository);
+        RedisTemplate<String, Batch> redisTemplate = mock(RedisTemplate.class);
+        when(redisTemplate.opsForValue()).thenReturn(mock(ValueOperations.class));
+        when(redisTemplate.opsForValue().get(anyString())).thenReturn(null);
+        batchService = new BatchServiceImpl(batchRepository, redisTemplate);
     }
 
     @Test

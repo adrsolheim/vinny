@@ -5,7 +5,9 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.Mapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,15 +19,29 @@ import java.util.stream.Collectors;
 @Service
 public class BatchServiceImpl implements BatchService {
 
+    private final static String REDIS_PREFIX = "Batch";
     private final BatchRepository batchRepository;
+    private final RedisTemplate<String, Batch> redisTemplate;
 
-    public BatchServiceImpl(BatchRepository batchRepository) {
+    public BatchServiceImpl(BatchRepository batchRepository, @Qualifier("batch-template") RedisTemplate redisTemplate) {
         this.batchRepository = batchRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Optional<Batch> get(Long id) {
-        return batchRepository.findById(id);
+        String redisKey = String.format("%s::%s", REDIS_PREFIX, id);
+        Batch batch = redisTemplate.opsForValue().get(redisKey);
+        if (batch != null) {
+            log.info("Fetched from redis");
+            return Optional.of(batch);
+        }
+        stall();
+        Optional<Batch> batchById = batchRepository.findById(id);
+        if (batchById.isPresent()) {
+            redisTemplate.opsForValue().set(redisKey, batchById.get());
+        }
+        return batchById;
     }
 
     @Override
@@ -111,5 +127,13 @@ public class BatchServiceImpl implements BatchService {
         }
         batchRepository.update(batch);
         return get(batch.getId()).get();
+    }
+
+    private void stall() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
