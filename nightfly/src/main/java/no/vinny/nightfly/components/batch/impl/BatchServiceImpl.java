@@ -6,6 +6,7 @@ import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,7 +31,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    @Cacheable(cacheNames = "batch", key = "'Batch::' + #id")
+    @Cacheable(cacheNames = "batch", key = "#root.methodName + '[' + #id + ']'")
     public Optional<Batch> get(Long id) {
         return batchRepository.findById(id);
     }
@@ -50,6 +51,7 @@ public class BatchServiceImpl implements BatchService {
     //}
 
     @Override
+    @Cacheable(cacheNames = "batch", key = "#root.methodName + '[' + #brewfatherId + ']'")
     public Optional<Batch> getByBrewfatherId(String brewfatherId) {
         return batchRepository.findByBrewfatherId(brewfatherId);
     }
@@ -62,9 +64,9 @@ public class BatchServiceImpl implements BatchService {
 
     // TODO: Return pagedlist
     @Override
-    public List<Batch> getAll(Pageable pageable) {
-        return batchRepository.findAll().stream()
-                .collect(Collectors.toList());
+    @Cacheable(cacheNames = {"batches"}, key = "#root.methodName + '[]'")
+    public List<Batch> getAll() {
+        return batchRepository.findAll();
     }
 
     //TODO: implement rest
@@ -74,11 +76,14 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "batch", key = "#root.methodName + '[' + #id + ']'")
+    // delete cached by brewfatherId
     public int delete(Long id) {
         return batchRepository.delete(id);
     }
 
     @Override
+    // CacheEvict by id and brewfatherId
     public Batch update(Batch batch) {
         if (batch.getId() == null) {
             throw new IllegalArgumentException("Batch id must be present in order to find and update batch");

@@ -10,7 +10,7 @@ public interface BatchService {
    Optional<Batch> get(Long id);
    Optional<Batch> getByBrewfatherId(String id);
    int add(Batch batch);
-   List<Batch> getAll(Pageable pageable);
+   List<Batch> getAll();
    Long count();
    int delete(Long id);
    Batch update(Batch batch);
