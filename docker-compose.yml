@@ -29,3 +29,12 @@ services:
     volumes:
       - ./nightfly_db/data:/var/lib/mysql
       - ./nightfly_db/scripts:/docker-entrypoint-initdb.d
+  
+  redis:
+    image: redis:7.2-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./redis/data:/data
