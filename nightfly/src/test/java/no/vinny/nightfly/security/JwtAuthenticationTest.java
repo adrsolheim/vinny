@@ -38,7 +38,7 @@ class JwtAuthenticationTest {
     @BeforeAll
     void setup() {
         supabaseAuthService = mock(SupabaseAuthService.class);
-        this.now = Instant.parse("2023-12-03T10:15:30.00Z");
+        this.now = Instant.parse("2030-12-03T10:15:30.00Z");
         this.TWO_DAYS_AGO = todayPlusDays(-2);
         this.TODAY        = todayPlusDays(0);
         this.IN_TWO_DAYS  = todayPlusDays(2);
