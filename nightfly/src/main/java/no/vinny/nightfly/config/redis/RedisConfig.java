@@ -15,8 +15,10 @@ import no.vinny.nightfly.components.batch.domain.Batch;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.interceptor.CacheErrorHandler;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -30,6 +32,8 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 @Configuration
@@ -46,20 +50,20 @@ public class RedisConfig implements CachingConfigurer {
 
     return new LettuceConnectionFactory(configuration);
   }
-  
+
   @Bean
   public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory, RedisCacheConfiguration cacheConfiguration) {
+    ObjectMapper objectMapper = createObjectMapper();
     return RedisCacheManager.builder(connectionFactory)
         .cacheDefaults(cacheConfiguration)
         .initialCacheNames(Set.of("batch", "batches"))
+        .withInitialCacheConfigurations(Map.of(
+                "batch",
+                RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(5L)).serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
+                //"batches",
+                //RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(15L)).serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
+        ))
         .build();
-  }
-
-  @Bean
-  public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-    return (builder) -> builder
-            .withCacheConfiguration("batch", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(30L)))
-            .withCacheConfiguration("batches", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(60L)));
   }
 
   @Bean
@@ -99,8 +103,7 @@ public class RedisConfig implements CachingConfigurer {
   public RedisTemplate<String, Batch> redisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, Batch> redisTemplate = new RedisTemplate<>();
     ObjectMapper objectMapper = createObjectMapper();
-    //GZippingJackson2JsonRedisSerializer redisSerializer = new GZippingJackson2JsonRedisSerializer(objectMapper);
-      GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer();
+    GZippingJackson2JsonRedisSerializer redisSerializer = new GZippingJackson2JsonRedisSerializer(objectMapper);
 
     redisTemplate.setConnectionFactory(connectionFactory);
     redisTemplate.setKeySerializer(new StringRedisSerializer());

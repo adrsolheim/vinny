@@ -31,7 +31,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    @Cacheable(cacheNames = "batch", key = "#root.methodName + '[' + #id + ']'")
+    @Cacheable(cacheNames = {"batch"}, key = "#root.methodName + '[' + #id + ']'")
     public Optional<Batch> get(Long id) {
         return batchRepository.findById(id);
     }
@@ -51,7 +51,7 @@ public class BatchServiceImpl implements BatchService {
     //}
 
     @Override
-    @Cacheable(cacheNames = "batch", key = "#root.methodName + '[' + #brewfatherId + ']'")
+    @Cacheable(cacheNames = {"batch"}, key = "#root.methodName + '[' + #brewfatherId + ']'")
     public Optional<Batch> getByBrewfatherId(String brewfatherId) {
         return batchRepository.findByBrewfatherId(brewfatherId);
     }
