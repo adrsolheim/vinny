@@ -8,8 +8,8 @@ public class SQLTemplater {
         return STR
                 ."""
                 SELECT \{batchColumns(includeId, includeRecipe)} \{batchRecipeColumns(includeRecipe)} FROM batch b
-                \{includeRecipe ? " LEFT JOIN recipe r on r.id = b.recipe " : ""}
-                """;
+                \{includeRecipe ? "LEFT JOIN recipe r on r.id = b.recipe" : ""}
+                """.replace('\n', ' ');
     }
 
     public static String recipeQuery() {
@@ -21,7 +21,7 @@ public class SQLTemplater {
         return STR."""
                 SELECT \{tapColumns()}, \{batchColumns(true,false)} FROM tap t
                 LEFT JOIN batch b on b.id = t.batch
-                """;
+                """.replace('\n', ' ');
     }
 
     public static String tapUpdate() {
@@ -42,7 +42,7 @@ public class SQLTemplater {
 
     private static String batchColumns(boolean includeId, boolean includeRecipe) {
         String columns = "b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.tap_status b_tap_status, b.packaging b_packaging, b.tap b_tap";
-        columns = includeRecipe ? columns + ", b.recipe b_recipe" : columns;
+        columns = includeRecipe ? columns + ", b.recipe b_recipe," : columns;
         columns = includeId ? "b.id b_id, " + columns : columns;
         return columns;
     }
@@ -52,7 +52,7 @@ public class SQLTemplater {
     }
 
     private static String batchRecipeColumns(boolean includeRecipe) {
-        return includeRecipe ? STR.", \{recipeColumns()}" : "";
+        return includeRecipe ? STR."\{recipeColumns()}" : "";
     }
 
     private static String recipeColumns() {
