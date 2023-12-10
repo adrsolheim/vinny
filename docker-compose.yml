@@ -31,6 +31,7 @@ services:
       - ./nightfly_db/scripts:/docker-entrypoint-initdb.d
   
   redis:
+    container_name: redis
     image: redis:7.2-alpine
     restart: always
     ports:
