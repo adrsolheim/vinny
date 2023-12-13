@@ -1,11 +1,17 @@
 import { batches } from "/src/services/service.js"
 
+const batchList = [];
 
-
+async function populateData() {
+    let freshBatches = await batches();
+    batchList.push(...freshBatches);
+    createTable();
+}
 
 function createTable() {
     let table = document.getElementById("batches");
-    batches().then(arr => arr.forEach(batch => {
+    table.innerHTML = "";
+    batchList.forEach(batch => {
         console.log(batch)
         let tr = `
         <tr>
@@ -18,9 +24,7 @@ function createTable() {
         </tr>
         `;
         table.innerHTML += tr;
-    }
-    ))
-
+    });
 }
 
-createTable();
+populateData();
