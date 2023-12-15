@@ -10,7 +10,8 @@ async function populateData() {
 
 function createTable() {
     let table = document.getElementById("batches");
-    table.innerHTML = "";
+    let tableBody = table.getElementsByTagName("tbody")[0];
+    tableBody.innerHTML = "";
     batchList.forEach(batch => {
         console.log(batch)
         let tr = `
@@ -23,7 +24,7 @@ function createTable() {
             <td>${batch.packaging}</td>
         </tr>
         `;
-        table.innerHTML += tr;
+        tableBody.innerHTML += tr;
     });
 }
 
