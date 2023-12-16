@@ -1,6 +1,7 @@
 import { batches } from "/src/services/service.js"
 
 const batchColumns = ["id", "brewfatherId", "name", "status", "tapStatus", "packaging"];
+let sortState = Object.fromEntries(batchColumns.map(b => [b,0]));
 const sorts = {
     "id":           (a, b) => a.id - b.id,
     "brewfatherId": (a, b) => a.brewfatherId.toUpperCase() === b.brewfatherId.toUpperCase() ? 0 : a.brewfatherId.toUpperCase() > b.brewfatherId.toUpperCase() ? 1 : -1,
@@ -35,10 +36,21 @@ function createTableHeaders() {
 }
 
 function sortBy(event) {
-    if (event.target.tagName === 'TH') {
-        batchList.sort(sorts[event.target.id.slice(2)]);
-        renderTable();
+    if (event.target.tagName !== 'TH') {
+        return;
     }
+    const column = event.target.id.slice(2);
+    if (sortState[column] === 0) {
+        sortState = Object.fromEntries(batchColumns.map(b => [b,0]));
+    }
+    let state = sortState[column]++;
+    if (state === 0) {
+        batchList.sort(sorts[column]);
+    } else if (state === 1) {
+        batchList.sort(sorts[column]).reverse();
+        sortState = Object.fromEntries(batchColumns.map(b => [b,0]));
+    }
+    renderTable();
 }
 async function populateData() {
     let freshBatches = await batches();
