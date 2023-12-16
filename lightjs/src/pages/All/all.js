@@ -13,6 +13,7 @@ const sorts = {
 
 }
 const batchList = [];
+const batchListCopy = [];
 
 function camelCaseToWord(camel) {
     let wlist = camel.match(/[A-Z]?[a-z]*/g);
@@ -48,6 +49,9 @@ function sortBy(event) {
         batchList.sort(sorts[column]);
     } else if (state === 1) {
         batchList.sort(sorts[column]).reverse();
+    } else {
+        batchList.length = 0;
+        batchList.push(...batchListCopy);
         sortState = Object.fromEntries(batchColumns.map(b => [b,0]));
     }
     renderTable();
@@ -55,6 +59,7 @@ function sortBy(event) {
 async function populateData() {
     let freshBatches = await batches();
     batchList.push(...freshBatches);
+    batchListCopy.push(...batchList);
     renderTable();
 }
 
