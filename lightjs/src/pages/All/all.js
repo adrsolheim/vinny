@@ -29,23 +29,14 @@ function createTableHeaders() {
         thRow[col] = document.createElement("th");
         thRow[col].setAttribute("id", `th${col}`);
         thRow[col].textContent = camelCaseToWord(col);
+        thRow[col].addEventListener("click", sortBy);
         tableHeader.appendChild(thRow[col]);
     });
-    for (const td of tableHeader.children) {
-        td.addEventListener("click", sortBy);
-    }
-    batchColumns.forEach(col => {
-    });
-}
-
-function handleThClick(event) {
-    console.log('clicked ', event.target);
 }
 
 function sortBy(event) {
     if (event.target.tagName === 'TH') {
         batchList.sort(sorts[event.target.id.slice(2)]);
-        console.log(batchList);
         renderTable();
     }
 }
@@ -60,7 +51,6 @@ function renderTable() {
     let tableBody = table.getElementsByTagName("tbody")[0];
     tableBody.innerHTML = "";
     batchList.forEach(batch => {
-        console.log(batch)
         let tr = `
         <tr>
             <td>${batch.id}</td>
