@@ -1,5 +1,6 @@
 package no.vinny.nightfly.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import no.vinny.nightfly.util.exception.ApiError;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -19,6 +21,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         return responseEntity(new ApiError(HttpStatus.BAD_REQUEST, "Invalid JSON request", ex));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return responseEntity(new ApiError(HttpStatus.METHOD_NOT_ALLOWED, "Method not supported", request.getDescription(false).substring(4), ex));
     }
 
     private ResponseEntity<Object> responseEntity(ApiError apiError) {

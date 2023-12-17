@@ -15,6 +15,7 @@ public class ApiError {
     private LocalDateTime timestamp;
     private String message;
     private String debugMessage;
+    private String type;
     private List<ApiErrorItem> errors;
 
     private ApiError() {
@@ -33,5 +34,13 @@ public class ApiError {
         this.status = status;
         this.message = message;
         this.debugMessage = exception.getLocalizedMessage();
+    }
+
+    public ApiError(HttpStatus status, String message, String type, Throwable exception) {
+        this();
+        this.status = status;
+        this.message = message;
+        this.debugMessage = exception.getLocalizedMessage();
+        this.type = type;
     }
 }
