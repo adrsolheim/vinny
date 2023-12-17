@@ -33,3 +33,26 @@ docker run -e SPRING_PROFILES_ACTIVE=dev -dp 8080:8080 nightfly
 ## Jobs
 
 Regular applications should be run with the profile `cron`
+
+# Errors
+
+Default error response on invalid json POST request
+```
+{
+    "timestamp": 1702832386349,
+    "status": 400,
+    "error": "Bad Request",
+    "path": "/api/batches"
+}
+```
+
+Customized error response
+```
+{
+    "status": "BAD_REQUEST",
+    "timestamp": "17-12-2023 07:12:46",
+    "message": "Invalid JSON request",
+    "debugMessage": "JSON parse error: Cannot construct instance of `no.vinny.nightfly.components.batch.domain.BatchStatus`, problem: `java.lang.IllegalArgumentException`",
+    "errors": null
+}
+```
