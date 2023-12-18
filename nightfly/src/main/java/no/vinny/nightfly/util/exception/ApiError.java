@@ -11,6 +11,7 @@ import java.util.List;
 public class ApiError {
 
     private HttpStatus status;
+    private int statusCode;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
@@ -25,6 +26,7 @@ public class ApiError {
     public ApiError(HttpStatus status, Throwable exception) {
         this();
         this.status = status;
+        this.statusCode = status.value();
         this.message = "Unexpected error";
         this.debugMessage = exception.getLocalizedMessage();
     }
@@ -32,6 +34,7 @@ public class ApiError {
     public ApiError(HttpStatus status, String message, Throwable exception) {
         this();
         this.status = status;
+        this.statusCode = status.value();
         this.message = message;
         this.debugMessage = exception.getLocalizedMessage();
     }
@@ -39,6 +42,7 @@ public class ApiError {
     public ApiError(HttpStatus status, String message, String type, Throwable exception) {
         this();
         this.status = status;
+        this.statusCode = status.value();
         this.message = message;
         this.debugMessage = exception.getLocalizedMessage();
         this.type = type;
