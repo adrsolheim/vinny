@@ -8,6 +8,7 @@ import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.batch.domain.Packaging;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -67,7 +68,11 @@ public class BatchRepositoryImpl implements BatchRepository {
         stall();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return Optional.of(jdbcTemplate.queryForObject(SELECT_BATCH + " WHERE b.id = :id", params, new BatchRowMapper()));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_BATCH + " WHERE b.id = :id", params, new BatchRowMapper()));
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Batch> findByBrewfatherId(String id) {

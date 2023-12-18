@@ -3,6 +3,8 @@ package no.vinny.nightfly.components.batch;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.config.Pagination;
+import no.vinny.nightfly.util.exception.ApiError;
+import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +30,7 @@ public class BatchController {
     // TODO: return message if missing
     @GetMapping("/{id}")
     public Batch batch(@PathVariable Long id) {
-        return batchService.get(id).orElse(null);
+        return batchService.get(id).orElseThrow(() -> new ResourceNotFoundException(STR."Batch by id=\{id} not found"));
     }
 
     @GetMapping("/brewfather/{id}")
