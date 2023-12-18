@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class ApiError {
 
+    private UUID id;
     private HttpStatus status;
     private int statusCode;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
@@ -20,6 +22,7 @@ public class ApiError {
     private List<ApiErrorItem> errors;
 
     private ApiError() {
+        id = UUID.randomUUID();
         timestamp = LocalDateTime.now();
     }
 
