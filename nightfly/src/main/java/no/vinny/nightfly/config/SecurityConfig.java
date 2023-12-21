@@ -16,13 +16,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf((csrf) -> csrf.disable())
-                .authorizeHttpRequests((request) -> { request
-                    .anyRequest().permitAll();
-                    //.requestMatchers(HttpMethod.POST, "/api/batches").authenticated()
-                    //.requestMatchers(HttpMethod.PUT, "/api/batches/**").authenticated()
-                    //.requestMatchers(HttpMethod.PATCH, "/api/batches/**").authenticated()
-                    //.requestMatchers(HttpMethod.DELETE, "/api/batches/**").authenticated()
-                    //.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-        }).build();
+                .authorizeHttpRequests((request) -> request
+                    //.anyRequest().permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/batches").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/batches/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/api/batches/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/batches/**").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
+        ).build();
     }
 }
