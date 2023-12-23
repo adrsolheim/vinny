@@ -2,11 +2,9 @@ package no.vinny.nightfly.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,18 +41,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             log.info("Unable to extract authentication headers from request: {}", request);
             return null;
         }
-        for (Cookie cookie : request.getCookies()) {
-            log.info("Cookie name: {}", cookie.getName());
-            log.info("Cookie value: {}", cookie.getValue());
-            if ("Authentication".equalsIgnoreCase(cookie.getName())) {
-                if (cookie.getValue() == null || !cookie.getValue().startsWith("Bearer ")) {
-                    return null;
-                }
-                String accessToken = cookie.getValue().split(" ")[1];
-                SupabaseUser user = supabaseAuthService.user(accessToken);
-                return user == null ? null : new UsernamePasswordAuthenticationToken(user, user.getPassword(), new ArrayList<>());
-            }
+        if (request.getHeader("Authorization") == null || !request.getHeader("Authorization").startsWith("Bearer ")) {
+            return null;
         }
-        return null;
+        String accessToken = request.getHeader("Authorization").split(" ")[1];
+        SupabaseUser user = supabaseAuthService.user(accessToken);
+        return user == null ? null : new UsernamePasswordAuthenticationToken(user, user.getPassword(), new ArrayList<>());
     }
 }
