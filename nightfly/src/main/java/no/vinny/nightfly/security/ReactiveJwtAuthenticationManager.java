@@ -5,11 +5,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import reactor.core.publisher.Mono;
 
-public class AuthenticationManager implements ReactiveAuthenticationManager {
+public class ReactiveJwtAuthenticationManager implements ReactiveAuthenticationManager {
 
     private SupabaseAuthService supabaseAuthService;
 
-    public AuthenticationManager(SupabaseAuthService supabaseAuthService) {
+    public ReactiveJwtAuthenticationManager(SupabaseAuthService supabaseAuthService) {
         this.supabaseAuthService = supabaseAuthService;
     }
 

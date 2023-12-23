@@ -1,14 +1,11 @@
 package no.vinny.nightfly.config;
 
-import no.vinny.nightfly.security.AuthenticationManager;
-import no.vinny.nightfly.security.JwtAuthenticationConverter;
+import no.vinny.nightfly.security.ReactiveJwtAuthenticationManager;
+import no.vinny.nightfly.security.ReactiveJwtAuthenticationConverter;
 import no.vinny.nightfly.security.SupabaseAuthService;
 import no.vinny.nightfly.util.RequestExceptionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -18,16 +15,16 @@ import org.springframework.security.web.server.authentication.AuthenticationWebF
 public class ReactiveSecurityConfig {
 
     private final RequestExceptionInterceptor interceptor;
-    private final JwtAuthenticationConverter jwtAuthenticationConverter;
+    private final ReactiveJwtAuthenticationConverter reactiveJwtAuthenticationConverter;
 
     @Autowired
-    public ReactiveSecurityConfig(RequestExceptionInterceptor interceptor, JwtAuthenticationConverter jwtAuthenticationConverter) {
+    public ReactiveSecurityConfig(RequestExceptionInterceptor interceptor, ReactiveJwtAuthenticationConverter reactiveJwtAuthenticationConverter) {
         this.interceptor = interceptor;
-        this.jwtAuthenticationConverter = jwtAuthenticationConverter;
+        this.reactiveJwtAuthenticationConverter = reactiveJwtAuthenticationConverter;
     }
 
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AuthenticationWebFilter authenticationWebFilter) {
-        authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter);
+        authenticationWebFilter.setServerAuthenticationConverter(reactiveJwtAuthenticationConverter);
         return http
                 .exceptionHandling()
                 .authenticationEntryPoint(interceptor)
@@ -46,11 +43,11 @@ public class ReactiveSecurityConfig {
                 .build();
     }
 
-    public AuthenticationManager authenticationManager(SupabaseAuthService supabaseAuthService) {
-        return new AuthenticationManager(supabaseAuthService);
+    public ReactiveJwtAuthenticationManager authenticationManager(SupabaseAuthService supabaseAuthService) {
+        return new ReactiveJwtAuthenticationManager(supabaseAuthService);
     }
 
-    public AuthenticationWebFilter authenticationWebFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationWebFilter(authenticationManager);
+    public AuthenticationWebFilter authenticationWebFilter(ReactiveJwtAuthenticationManager reactiveJwtAuthenticationManager) {
+        return new AuthenticationWebFilter(reactiveJwtAuthenticationManager);
     }
 }

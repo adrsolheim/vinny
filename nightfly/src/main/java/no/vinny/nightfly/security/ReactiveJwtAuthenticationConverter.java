@@ -10,11 +10,11 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-public class JwtAuthenticationConverter implements ServerAuthenticationConverter {
+public class ReactiveJwtAuthenticationConverter implements ServerAuthenticationConverter {
 
     private final SupabaseAuthService supabaseAuthService;
 
-    public JwtAuthenticationConverter(SupabaseAuthService supabaseAuthService) {
+    public ReactiveJwtAuthenticationConverter(SupabaseAuthService supabaseAuthService) {
         this.supabaseAuthService = supabaseAuthService;
     }
 
