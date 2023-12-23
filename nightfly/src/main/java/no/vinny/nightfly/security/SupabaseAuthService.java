@@ -4,8 +4,6 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-
 @Slf4j
 @Service
 public class SupabaseAuthService {
@@ -17,12 +15,13 @@ public class SupabaseAuthService {
     }
 
     public SupabaseUser user(String accessToken) {
-        SecretKey key = jwtUtil.fetchSecretKey();
-        String keyString = jwtUtil.fetchSecretKeyString();
+        //SecretKey key = jwtUtil.fetchSecretKey();
+        byte[] key = jwtUtil.getJwtSecret().getBytes();
+        String issuer = jwtUtil.getIssuer();
         try {
             Jwt<JwsHeader, Claims> parse = Jwts.parserBuilder()
-                    .setSigningKey(keyString.getBytes())
-                    .requireIssuer("supabase")
+                    .setSigningKey(key)
+                    .requireIssuer(issuer)
                     .setAllowedClockSkewSeconds(30L) // allow a margin 30 sec difference
                     .build()
                     .parseClaimsJws(accessToken);

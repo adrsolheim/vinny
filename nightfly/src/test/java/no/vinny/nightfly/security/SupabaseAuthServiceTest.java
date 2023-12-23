@@ -16,7 +16,7 @@ class SupabaseAuthServiceTest {
 
     @BeforeEach
     void setup() {
-        jwtUtil = new JwtUtil("K+g7wvB8pP5g53JL3ApQnnEZ9Xr29TqqLl2qloDpahnkXrem43uVMexrE0G+317I4ettbMXETbKrdO+WPKBdTQ==");
+        jwtUtil = new JwtUtil("K+g7wvB8pP5g53JL3ApQnnEZ9Xr29TqqLl2qloDpahnkXrem43uVMexrE0G+317I4ettbMXETbKrdO+WPKBdTQ==", "https://viatplyztqnkievknofv.supabase.co/auth/v1");
         supabaseAuthService = new SupabaseAuthService(jwtUtil);
     }
 
@@ -32,7 +32,7 @@ class SupabaseAuthServiceTest {
 
     private Claims bobUserClaims() {
         Claims claims = Jwts.claims()
-                .setIssuer("supabase")
+                .setIssuer("https://viatplyztqnkievknofv.supabase.co/auth/v1")
                 .setSubject("Bob");
         claims.put("role", "USER");
         return claims;
@@ -40,7 +40,7 @@ class SupabaseAuthServiceTest {
 
     private String bobUserJwt() {
         return Jwts.builder()
-                .setIssuer("supabase")
+                .setIssuer("https://viatplyztqnkievknofv.supabase.co/auth/v1")
                 .setSubject("Bob")
                 .claim("role", "USER")
                 .signWith(jwtUtil.fetchSecretKey())

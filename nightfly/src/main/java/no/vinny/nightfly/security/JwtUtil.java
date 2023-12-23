@@ -13,9 +13,19 @@ import java.util.Base64;
 public class JwtUtil {
 
     private String jwtSecret;
+    private String issuer;
 
-    public JwtUtil(@Value("${supabase.jwt_secret}") String jwtSecret) {
+    public JwtUtil(@Value("${supabase.jwt_secret}") String jwtSecret, @Value("${supabase.url}") String issuer) {
         this.jwtSecret = jwtSecret;
+        this.issuer = issuer;
+    }
+
+    public String getJwtSecret() {
+        return jwtSecret;
+    }
+
+    public String getIssuer() {
+        return issuer;
     }
 
     public String fetchSecretKeyString() {
@@ -37,7 +47,7 @@ public class JwtUtil {
             log.warn("Unable to perform authentication: Missing JWT secret. Make sure environment properties are configured and loaded.");
             return null;
         }
-        return generateSecretKeyFrom(Base64.getEncoder().encode(jwtSecret.getBytes()));
+        return generateSecretKeyFrom(jwtSecret.getBytes());
     }
 
     private SecretKey generateSecretKeyFrom(byte[] secret) {
