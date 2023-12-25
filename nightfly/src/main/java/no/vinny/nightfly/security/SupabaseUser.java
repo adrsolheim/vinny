@@ -1,13 +1,17 @@
 package no.vinny.nightfly.security;
 
 import io.jsonwebtoken.Claims;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Collections.unmodifiableMap;
 
+@ToString
 public class SupabaseUser implements UserDetails {
     private final List<GrantedAuthority> grantedAuthorities;
     private final Claims claims;
@@ -17,57 +21,30 @@ public class SupabaseUser implements UserDetails {
     private final String id;
     private final String role;
     private final String issuer;
-    //private final String role;
-    //private final String email;
-    //private final String phone;
-
-    //private final String avatarUrl;
-    //private final String userName;
-    //private final String fullName;
-    //private final String emailConfirmedAt;
-    //private final String confirmedAt;
-    //private final String lastSignInAt;
-    //private final String createdAt;
-    //private final String updatedAt;
-    //private final String provider;
+    private final String email;
+    private final ZonedDateTime issued;
+    private final ZonedDateTime expired;
 
     public SupabaseUser(Claims claims, String accessToken) {
         grantedAuthorities = new ArrayList<>();
         this.claims = claims;
         token = accessToken;
-        //appMetadata = (Map<String, String>) unmodifiableMap(claims.get("app_metadata", HashMap.class));
-        //userMetadata = (Map<String, String>) unmodifiableMap(claims.get("user_metadata", HashMap.class));
 
         // Registered Claims
         issuer = claims.get("iss", String.class);
         id = claims.get("sub", String.class);
         role = claims.get("role", String.class);
-        claims.get("exp", Integer.class);
-        claims.get("iat", Integer.class);
-        //provider = appMetadata.getOrDefault("provider", "");
+        expired = ZonedDateTime.from(Instant.ofEpochSecond(claims.get("exp", Long.class)));
+        issued  = ZonedDateTime.from(Instant.ofEpochSecond(claims.get("iss", Long.class)));
+        email = claims.get("email", String.class);
 
         // Jose Header
         claims.get("typ", String.class);
-
-        // Claims
-        //role = claims.get("role", String.class);
-        //email = claims.get("email", String.class);
-        //phone = claims.get("phone", String.class);
-
-        //avatarUrl = userMetadata.containsKey("avatar_url") ? userMetadata.get("avatar_url") : null; // default url?
-        //fullName = userMetadata.get("full_name");
-        //userName = userMetadata.containsKey("user_name") ? userMetadata.get("user_name") : email;
-        //emailConfirmedAt = userMetadata.get("email_confirmed_at");
-        //confirmedAt = userMetadata.get("confirmed_ad");
-        //lastSignInAt = userMetadata.get("last_sign_in_at");
-        //createdAt = userMetadata.get("created_at");
-        //updatedAt = userMetadata.get("updated_ad");
-
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return grantedAuthorities;
     }
 
     @Override
@@ -84,9 +61,22 @@ public class SupabaseUser implements UserDetails {
         return issuer;
     }
 
+    public ZonedDateTime getIssued() {
+        return issued;
+    }
+
+    public ZonedDateTime getExpired() {
+        return expired;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     public String getRole() {
         return role;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

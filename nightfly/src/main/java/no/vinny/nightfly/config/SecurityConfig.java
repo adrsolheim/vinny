@@ -2,6 +2,7 @@ package no.vinny.nightfly.config;
 
 import no.vinny.nightfly.security.JwtAuthenticationFilter;
 import no.vinny.nightfly.security.JwtAuthenticationManager;
+import no.vinny.nightfly.security.JwtInspectionFilter;
 import no.vinny.nightfly.security.SupabaseAuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ public class SecurityConfig {
         return http
                 .csrf((csrf) -> csrf.disable())
                 .addFilter(new JwtAuthenticationFilter(jwtAuthenticationManager, supabaseAuthService))
+                .addFilter(new JwtInspectionFilter(jwtAuthenticationManager))
                 .authorizeHttpRequests((request) -> request
                     //.anyRequest().permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/batches").authenticated()
