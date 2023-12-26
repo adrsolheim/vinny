@@ -3,6 +3,7 @@
 DROP TABLE IF EXISTS tap;
 DROP TABLE IF EXISTS batch;
 DROP TABLE IF EXISTS recipe;
+DROP TABLE IF EXISTS account;
 
 CREATE TABLE IF NOT EXISTS recipe (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -28,6 +29,12 @@ CREATE TABLE IF NOT EXISTS tap (
     FOREIGN KEY (batch) REFERENCES batch(id)
 );
 
+CREATE TABLE IF NOT EXISTS account (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100),
+    password VARCHAR(255)
+);
+
 INSERT INTO recipe (id, brewfather_id, name) VALUES (100001, 'b1W72a2OuL9xsC1c1OTrgog6JiPP0b', 'Eldon');
 INSERT INTO recipe (id, brewfather_id, name) VALUES (100002, 'oCJlXhR1iIdYgLMwem0V0mmYNBIIia', 'KIWI Pilsner');
 
@@ -43,3 +50,4 @@ INSERT INTO tap (id, batch) VALUES (2, 11);
 INSERT INTO tap (id) VALUES (3);
 INSERT INTO tap (id) VALUES (4);
 
+INSERT INTO account (username, password) VALUES ('', '');

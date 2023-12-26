@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -34,8 +35,14 @@ public class SupabaseUser implements UserDetails {
         issuer = claims.get("iss", String.class);
         id = claims.get("sub", String.class);
         role = claims.get("role", String.class);
-        expired = ZonedDateTime.from(Instant.ofEpochSecond(claims.get("exp", Long.class)));
-        issued  = ZonedDateTime.from(Instant.ofEpochSecond(claims.get("iss", Long.class)));
+        expired = Optional.ofNullable(claims.get("exp", Long.class))
+                .map(Instant::ofEpochSecond)
+                .map(instant -> instant.atZone(ZoneId.of("Europe/Oslo")))
+                .orElse(null);
+        issued = Optional.ofNullable(claims.get("exp", Long.class))
+                .map(Instant::ofEpochSecond)
+                .map(instant -> instant.atZone(ZoneId.of("Europe/Oslo")))
+                .orElse(null);
         email = claims.get("email", String.class);
 
         // Jose Header
