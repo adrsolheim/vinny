@@ -13,3 +13,15 @@ INSERT INTO tap (id, batch) VALUES (2, 11);
 INSERT INTO tap (id) VALUES (3);
 INSERT INTO tap (id) VALUES (4);
 
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (23,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (23,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (12,  'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');

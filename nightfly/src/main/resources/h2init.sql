@@ -3,7 +3,9 @@
 DROP TABLE IF EXISTS tap;
 DROP TABLE IF EXISTS batch;
 DROP TABLE IF EXISTS recipe;
+
 DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS keg;
 
 CREATE TABLE IF NOT EXISTS recipe (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -35,6 +37,15 @@ CREATE TABLE IF NOT EXISTS account (
     password VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS keg (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    capacity DECIMAL,
+    brand VARCHAR(100),
+    serial_number VARCHAR(255),
+    source VARCHAR(100),
+    note VARCHAR (1000)
+);
+
 INSERT INTO recipe (id, brewfather_id, name) VALUES (100001, 'b1W72a2OuL9xsC1c1OTrgog6JiPP0b', 'Eldon');
 INSERT INTO recipe (id, brewfather_id, name) VALUES (100002, 'oCJlXhR1iIdYgLMwem0V0mmYNBIIia', 'KIWI Pilsner');
 
@@ -51,3 +62,16 @@ INSERT INTO tap (id) VALUES (3);
 INSERT INTO tap (id) VALUES (4);
 
 INSERT INTO account (username, password) VALUES ('', '');
+
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (23,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (23,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (19,  'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (12,  'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
+INSERT INTO keg (capacity, brand, serial_number, source, note) VALUES (9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');

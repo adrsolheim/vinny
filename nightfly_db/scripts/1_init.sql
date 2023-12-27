@@ -25,3 +25,11 @@ CREATE TABLE IF NOT EXISTS nightfly.tap (
     FOREIGN KEY (batch) REFERENCES batch(id)
 );
 
+CREATE TABLE IF NOT EXISTS nightfly.keg (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    capacity DECIMAL,
+    brand VARCHAR(100),
+    serial_number VARCHAR(255),
+    source VARCHAR(100),
+    note VARCHAR (1000)
+);
