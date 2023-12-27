@@ -27,7 +27,7 @@ public class SupabaseAuthService {
                     .parseClaimsJws(accessToken);
             return new SupabaseUser(parse.getBody(), accessToken);
         } catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
-            log.warn("Unable to parse JWT: {}", ex);
+            log.warn("Unable to parse JWT:", ex);
             return null;
         }
     }

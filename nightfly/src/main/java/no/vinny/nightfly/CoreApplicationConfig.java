@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import;
         RequestExceptionInterceptor.class,
         ReactiveJwtAuthenticationConverter.class
 })
-@EnableConfigurationProperties(BrewfatherSettings.class)
+@EnableConfigurationProperties
 public class CoreApplicationConfig {
 }
 
