@@ -29,7 +29,7 @@ public class SQLTemplater {
     }
 
     public static String batchInsert() {
-        return "INSERT INTO batch (brewfather_id, name, status, tap_status, packaging, recipe, tap) VALUES (:brewfatherId, :name, :status, :packaging, :recipe, :tap)";
+        return "INSERT INTO batch (brewfather_id, name, status, tap_status, packaging, recipe, tap) VALUES (:brewfatherId, :name, :status, :tapStatus, :packaging, :recipe, :tap)";
     }
 
     public static String batchUpdate() {

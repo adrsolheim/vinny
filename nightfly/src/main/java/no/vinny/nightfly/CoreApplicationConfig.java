@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Import;
         RequestExceptionInterceptor.class,
         ReactiveJwtAuthenticationConverter.class
 })
-@EnableConfigurationProperties
 public class CoreApplicationConfig {
 }
 
