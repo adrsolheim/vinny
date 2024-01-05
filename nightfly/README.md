@@ -1,6 +1,6 @@
 # Run project
 
-## Local
+### Local
 The `dev` Spring profile executes the project without the need for external services, e.g., an H2 memory database. `prod` is the default profile.
 ```
 SPRING_PROFILES_ACTIVE=dev
@@ -22,7 +22,7 @@ brewfather:
   user_id: <BREWFATHER_USER_ID>
 ```
 
-## Docker local
+### Docker local
 To run separately from dependent services (e.g. database) enable `dev` profile
 ```
 docker build -t nightfly .
@@ -34,7 +34,7 @@ docker run -e SPRING_PROFILES_ACTIVE=dev -dp 8080:8080 nightfly
 
 Regular applications should be run with the profile `cron`
 
-# Errors
+## Errors
 
 Default error response on invalid json POST request
 ```
@@ -56,3 +56,7 @@ Customized error response
     "errors": null
 }
 ```
+
+# Application
+
+![](docs/process.svg)
