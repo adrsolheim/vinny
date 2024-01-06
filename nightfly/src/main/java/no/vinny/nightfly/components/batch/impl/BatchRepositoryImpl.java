@@ -38,10 +38,8 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
-        params.addValue("tapStatus", TapStatus.WAITING.name());
+        //params.addValue("tapStatus", TapStatus.WAITING.name());
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
-        params.addValue("packaging", batch.getPackaging());
-        params.addValue("tap", batch.getTap());
         return jdbcTemplate.update(INSERT_BATCH, params);
     }
 
@@ -57,9 +55,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
-        params.addValue("packaging", Optional.ofNullable(batch.getPackaging()).map(Packaging::name).orElse(null));
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
-        params.addValue("tap", batch.getTap());
         jdbcTemplate.update(UPDATE_BATCH, params);
     }
 
@@ -108,7 +104,6 @@ public class BatchRepositoryImpl implements BatchRepository {
         batchMap.put("brewfatherId", batch.getBrewfatherId());
         batchMap.put("name", batch.getName());
         batchMap.put("status", batch.getStatus());
-        batchMap.put("packaging", Optional.ofNullable(batch.getPackaging()).map(Packaging::name).orElse(null));
         batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return batchMap;
     }

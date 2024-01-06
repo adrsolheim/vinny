@@ -18,11 +18,6 @@ public class Batch implements Serializable {
     private String name;
     @Enumerated(EnumType.STRING)
     private BatchStatus status;
-    @Enumerated(EnumType.STRING)
-    private TapStatus tapStatus;
-    @Enumerated(EnumType.STRING)
-    private Packaging packaging;
     private Recipe recipe;
-    private Long tap;
     // TODO: filter batches for display on frontend
 }

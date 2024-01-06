@@ -29,11 +29,11 @@ public class SQLTemplater {
     }
 
     public static String batchInsert() {
-        return "INSERT INTO batch (brewfather_id, name, status, tap_status, packaging, recipe, tap) VALUES (:brewfatherId, :name, :status, :tapStatus, :packaging, :recipe, :tap)";
+        return "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     }
 
     public static String batchUpdate() {
-        return "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, packaging = :packaging, recipe = :recipe, tap = :tap WHERE id = :id ";
+        return "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
     }
 
     public static String batchCount() {
@@ -41,7 +41,7 @@ public class SQLTemplater {
     }
 
     private static String batchColumns(boolean includeId, boolean includeRecipe) {
-        String columns = "b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.tap_status b_tap_status, b.packaging b_packaging, b.tap b_tap";
+        String columns = "b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status";
         columns = includeRecipe ? columns + ", b.recipe b_recipe," : columns;
         columns = includeId ? "b.id b_id, " + columns : columns;
         return columns;

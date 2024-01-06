@@ -41,7 +41,6 @@ public class TapServiceImpl implements TapService {
     public List<Tap> findActive() {
         return findAll().stream()
                 .filter(tap -> tap.getBatch() != null)
-                .filter(tap -> List.of(TapStatus.CONNECTED, TapStatus.SERVING).contains(tap.getBatch().getTapStatus()))
                 .collect(Collectors.toList());
     }
 
@@ -51,15 +50,11 @@ public class TapServiceImpl implements TapService {
         Batch batch = Optional.of(batchService.get(batchId))
                 .get()
                 .orElseThrow(() -> new ResourceNotFoundException("Batch not found: " + batchId));
-        if (batch.getTap() != null) {
-            throw new OperationFailedException("Batch already connected to tap " + batch.getTap());
-        }
         if (taphandle.getBatch() != null) {
             Batch oldBatch = taphandle.getBatch();
             oldBatch.setStatus(BatchStatus.ARCHIVED);
             batchService.update(oldBatch);
         }
-        batch.setTap(tap);
         taphandle.setBatch(batch);
         batchService.update(batch);
         update(taphandle);

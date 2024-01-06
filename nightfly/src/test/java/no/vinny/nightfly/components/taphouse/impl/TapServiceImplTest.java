@@ -61,7 +61,6 @@ class TapServiceImplTest {
         Optional<Tap> connectedTap = tapService.find(3L);
 
         assertTrue(connectedTap.isPresent());
-        assertEquals(connectedTap.get().getBatch().getTapStatus(), TapStatus.CONNECTED);
     }
 
     @Test
@@ -113,13 +112,9 @@ class TapServiceImplTest {
                                     .brewfatherId(bid)
                                     .name("Pilsner")
                                     .status(COMPLETED)
-                                    .packaging(Packaging.KEG)
                                     .recipe(null)
                                     .build())
                             .collect(Collectors.toList());
-        batches.get(0).setTapStatus(TapStatus.SERVING);
-        batches.get(1).setTapStatus(TapStatus.SERVING);
-        batches.get(2).setTapStatus(TapStatus.CONNECTED);
         return batches;
     }
 }
