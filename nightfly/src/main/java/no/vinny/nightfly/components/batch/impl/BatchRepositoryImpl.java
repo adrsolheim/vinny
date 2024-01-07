@@ -1,10 +1,12 @@
 package no.vinny.nightfly.components.batch.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.SQLTemplater;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.batch.domain.Packaging;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,15 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+@Slf4j
 @Repository
 public class BatchRepositoryImpl implements BatchRepository {
 
     private static final String SELECT_BATCH = SQLTemplater.batchQuery(true, true);
     private static final String SELECT_BATCH_ONLY = SQLTemplater.batchQuery(true, false);
+    private static final String INSERT_BATCH_UNIT = SQLTemplater.batchUnitInsert();
     private static final String INSERT_BATCH = SQLTemplater.batchInsert();
     private static final String UPDATE_BATCH = SQLTemplater.batchUpdate();
     private static final String BATCH_COUNT = SQLTemplater.batchCount();
@@ -40,7 +41,23 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
         //params.addValue("tapStatus", TapStatus.WAITING.name());
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
-        return jdbcTemplate.update(INSERT_BATCH, params);
+        int insertBatchResult = jdbcTemplate.update(INSERT_BATCH, params);
+        if (batch.getBatchUnits() != null) {
+            insertAll(batch.getBatchUnits());
+        }
+        return insertBatchResult;
+    }
+
+    public int insertAll(List<BatchUnit> batchUnits) {
+        if (batchUnits == null || batchUnits.isEmpty()) {
+            return 0;
+        }
+        int[] dbResult = jdbcTemplate.batchUpdate(INSERT_BATCH_UNIT, batchUnits.stream().map(this::convertToMap).toArray(Map[]::new));
+        int inserts = Arrays.stream(dbResult).reduce(0, (a, b) -> a + b);
+        if (inserts < batchUnits.size()) {
+            log.warn("{}/{} batch units inserted for batch {}", inserts, batchUnits.size(), batchUnits.get(0).getBatchId());
+        }
+        return inserts;
     }
 
     public int delete(Long id) {
@@ -106,6 +123,17 @@ public class BatchRepositoryImpl implements BatchRepository {
         batchMap.put("status", batch.getStatus());
         batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return batchMap;
+    }
+
+    private Map<String, Object> convertToMap(BatchUnit batchUnit) {
+        Map<String, Object> batchUnitMap = new HashMap<>();
+        batchUnitMap.put("id", batchUnit.getId());
+        batchUnitMap.put("batch",  batchUnit.getBatchId());
+        batchUnitMap.put("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
+        batchUnitMap.put("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
+        batchUnitMap.put("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());
+        batchUnitMap.put("keg", batchUnit.getKeg() == null ? null : batchUnit.getKeg().getId());
+        return batchUnitMap;
     }
 
     private void stall() {

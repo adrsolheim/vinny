@@ -32,6 +32,10 @@ public class SQLTemplater {
         return "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     }
 
+    public static String batchUnitInsert() {
+        return "INSERT INTO batch_unit (batch, tap_status, packaging, volume_status, keg) VALUES (:batch, :tapStatus, :packaging, :volumeStatus, :keg)";
+    }
+
     public static String batchUpdate() {
         return "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
     }

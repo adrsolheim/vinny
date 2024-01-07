@@ -7,6 +7,7 @@ import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,5 +20,6 @@ public class Batch implements Serializable {
     @Enumerated(EnumType.STRING)
     private BatchStatus status;
     private Recipe recipe;
+    private List<BatchUnit> batchUnits;
     // TODO: filter batches for display on frontend
 }
