@@ -25,6 +25,7 @@ public class TapRowMapper implements RowMapper<Tap> {
                 rs.getString("b_brewfather_id"),
                 rs.getString("b_name"),
                 rs.getObject("b_status") != null ? BatchStatus.valueOf(rs.getString("b_status").toUpperCase()) : null,
+                null,
                 null
         );
     }

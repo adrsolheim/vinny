@@ -4,6 +4,7 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -47,6 +48,11 @@ class BatchServiceImplTest {
                 batchesById.add(batch);
                 batchesByBrewfatherId.put(batch.getBrewfatherId(), batch);
                 return 1;
+            }
+
+            @Override
+            public int insertAll(List<BatchUnit> batchUnits) {
+                return 0;
             }
 
             @Override
