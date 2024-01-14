@@ -16,7 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Data
 @Entity
 @RequiredArgsConstructor
-@NoArgsConstructor(force=true, access= AccessLevel.PRIVATE)
+@NoArgsConstructor(force=true)
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
