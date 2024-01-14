@@ -8,9 +8,12 @@ services:
       - 8080:8080
     depends_on:
       - nightfly_db
+      - redis
     environment:
       DATABASE_HOST: nightfly_db
       DB_USER: nightfly
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       DB_PASS: nightfly
       SPRING_PROFILES_ACTIVE: prod
 
