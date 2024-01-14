@@ -56,8 +56,10 @@ public class DatabaseConfig  {
     @Bean
     @Profile("prod")
     public ConnectionFactory connectionFactory() {
+        log.info("url {}, db {}, user {}, pw {}", env.getProperty("spring.r2dbc.url"), env.getProperty("spring.r2dbc.database"), env.getProperty("spring.r2dbc.username"), env.getProperty("spring.r2dbc.password"));
        MariadbConnectionConfiguration conf = MariadbConnectionConfiguration.builder()
-               .host(env.getProperty("spring.r2dbc.url"))
+               .host(env.getProperty("spring.r2dbc.host"))
+               .port(Integer.valueOf(env.getProperty("spring.r2dbc.port")))
                .database(env.getProperty("spring.r2dbc.database"))
                .username(env.getProperty("spring.r2dbc.username"))
                .password(env.getProperty("spring.r2dbc.password"))
@@ -118,7 +120,7 @@ public class DatabaseConfig  {
     }
 
     @Bean
-    public DatabaseClient asyncDatabaseClient(@Qualifier("asyncH2ConnectionFactory") ConnectionFactory asyncH2ConnectionFactory) {
+    public DatabaseClient asyncDatabaseClient(ConnectionFactory asyncH2ConnectionFactory) {
         return DatabaseClient.builder()
                 .connectionFactory(asyncH2ConnectionFactory)
                 .namedParameters(true)
