@@ -9,31 +9,31 @@ DROP TABLE IF EXISTS recipe;
 DROP TABLE IF EXISTS account;
 
 CREATE TABLE IF NOT EXISTS recipe (
-    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     brewfather_id VARCHAR(50) UNIQUE,
     name VARCHAR(100)
-);
+) AUTO_INCREMENT=100;
 
 CREATE TABLE IF NOT EXISTS batch (
-    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     brewfather_id VARCHAR(50) UNIQUE,
     name VARCHAR(100),
     status VARCHAR(30),
     recipe BIGINT,
     FOREIGN KEY (recipe) REFERENCES recipe(id)
-);
+) AUTO_INCREMENT=100;
 
 CREATE TABLE IF NOT EXISTS keg (
-    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     capacity DECIMAL,
     brand VARCHAR(100),
     serial_number VARCHAR(255),
     purchase_condition VARCHAR(100),
     note VARCHAR (1000)
-);
+) AUTO_INCREMENT=100;
 
 CREATE TABLE IF NOT EXISTS batch_unit (
-    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     batch BIGINT,
     packaging VARCHAR(30),
     tap_status VARCHAR(30),
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS batch_unit (
     keg BIGINT,
     FOREIGN KEY (batch) REFERENCES batch(id),
     FOREIGN KEY (keg) REFERENCES keg(id)
-);
+) AUTO_INCREMENT=100;
 
 CREATE TABLE IF NOT EXISTS tap (
     id TINYINT NOT NULL PRIMARY KEY,
@@ -50,10 +50,10 @@ CREATE TABLE IF NOT EXISTS tap (
 );
 
 CREATE TABLE IF NOT EXISTS account (
-    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     username VARCHAR(100),
     password VARCHAR(255)
-);
+) AUTO_INCREMENT=100;
 
 
 INSERT INTO recipe (id, brewfather_id, name) VALUES (100001, 'b1W72a2OuL9xsC1c1OTrgog6JiPP0b', 'Eldon');
@@ -91,5 +91,4 @@ INSERT INTO tap (id, batch) VALUES (2, 11);
 INSERT INTO tap (id) VALUES (3);
 INSERT INTO tap (id) VALUES (4);
 
-INSERT INTO account (username, password) VALUES ('', '');
 
