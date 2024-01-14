@@ -1,7 +1,6 @@
 package no.vinny.gatekeeper.user;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(force=true)
-public class User implements UserDetails {
+public class AppUser implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
