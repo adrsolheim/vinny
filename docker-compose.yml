@@ -8,6 +8,7 @@ services:
       - 8080:8080
     depends_on:
       - nightfly_db
+      - gatekeeper
       - redis
     environment:
       DATABASE_HOST: nightfly_db
@@ -32,6 +33,15 @@ services:
     volumes:
       - ./nightfly_db/data:/var/lib/mysql
       - ./nightfly_db/scripts:/docker-entrypoint-initdb.d
+
+  gatekeeper:
+    container_name: gatekeeper
+    build: ./gatekeeper
+    restart: on-failure
+    ports:
+      - 9000:9000
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
   
   redis:
     container_name: redis
