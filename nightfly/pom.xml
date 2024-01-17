@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0-M3</version>
+		<version>3.2.1</version>
 		<relativePath/>
 	</parent>
 	<groupId>no.vinny</groupId>
@@ -175,40 +175,6 @@
             </plugin>
         </plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-snapshots</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-		  <id>spring-milestones</id>
-		  <name>Spring Milestones</name>
-		  <url>https://repo.spring.io/milestone</url>
-		  <snapshots>
-			<enabled>false</enabled>
-		  </snapshots>
-		</pluginRepository>
-		<pluginRepository>
-		  <id>spring-snapshots</id>
-		  <name>Spring Snapshots</name>
-		  <url>https://repo.spring.io/snapshot</url>
-		  <releases>
-			<enabled>false</enabled>
-		  </releases>
-		</pluginRepository>
-	</pluginRepositories>
 
 
 
