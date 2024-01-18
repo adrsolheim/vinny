@@ -29,6 +29,12 @@ docker build -t nightfly .
 docker run -e SPRING_PROFILES_ACTIVE=dev -dp 8080:8080 nightfly
 ```
 
+### GraalVM
+
+Native install (`sdk install java 21.0.2-graal`)
+```
+mvn -Pnative native:compile
+```
 
 ## Jobs
 
