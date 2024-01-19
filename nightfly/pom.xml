@@ -137,8 +137,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-				  <jvmArguments>--enable-preview</jvmArguments>
-				  <compilerArguments>--enable-preview</compilerArguments>
 				  <excludes>
 					<exclude>
 					  <groupId>org.projectlombok</groupId>
@@ -175,18 +173,6 @@
                     <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>org.graalvm.buildtools</groupId>
-				<artifactId>native-maven-plugin</artifactId>
-				<configuration>
-					<buildArgs combine.children="append">
-						<buildArg>--enable-preview</buildArg>
-					</buildArgs>
-				</configuration>
-			</plugin>
         </plugins>
 	</build>
-
-
-
 </project>
