@@ -12,7 +12,7 @@ spring:
     password:
   # legacy
   r2dbc:
-    url: r2dbc:h2:mem:///~/db/nightfly?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MariaDB
+    url: r2dbc:h2:mem:///~/db/nightfly?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MariaDB&INIT=RUNSCRIPT%20FROM%20'classpath:h2init.sql'
     username: sa
     password:
     database: nightfly

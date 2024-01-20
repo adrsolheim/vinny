@@ -17,4 +17,4 @@ COPY --from=builder jarlayers/snapshot-dependencies/ ./
 COPY --from=builder jarlayers/application/ ./
 EXPOSE 8080
 
-ENTRYPOINT ["java", "--enable-preview", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher"]
