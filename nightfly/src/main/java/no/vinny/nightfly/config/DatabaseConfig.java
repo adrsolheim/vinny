@@ -80,15 +80,6 @@ public class DatabaseConfig  {
                 .build();
     }
 
-    @Bean
-    ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
-        ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
-        initializer.setConnectionFactory(connectionFactory);
-        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("h2init.sql")));
-        return initializer;
-    }
-
-
     //@Bean
     //public CommandLineRunner dataLoader(BatchService batchService) {
     //    return args -> {
