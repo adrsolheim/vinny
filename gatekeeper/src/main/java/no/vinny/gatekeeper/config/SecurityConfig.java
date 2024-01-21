@@ -49,9 +49,18 @@ public class SecurityConfig {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authorizationSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         return http
+                .formLogin(Customizer.withDefaults())
+                .build();
+    }
+
+    @Bean
+    @Order
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .authorizeHttpRequests((authorize -> authorize.anyRequest().authenticated()))
                 .formLogin(Customizer.withDefaults())
                 .build();
     }
