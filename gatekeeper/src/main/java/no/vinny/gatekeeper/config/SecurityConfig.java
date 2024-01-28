@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -37,13 +39,18 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-@Configuration // bean methods behave like plain method calls, creating new instances each time they are called
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> userRepository.findByUsername(username);
+    public UserDetailsService userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        //return username -> userRepository.findByUsername(username);
+        return new InMemoryUserDetailsManager(User.builder()
+                .username("user")
+                .password(passwordEncoder.encode("password"))
+                .roles("USER")
+                .build());
     }
 
     @Bean
@@ -86,19 +93,23 @@ public class SecurityConfig {
         // TODO: inject properties
         RegisteredClient client = RegisteredClient
                 .withId(UUID.randomUUID().toString())
-                .clientId("admin-client")
+                .clientId("oidc-client")
                 .clientSecret(passwordEncoder.encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC) // TODO: jwt?
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:3000/login/oauth2/code/admin-client")
-                .scope("writeBatches")
-                .scope("readBatches")
-                .scope("writeRecipes")
-                .scope("readRecipes")
-                .scope("writeTaps")
-                .scope("readTaps")
+                .redirectUri("http://127.0.0.1:3000/login/oauth2/code/oidc-client")
                 .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .scope("batches.read")
+                .scope("batches.write")
+                .scope("batches.all")
+                .scope("recipes.read")
+                .scope("recipes.write")
+                .scope("recipes.all")
+                .scope("taps.read")
+                .scope("taps.write")
+                .scope("taps.all")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
