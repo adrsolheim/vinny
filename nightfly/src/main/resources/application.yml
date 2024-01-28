@@ -6,6 +6,11 @@ spring:
   threads:
     virtual:
       enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://gatekeeper:9000
 cron:
   runner:
     enabled: false
