@@ -22,6 +22,8 @@ brewfather:
   user_id: <BREWFATHER_USER_ID>
 ```
 
+If redis is enabled a local instance of redis needs to be configured. Docker compose provides a redis image
+
 ### Docker local
 To run separately from dependent services (e.g. database) enable `dev` profile
 ```
