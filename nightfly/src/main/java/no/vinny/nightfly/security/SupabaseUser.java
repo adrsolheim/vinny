@@ -10,8 +10,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.util.Collections.unmodifiableMap;
-
 @ToString
 public class SupabaseUser implements UserDetails {
     private final List<GrantedAuthority> grantedAuthorities;

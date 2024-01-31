@@ -2,7 +2,6 @@ package no.vinny.nightfly.components.batch.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.components.batch.AsyncBatchRepository;
 import no.vinny.nightfly.components.batch.AsyncBatchService;
 import org.springframework.beans.factory.annotation.Autowired;

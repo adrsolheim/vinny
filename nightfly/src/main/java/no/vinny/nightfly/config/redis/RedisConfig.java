@@ -14,11 +14,8 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.interceptor.CacheErrorHandler;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -32,7 +29,6 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 

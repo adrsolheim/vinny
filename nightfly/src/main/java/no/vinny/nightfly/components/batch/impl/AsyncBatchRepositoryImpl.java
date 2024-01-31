@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.AsyncBatchRepository;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;

@@ -3,12 +3,9 @@ package no.vinny.nightfly.components.taphouse.impl;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
-import no.vinny.nightfly.components.batch.domain.Mapper;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
-import no.vinny.nightfly.util.exception.OperationFailedException;
 import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
