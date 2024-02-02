@@ -64,10 +64,11 @@ public class AuthorizationServerConfig {
                 .withId(UUID.randomUUID().toString())
                 .clientId("oidc-client")
                 .clientSecret(passwordEncoder.encode("secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC) // TODO: jwt?
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("http://127.0.0.1:3000/login/oauth2/code/oidc-client")
+                .redirectUri("https://www.google.com")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("batches.read")
