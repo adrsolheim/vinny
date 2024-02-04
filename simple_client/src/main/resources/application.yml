@@ -1,0 +1,18 @@
+server:
+  port: 8082
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          spring:
+            issuer-uri: "http://gatekeeper:9000"
+        registration:
+          spring:
+            client-id: "simpleclient"
+            secret: "simpleclient"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_basic
+            redirect-uri: "http://127.0.0.1:8082/login/oauth2/code/simpleclient"
+            post-logout-redirect-uris: "http://127.0.0.1:8082"
+            scope: batches.read,openid
