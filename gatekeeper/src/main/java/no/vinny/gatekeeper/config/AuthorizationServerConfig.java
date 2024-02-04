@@ -60,15 +60,16 @@ public class AuthorizationServerConfig {
     @Bean
     public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
         // TODO: inject properties
-        RegisteredClient client = RegisteredClient
+        RegisteredClient oidcClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
                 .clientId("oidc-client")
                 .clientSecret(passwordEncoder.encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("http://127.0.0.1:3000/login/oauth2/code/oidc-client")
-                .redirectUri("https://www.google.com")
+                .redirectUri("https://www.google.com/oauth2")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("batches.read")
@@ -82,8 +83,49 @@ public class AuthorizationServerConfig {
                 .scope("taps.all")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
+        RegisteredClient nightfly = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("nightfly")
+                .clientSecret(passwordEncoder.encode("nightfly"))
+                .redirectUri("https://www.google.com/oauth2")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .scope(OidcScopes.OPENID)
+                .scope("batches.read")
+                .scope("batches.write")
+                .scope("batches.all")
+                .scope("recipes.read")
+                .scope("recipes.write")
+                .scope("recipes.all")
+                .scope("taps.read")
+                .scope("taps.write")
+                .scope("taps.all")
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
+        RegisteredClient simpleClient = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("simpleclient")
+                .clientSecret(passwordEncoder.encode("simpleclient"))
+                .redirectUri("http://127.0.0.1:8082/login/oauth2/code/simpleclient")
+                .postLogoutRedirectUri("http://127.0.0.1:8082")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .scope(OidcScopes.OPENID)
+                .scope("batches.read")
+                //.scope("batches.write")
+                //.scope("batches.all")
+                //.scope("recipes.read")
+                //.scope("recipes.write")
+                //.scope("recipes.all")
+                //.scope("taps.read")
+                //.scope("taps.write")
+                //.scope("taps.all")
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
 
-        return new InMemoryRegisteredClientRepository(client);
+        return new InMemoryRegisteredClientRepository(oidcClient, nightfly, simpleClient);
     }
 
     @Bean
@@ -91,26 +133,26 @@ public class AuthorizationServerConfig {
         return AuthorizationServerSettings.builder().build();
     }
 
-    @Bean
-    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
-        RSAKey rsaKey = createRsaKey();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
-    }
+    //@Bean
+    //public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
+    //    RSAKey rsaKey = createRsaKey();
+    //    JWKSet jwkSet = new JWKSet(rsaKey);
+    //    return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
+    //}
 
-    private static RSAKey createRsaKey() throws NoSuchAlgorithmException {
-        KeyPair keyPair = createKeyPair();
-        RSAPublicKey publicKey   = (RSAPublicKey)  keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        return new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
-                .keyID(UUID.randomUUID().toString())
-                .build();
-    }
+    //private static RSAKey createRsaKey() throws NoSuchAlgorithmException {
+    //    KeyPair keyPair = createKeyPair();
+    //    RSAPublicKey publicKey   = (RSAPublicKey)  keyPair.getPublic();
+    //    RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+    //    return new RSAKey.Builder(publicKey)
+    //            .privateKey(privateKey)
+    //            .keyID(UUID.randomUUID().toString())
+    //            .build();
+    //}
 
-    private static KeyPair createKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
-        return keyPairGenerator.generateKeyPair();
-    }
+    //private static KeyPair createKeyPair() throws NoSuchAlgorithmException {
+    //    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+    //    keyPairGenerator.initialize(2048);
+    //    return keyPairGenerator.generateKeyPair();
+    //}
 }
