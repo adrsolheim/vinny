@@ -20,21 +20,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
-
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        //return username -> userRepository.findByUsername(username);
-        return new InMemoryUserDetailsManager(
-                User.builder()
-                        .username("user")
-                        .password(passwordEncoder().encode("password"))
-                        .roles("USER")
-                        .build()
-        );
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,15 +29,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers( "/login").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults())
+                                .requestMatchers( "/oauth/token").permitAll()
+                                .requestMatchers( "/logout").permitAll()
+                                .anyRequest().authenticated()
+    //                    .requestMatchers( "/login/**").permitAll()
+    //                    .requestMatchers( "/authorize").permitAll()
+    //                    .requestMauchers( "/authorize/**").permitAll()
+    //                    .anyRequest().authenticated())
+    //            .formLogin(Customizer.withDefaults())
+                )
                 .build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 }
