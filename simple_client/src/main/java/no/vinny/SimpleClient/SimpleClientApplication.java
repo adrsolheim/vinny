@@ -23,4 +23,14 @@ public class SimpleClientApplication {
 		return Map.of("greeting", "Hello World!", "principal", principal.getName());
 	}
 
+
+	@GetMapping("/batches")
+	public Map<String, String> batches(Principal principal) {
+		return Map.of("b1", "Batch One", "principal", principal.getName());
+	}
+
+	@GetMapping("/recipes")
+	public Map<String, String> recipes(Principal principal) {
+		return Map.of("r1", "Recipe One", "principal", principal.getName());
+	}
 }
