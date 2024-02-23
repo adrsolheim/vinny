@@ -22,19 +22,19 @@ public class SimpleClientApplication {
 
 	@GetMapping("/")
 	public Map<String, String> root(Authentication authentication) {
-		return Map.of("greeting", "Hello World!", "authentication", authentication.toString());
+		return Map.of("greeting", "Hello World!", "authentication", authentication.toString(), "authclass", authentication.getClass().getName());
 	}
 
 
 	@PreAuthorize("isAuthenticated() and hasRole('user')")
 	@GetMapping("/batches")
 	public Map<String, String> batches(Authentication authentication) {
-		return Map.of("b1", "Batch One", "authentication", authentication.toString());
+		return Map.of("b1", "Batch One", "authentication", authentication.toString(), "authclass", authentication.getClass().getName());
 	}
 
 	@PreAuthorize("isAuthenticated() and hasRole('admin')")
 	@GetMapping("/recipes")
 	public Map<String, String> recipes(Authentication authentication) {
-		return Map.of("r1", "Recipe One", "authentication", authentication.toString());
+		return Map.of("r1", "Recipe One", "authentication", authentication.toString(), "authclass", authentication.getClass().getName());
 	}
 }

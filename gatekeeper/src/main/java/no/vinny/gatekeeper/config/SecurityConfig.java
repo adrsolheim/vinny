@@ -51,12 +51,10 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
-                //.oauth2Login(oauth2Login -> oauth2Login.permitAll())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers( "/oauth2/**").permitAll()
-                        .requestMatchers( "/login/**").permitAll()
-                        .requestMatchers( "/authorize/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/oauth2/**").permitAll()
+                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/authorize/**").permitAll()
                 )
                 .formLogin(Customizer.withDefaults())
                 .build();
