@@ -72,7 +72,7 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder, NightflySettings nightflySettings) {
         RegisteredClient simpleClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
                 .clientId("simpleclient")
@@ -88,8 +88,31 @@ public class AuthorizationServerConfig {
                 .scope("batches.read")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
+        RegisteredClient nightflyClient = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("nightfly")
+                .clientSecret(passwordEncoder.encode(nightflySettings.getSecret()))
+                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/nightfly")
+                .redirectUri("http://127.0.0.1:8080/authorized")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .scope("batches.read")
+                .scope("batches.write")
+                .scope("batches.all")
+                .scope("recipes.read")
+                .scope("recipes.write")
+                .scope("recipes.all")
+                .scope("taps.read")
+                .scope("taps.write")
+                .scope("taps.all")
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
 
-        return new InMemoryRegisteredClientRepository(simpleClient);
+        return new InMemoryRegisteredClientRepository(simpleClient, nightflyClient);
     }
 
     @Bean
