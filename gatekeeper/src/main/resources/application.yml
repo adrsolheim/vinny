@@ -1,6 +1,9 @@
 server:
   port: 9000
-
+spring:
+  config:
+    # Local development properties outside version control
+    import: optional:classpath:local.yml
 logging:
   level:
     org:

@@ -1,4 +1,5 @@
 *.txt
+local.yml
 
 # dirs
 nightfly_db/data/
