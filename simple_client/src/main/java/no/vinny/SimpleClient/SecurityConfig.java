@@ -19,7 +19,7 @@ public class SecurityConfig {
                     authorize.requestMatchers("/favicon.ico").permitAll();
                     authorize.requestMatchers("/batches").hasAuthority("SCOPE_batches.read");
                     authorize.requestMatchers("/recipes").hasAuthority("SCOPE_recipes.read");
-                    authorize.requestMatchers("/").authenticated();
+                    authorize.requestMatchers("/**").authenticated();
                 })
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .oauth2Login(Customizer.withDefaults())
