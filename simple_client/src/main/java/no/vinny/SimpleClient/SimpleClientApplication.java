@@ -1,6 +1,7 @@
 package no.vinny.SimpleClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.security.Principal;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @ResponseBody
 @SpringBootApplication
@@ -43,10 +45,10 @@ public class SimpleClientApplication {
 
 		var body = new LinkedMultiValueMap<String, String>();
 		body.add("grant_type", "client_credentials");
-		body.add("scope", "user.read");
+		body.add("scope", "batches.read");
 
 		var entity = new HttpEntity<>(body, headers);
-		var url = "http://localhost:8080/oauth2/token";
+		var url = "http://localhost:9000/oauth2/token";
 		var response = restTemplate.postForEntity(url, entity, JsonNode.class);
 		Assert.state(response.getStatusCode().is2xxSuccessful(), "the response needs to be 2xx");
 		return response.getBody().get("access_token").asText();
