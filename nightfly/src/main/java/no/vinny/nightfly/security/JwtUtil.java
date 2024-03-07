@@ -15,7 +15,8 @@ public class JwtUtil {
     private String jwtSecret;
     private String issuer;
 
-    public JwtUtil(@Value("${supabase.jwt_secret}") String jwtSecret, @Value("${supabase.url}") String issuer) {
+    public JwtUtil(@Value("${spring.security.oauth2.client.registration.nightfly.client-secret}") String jwtSecret,
+                   @Value("${spring.security.oauth2.client.provider.spring.issuer-uri}") String issuer) {
         this.jwtSecret = jwtSecret;
         this.issuer = issuer;
     }
