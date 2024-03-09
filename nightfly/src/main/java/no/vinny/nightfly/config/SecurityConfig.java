@@ -28,9 +28,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf((csrf) -> csrf.disable())
-                .oauth2Login(Customizer.withDefaults())
-                //.addFilter(new JwtAuthenticationFilter(jwtAuthenticationManager, supabaseAuthService))
-                //.addFilter(new JwtInspectionFilter(jwtAuthenticationManager))
+                //.oauth2Login(Customizer.withDefaults())
+                .addFilter(new JwtAuthenticationFilter(jwtAuthenticationManager, supabaseAuthService))
+                .addFilter(new JwtInspectionFilter(jwtAuthenticationManager))
                 .authorizeHttpRequests((request) -> request
                     .requestMatchers(HttpMethod.POST,   "/api/batches/**").hasAnyAuthority("SCOPE_batches.write")
                     .requestMatchers(HttpMethod.PUT,    "/api/batches/**").hasAnyAuthority("SCOPE_batches.write")
