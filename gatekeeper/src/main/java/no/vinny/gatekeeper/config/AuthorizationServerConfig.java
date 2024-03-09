@@ -102,13 +102,10 @@ public class AuthorizationServerConfig {
                 .scope(OidcScopes.PROFILE)
                 .scope("batches.read")
                 .scope("batches.write")
-                .scope("batches.all")
                 .scope("recipes.read")
                 .scope("recipes.write")
-                .scope("recipes.all")
                 .scope("taps.read")
                 .scope("taps.write")
-                .scope("taps.all")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
