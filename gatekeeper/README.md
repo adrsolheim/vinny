@@ -1,3 +1,7 @@
+# Setup
+
+An RSA key pair is required. The private key needs to be in `PKCS#8` format (`PKCS#1` is standard). See `keygen.sh` for details
+
 # Authorization Server
 
 Cookies are tied to hostname. Redirects will use `127.0.0.1` and not `localhost`.
