@@ -1,26 +1,27 @@
 server:
   port: 8082
-spring:
-  security:
-    oauth2:
-      client:
-        provider:
-          spring:
-            issuer-uri: http://gatekeeper:9000
-        registration:
-          simpleclient-oidc:
-            provider: spring
-            client-id: simpleclient
-            client-secret: simpleclient
-            redirect-uri: "http://127.0.0.1:8082/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
-            client-authentication-method: client_secret_basic
-            scope: batches.read,openid
-          simpleclient-authorization-code:
-            provider: spring
-            client-id: simpleclient
-            client-secret: simpleclient
-            redirect-uri: "http://127.0.0.1:8082/authorized"
-            authorization-grant-type: authorization_code
-            client-authentication-method: client_secret_basic
-            scope: batches.read
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        provider:
+#          spring:
+#            issuer-uri: http://gatekeeper:9000
+#        registration:
+#          simpleclient-oidc:
+#            provider: spring
+#            client-id: nightfly
+#            client-secret: nightfly
+#            redirect-uri: "http://127.0.0.1:8082/login/oauth2/code/{registrationId}"
+#            redirect-uri: "http://127.0.0.1:8082/authorized"
+#            authorization-grant-type: authorization_code
+#            client-authentication-method: client_secret_basic
+#            scope: batches.read,batches.write,recipes.read,recipes.write,taps.read,taps.write,openid,profile
+          #simpleclient-authorization-code:
+          #  provider: spring
+          #  client-id: simpleclient
+          #  client-secret: simpleclient
+          #  redirect-uri: "http://127.0.0.1:8082/authorized"
+          #  authorization-grant-type: authorization_code
+          #  client-authentication-method: client_secret_basic
+          #  scope: batches.read

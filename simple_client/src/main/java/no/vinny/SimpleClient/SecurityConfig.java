@@ -17,12 +17,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/error").permitAll();
                     authorize.requestMatchers("/favicon.ico").permitAll();
-                    authorize.requestMatchers("/batches").hasAuthority("SCOPE_batches.read");
+                    authorize.requestMatchers("/jwt").permitAll();
+                    authorize.requestMatchers("/batches").permitAll();//hasAuthority("SCOPE_batches.read");
                     authorize.requestMatchers("/recipes").hasAuthority("SCOPE_recipes.read");
                     authorize.requestMatchers("/**").authenticated();
                 })
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
-                .oauth2Login(Customizer.withDefaults())
+                //.oauth2Login(Customizer.withDefaults())
                 .build();
     }
 }
