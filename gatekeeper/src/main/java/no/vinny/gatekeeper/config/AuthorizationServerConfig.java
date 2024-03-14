@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -39,15 +40,27 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.UUID;
 
+@Slf4j
 @Configuration
 public class AuthorizationServerConfig {
+
+    @Autowired
+    private NightflySettings nightflySettings;
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -114,18 +127,22 @@ public class AuthorizationServerConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+        return AuthorizationServerSettings.builder()
+                .issuer("http://gatekeeper:9000")
+                .build();
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
-        RSAKey rsaKey = createRsaKey();
+    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        //byte[] seed = MessageDigest.getInstance("SHA-256").digest(nightflySettings.getSecret().getBytes("utf-8"));
+        //RSAKey rsaKey = createRsaKey(seed);
+        RSAKey rsaKey = loadRsaKeyPair();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
     }
 
-    private static RSAKey createRsaKey() throws NoSuchAlgorithmException {
-        KeyPair keyPair = createKeyPair();
+    private static RSAKey createRsaKey(byte[] seed) throws NoSuchAlgorithmException {
+        KeyPair keyPair = createKeyPair(seed);
         RSAPublicKey publicKey   = (RSAPublicKey)  keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         return new RSAKey.Builder(publicKey)
@@ -134,9 +151,48 @@ public class AuthorizationServerConfig {
                 .build();
     }
 
-    private static KeyPair createKeyPair() throws NoSuchAlgorithmException {
+    private static RSAKey loadRsaKeyPair() {
+        String pubText;
+        String privText;
+        try {
+            pubText = Files.readString(Path.of(AuthorizationServerConfig.class.getClassLoader().getResource("publickey.pem").toURI()));
+            privText = Files.readString(Path.of(AuthorizationServerConfig.class.getClassLoader().getResource("privatekey-pkcs8.pem").toURI()));
+        } catch (IOException | URISyntaxException ex) {
+            log.error("Unable to read public and private key from disk: ", ex);
+            throw new RuntimeException(ex);
+        }
+        String pub = pubText.replaceAll("-----BEGIN PUBLIC KEY-----", "").replaceAll("-----END PUBLIC KEY-----", "").replaceAll("\\s", "");
+        String priv = privText.replaceAll("-----BEGIN PRIVATE KEY-----", "").replaceAll("-----END PRIVATE KEY-----", "").replaceAll("\\s", "");
+        PublicKey pubKey;
+        PrivateKey privKey;
+        try {
+            pubKey = loadPublicKey(pub);
+            privKey = loadPrivateKey(priv);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            log.error("Unable to convert public/private pem keys to key pair: ", ex);
+            throw new RuntimeException(ex);
+        }
+        return new RSAKey.Builder((RSAPublicKey) pubKey)
+                .privateKey((RSAPrivateKey) privKey)
+                .build();
+    }
+
+    private static PrivateKey loadPrivateKey(String privateKeyPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] decodedPrivateKey = Base64.getDecoder().decode(privateKeyPem.getBytes());
+        return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decodedPrivateKey));
+    }
+
+    private static PublicKey loadPublicKey(String publicKeyPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] decodedPublicKey = Base64.getDecoder().decode(publicKeyPem.getBytes());
+        return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decodedPublicKey));
+    }
+
+    private static KeyPair createKeyPair(byte[] seed) throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        secureRandom.setSeed(seed);
+
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
+        keyPairGenerator.initialize(2048,secureRandom);
         return keyPairGenerator.generateKeyPair();
     }
 }
