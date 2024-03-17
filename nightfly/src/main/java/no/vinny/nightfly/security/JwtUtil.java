@@ -1,12 +1,25 @@
 package no.vinny.nightfly.security;
 
+import com.nimbusds.jose.jwk.RSAKey;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -38,6 +51,10 @@ public class JwtUtil {
         return generateSecretKeyStringFrom(jwtSecret.getBytes());
     }
 
+    public PublicKey getPublicKey() {
+        return loadPublicKey();
+    }
+
     private String generateSecretKeyStringFrom(byte[] secret) {
         return Base64.getEncoder().encodeToString(secret);
     }
@@ -53,5 +70,50 @@ public class JwtUtil {
 
     private SecretKey generateSecretKeyFrom(byte[] secret) {
         return Keys.hmacShaKeyFor(secret);
+    }
+
+    public RSAKey getRsaKey() throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        return createRsaKey(jwtSecret.getBytes("utf-8"));
+    }
+    private static RSAKey createRsaKey(byte[] seed) throws NoSuchAlgorithmException {
+        KeyPair keyPair = createKeyPair(seed);
+        RSAPublicKey publicKey   = (RSAPublicKey)  keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        return new RSAKey.Builder(publicKey)
+                .privateKey(privateKey)
+                .keyID(UUID.randomUUID().toString())
+                .build();
+    }
+
+    private static KeyPair createKeyPair(byte[] seed) throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        secureRandom.setSeed(seed);
+
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048,secureRandom);
+        return keyPairGenerator.generateKeyPair();
+    }
+
+    private PublicKey loadPublicKey() {
+        String pubText;
+        try {
+            pubText = Files.readString(Path.of(JwtUtil.class.getClassLoader().getResource("publickey.pem").toURI()));
+            pubText = pubText.replaceAll("-----BEGIN PUBLIC KEY-----", "").replaceAll("-----END PUBLIC KEY-----", "").replaceAll("\\s", "");
+        } catch (IOException | URISyntaxException ex) {
+            log.error("Unable to read public key 'publickey.pem' from file: ", ex);
+            throw new RuntimeException(ex);
+        }
+        PublicKey publicKey;
+        try {
+             publicKey = loadPublicKey(pubText);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            log.error("Unable to decode and convert 'publickey.pem' to public key: ", ex);
+            throw new RuntimeException(ex);
+        }
+        return publicKey;
+    }
+    private PublicKey loadPublicKey(String publicKeyPem) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] decodedPublicKey = Base64.getDecoder().decode(publicKeyPem.getBytes(StandardCharsets.UTF_8));
+        return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decodedPublicKey));
     }
 }
