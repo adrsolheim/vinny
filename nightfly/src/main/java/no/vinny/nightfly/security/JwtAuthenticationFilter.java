@@ -37,8 +37,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken extractAuthentication(HttpServletRequest request) {
         log.info("Extracting authentication from request: {}", request);
-        if (request == null || request.getCookies() == null) {
-            log.info("Unable to extract authentication headers from request: {}", request);
+        if (request == null) {
+            log.info("Unable to extract authentication from empty request: {}", request);
             return null;
         }
         if (request.getHeader("Authorization") == null || !request.getHeader("Authorization").startsWith("Bearer ")) {
@@ -46,6 +46,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
         String accessToken = request.getHeader("Authorization").split(" ")[1];
         SupabaseUser user = supabaseAuthService.user(accessToken);
-        return user == null ? null : new UsernamePasswordAuthenticationToken(user, user.getPassword(), new ArrayList<>());
+        return user == null ? null : new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
     }
 }

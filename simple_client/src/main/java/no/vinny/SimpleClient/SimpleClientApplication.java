@@ -65,8 +65,8 @@ public class SimpleClientApplication {
 
 
 	@GetMapping("/batches")
-	public ResponseEntity<Map> batches(RestTemplate restTemplate) {
-		String jwtToken = getJwtToken(restTemplate());
+	public ResponseEntity<String> batches(RestTemplate restTemplate) {
+		String jwtToken = getJwtToken(restTemplate);
 
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
@@ -74,7 +74,7 @@ public class SimpleClientApplication {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(jwtToken);
 
-		return restTemplate.exchange("http://localhost:8080/api/batches", HttpMethod.GET, new HttpEntity<>(body, headers), Map.class);
+		return restTemplate.exchange("http://localhost:8080/api/batches", HttpMethod.GET, new HttpEntity<>(body, headers), String.class);
 	}
 
 	@PreAuthorize("isAuthenticated() and hasRole('admin')")

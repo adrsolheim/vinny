@@ -3,6 +3,7 @@ package no.vinny.nightfly.security;
 import io.jsonwebtoken.Claims;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
@@ -25,7 +26,13 @@ public class SupabaseUser implements UserDetails {
     private final ZonedDateTime expired;
 
     public SupabaseUser(Claims claims, String accessToken) {
-        grantedAuthorities = new ArrayList<>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (claims.get("scope") != null) {
+            for (Object scp : claims.get("scope", List.class)) {
+                authorities.add(new SimpleGrantedAuthority((String) scp));
+            }
+        }
+        grantedAuthorities = authorities;
         this.claims = claims;
         token = accessToken;
 

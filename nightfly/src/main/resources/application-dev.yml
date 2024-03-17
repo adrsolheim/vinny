@@ -1,6 +1,7 @@
 logging:
   level:
     org.springframework.jdbc.core: TRACE
+    org.springframework.security: TRACE
 spring:
   config:
     # Local development properties outside version control
