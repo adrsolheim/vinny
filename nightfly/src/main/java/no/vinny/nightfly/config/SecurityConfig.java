@@ -48,6 +48,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PATCH,  "/api/taps/**").hasAnyAuthority("SCOPE_taps.write", "taps.write")
                     .requestMatchers(HttpMethod.DELETE, "/api/taps/**").hasAnyAuthority("SCOPE_taps.write", "taps.write")
                     .requestMatchers(HttpMethod.GET,    "/api/taps/**").hasAnyAuthority("SCOPE_taps.read",  "taps.read")
+                    .requestMatchers("/api/export/**").permitAll()
                     .anyRequest().authenticated()
         ).build();
     }
