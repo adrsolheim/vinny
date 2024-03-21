@@ -2,6 +2,7 @@ package no.vinny.nightfly.components.recipe.impl;
 
 import jakarta.servlet.ServletOutputStream;
 import no.vinny.nightfly.components.recipe.RecipeService;
+import no.vinny.nightfly.components.recipe.domain.Recipe;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class RecipeExportService {
@@ -46,7 +48,25 @@ public class RecipeExportService {
             headerCell.setCellValue("Name");
             headerCell.setCellStyle(headerStyle);
 
+            fillRows(sheet);
             workbook.write(servletOutputStream);
+        }
+    }
+
+    private void fillRows(Sheet sheet) {
+        List<Recipe> recipes = recipeService.getAll(null);
+        int row = 1;
+        for (Recipe recipe : recipes) {
+            Row current = sheet.createRow(row);
+            Cell rowCell = current.createCell(0);
+            rowCell.setCellValue(recipe.getId());
+
+            rowCell = current.createCell(1);
+            rowCell.setCellValue(recipe.getBrewfatherId());
+
+            rowCell = current.createCell(2);
+            rowCell.setCellValue(recipe.getName());
+            row++;
         }
     }
 }
