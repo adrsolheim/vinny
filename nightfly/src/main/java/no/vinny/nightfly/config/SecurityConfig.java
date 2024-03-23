@@ -30,8 +30,8 @@ public class SecurityConfig {
         return http
                 .csrf((csrf) -> csrf.disable())
                 //.oauth2Login(Customizer.withDefaults())
-                .addFilterBefore(new JwtInspectionFilter(jwtAuthenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtAuthenticationManager, supabaseAuthService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtInspectionFilter(jwtAuthenticationManager), JwtAuthenticationFilter.class)
                 .authorizeHttpRequests((request) -> request
                     .requestMatchers(HttpMethod.POST,   "/api/batches/**").hasAnyAuthority("SCOPE_batches.write", "batches.write")
                     .requestMatchers(HttpMethod.PUT,    "/api/batches/**").hasAnyAuthority("SCOPE_batches.write", "batches.write")

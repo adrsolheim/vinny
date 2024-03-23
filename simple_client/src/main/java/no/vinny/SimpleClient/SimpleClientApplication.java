@@ -83,6 +83,7 @@ public class SimpleClientApplication {
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set("foo", "bar");
 		headers.setBearerAuth(jwtToken);
 
 		return restTemplate.exchange("http://localhost:8080/api/recipes", HttpMethod.GET, new HttpEntity<>(body, headers), String.class);

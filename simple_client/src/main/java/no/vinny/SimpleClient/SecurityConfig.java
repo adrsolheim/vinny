@@ -15,15 +15,9 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/error").permitAll();
-                    authorize.requestMatchers("/favicon.ico").permitAll();
-                    authorize.requestMatchers("/jwt").permitAll();
-                    authorize.requestMatchers("/batches").permitAll();//hasAuthority("SCOPE_batches.read");
-                    authorize.requestMatchers("/recipes").hasAuthority("SCOPE_recipes.read");
-                    authorize.requestMatchers("/**").authenticated();
+                    authorize.requestMatchers("/**").permitAll();
                 })
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
-                //.oauth2Login(Customizer.withDefaults())
                 .build();
     }
 }
