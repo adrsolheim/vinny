@@ -52,9 +52,10 @@ public class SecurityConfig {
         return http
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/oauth2/**").permitAll()
-                        .requestMatchers("/login/**").permitAll()
-                        .requestMatchers("/authorize/**").permitAll()
+                        .anyRequest().authenticated()
+                        //.requestMatchers("/oauth2/**").permitAll()
+                        //.requestMatchers("/login/**").permitAll()
+                        //.requestMatchers("/authorize/**").permitAll()
                 )
                 .formLogin(Customizer.withDefaults())
                 .build();
