@@ -22,7 +22,7 @@ public class ExportRecipeController {
         this.recipeExportService = recipeExportService;
     }
 
-    @GetMapping
+    @GetMapping("/excel")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType("text/xlsx");
         response.setHeader("Content-disposition", String.format("attachment;filename=%s", FILENAME));
