@@ -8,17 +8,27 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 @Service
 public class RecipeExportService {
 
+    private static final String CSV_HEADER = "BrewfatherId,Name";
     private final RecipeService recipeService;
+
 
     public RecipeExportService(RecipeService recipeService) {
         this.recipeService = recipeService;
+    }
+
+    public String recipesToCsv() {
+        StringBuilder csv = new StringBuilder(CSV_HEADER);
+        List<Recipe> recipes = recipeService.getAll(null);
+        for (Recipe recipe : recipes) {
+            csv.append(String.format("%s,%s", recipe.getBrewfatherId(), recipe.getName()));
+        }
+        return csv.toString();
     }
 
     public void exportRecipesToExcel(ServletOutputStream servletOutputStream) throws IOException {
