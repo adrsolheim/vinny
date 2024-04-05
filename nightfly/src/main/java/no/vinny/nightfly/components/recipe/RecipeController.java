@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.recipe;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.config.Pagination;
@@ -28,18 +29,17 @@ public class RecipeController {
     // TODO: return message if missing
     @GetMapping("/{id}")
     public Recipe recipe(@PathVariable Long id) {
-        return recipeService.get(id).orElse(null);
+        return recipeService.get(id).orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
     }
 
     @GetMapping("/brewfather/{id}")
     public Recipe recipe(@PathVariable String id) {
-        return recipeService.getByBrewfatherId(id).orElse(null);
+        return recipeService.getByBrewfatherId(id).orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
     }
 
     @GetMapping
     public List<Recipe> recipes() {
-        Pageable pageable = PageRequest.of(0, pagination.getPageSize());
-        return recipeService.getAll(pageable);
+        return recipeService.getAll(null);
     }
 
     @GetMapping("/count")

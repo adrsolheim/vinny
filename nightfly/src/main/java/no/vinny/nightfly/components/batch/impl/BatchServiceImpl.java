@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.batch.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
@@ -88,10 +89,10 @@ public class BatchServiceImpl implements BatchService {
         Optional<Batch> existingBatch = get(batch.getId());
         if (existingBatch.isEmpty()) {
             log.info("UPDATE: Batch not found. Skipping update..");
-            return null;
+            throw new EntityNotFoundException("Batch not found");
         }
         batchRepository.update(mergeNonNull(batch, existingBatch.get()));
-        return get(batch.getId()).orElse(null); // TODO: throw exception with description here
+        return get(batch.getId()).get();
     }
 
     /**

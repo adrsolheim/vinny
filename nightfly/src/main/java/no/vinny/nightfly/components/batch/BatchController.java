@@ -34,7 +34,7 @@ public class BatchController {
 
     @GetMapping("/brewfather/{id}")
     public Batch batch(@PathVariable String id) {
-        return batchService.getByBrewfatherId(id).orElse(null);
+        return batchService.getByBrewfatherId(id).orElseThrow(() -> new EntityNotFoundException("Batch not found"));
     }
 
     @GetMapping
