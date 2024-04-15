@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,23 +25,49 @@ import java.util.Map;
 @SpringBootApplication
 public class SimpleClientApplication {
 
+	@Lazy
+	@Autowired
+	RestTemplate restTemplate;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SimpleClientApplication.class, args);
 	}
 
 	@GetMapping("/jwt")
-	public Map<String, String> jwt(RestTemplate restTemplate) {
-		return Map.of("jwt", getJwtToken(restTemplate));
+	public Map<String, String> jwt() {
+		return Map.of("jwt", getJwtToken());
 	}
 
 	@GetMapping("/auth-jwt")
-	public Map<String, String> jwt(Authentication authentication, RestTemplate restTemplate) {
-		return Map.of("jwt", getJwtToken(restTemplate), "authentication", authentication.toString(), "authclass", authentication.getClass().getName());
+	public Map<String, String> jwt(Authentication authentication) {
+		return Map.of("jwt", getJwtToken(), "authentication", authentication.toString(), "authclass", authentication.getClass().getName());
 	}
 
+	@GetMapping("/userlogin")
+	public String jwt(@RequestParam String username,
+					  @RequestParam String password) {
+		return getJwtToken(username, password);
+	}
 
-	private String getJwtToken(RestTemplate restTemplate) {
+	private String getJwtToken(String username, String password) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBasicAuth(username, password);
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("grant_type", "client_credentials");
+		// space delimited
+		body.add("scope", "batches.read batches.write recipes.read recipes.write taps.read taps.write openid profile");
+
+		HttpEntity<LinkedMultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
+		String url = "http://localhost:9000/oauth2/token";
+
+		ResponseEntity<JsonNode> response = restTemplate.postForEntity(url, entity, JsonNode.class);
+		Assert.state(response.getStatusCode().is2xxSuccessful(), "the response needs to be 2xx");
+		return response.getBody().get("access_token").asText();
+	}
+
+	private String getJwtToken() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBasicAuth("nightfly", "578b7f8b-7e0b-452c-9a80-1541c6282ea3");
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -65,8 +92,8 @@ public class SimpleClientApplication {
 
 
 	@GetMapping("/batches")
-	public ResponseEntity<String> batches(RestTemplate restTemplate) {
-		String jwtToken = getJwtToken(restTemplate);
+	public ResponseEntity<String> batches() {
+		String jwtToken = getJwtToken();
 
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		HttpHeaders headers = new HttpHeaders();
@@ -77,8 +104,8 @@ public class SimpleClientApplication {
 	}
 
 	@GetMapping("/recipes")
-	public ResponseEntity<String> recipes(RestTemplate restTemplate) {
-		String jwtToken = getJwtToken(restTemplate);
+	public ResponseEntity<String> recipes() {
+		String jwtToken = getJwtToken();
 
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		HttpHeaders headers = new HttpHeaders();
