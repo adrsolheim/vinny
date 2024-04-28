@@ -1,11 +1,16 @@
 package no.vinny.nightfly.security;
 
+import com.nimbusds.jose.JOSEException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +21,7 @@ class SupabaseAuthServiceTest {
 
     @BeforeEach
     void setup() {
-        jwtUtil = new JwtUtil("K+g7wvB8pP5g53JL3ApQnnEZ9Xr29TqqLl2qloDpahnkXrem43uVMexrE0G+317I4ettbMXETbKrdO+WPKBdTQ==", "https://viatplyztqnkievknofv.supabase.co/auth/v1");
+        jwtUtil = new JwtUtil("K+g7wvB8pP5g53JL3ApQnnEZ9Xr29TqqLl2qloDpahnkXrem43uVMexrE0G+317I4ettbMXETbKrdO+WPKBdTQ==", "http://auth-server");
         supabaseAuthService = new SupabaseAuthService(jwtUtil);
     }
 
@@ -39,11 +44,15 @@ class SupabaseAuthServiceTest {
     }
 
     private String bobUserJwt() {
-        return Jwts.builder()
-                .setIssuer("https://viatplyztqnkievknofv.supabase.co/auth/v1")
-                .setSubject("Bob")
-                .claim("role", "USER")
-                .signWith(jwtUtil.fetchSecretKey())
-                .compact();
+        try {
+            return Jwts.builder()
+                    .setIssuer("http://auth-server")
+                    .setSubject("Bob")
+                    .claim("role", "USER")
+                    .signWith(jwtUtil.getRsaKey().toPrivateKey())
+                    .compact();
+        } catch (JOSEException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -32,7 +32,7 @@ public class SupabaseAuthService {
         String issuer = jwtUtil.getIssuer();
         try {
             Jwt<JwsHeader, Claims> parse = Jwts.parserBuilder()
-                    .setSigningKey(jwtUtil.getPublicKey())
+                    .setSigningKey(jwtUtil.getRsaKey().toPrivateKey())
                     .requireIssuer(issuer)
                     .setAllowedClockSkewSeconds(30L) // allow a margin 30 sec difference
                     .build()
@@ -45,6 +45,12 @@ public class SupabaseAuthService {
         } catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             log.warn("Unable to parse JWT:", ex);
             return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
         }
     }
 }
