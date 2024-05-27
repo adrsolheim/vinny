@@ -38,6 +38,11 @@ public class SecurityConfig {
                         .username("user")
                         .password(passwordEncoder().encode("password"))
                         .roles("USER")
+                        .build(),
+                User.builder()
+                        .username("admin")
+                        .password(passwordEncoder().encode("password"))
+                        .roles("ADMIN","USER")
                         .build()
         );
     }

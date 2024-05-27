@@ -3,10 +3,10 @@ package no.vinny.nightfly.security;
 import com.nimbusds.jose.JOSEException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.Base64;
@@ -32,24 +32,18 @@ public class SupabaseAuthService {
         String issuer = jwtUtil.getIssuer();
         try {
             Jwt<JwsHeader, Claims> parse = Jwts.parserBuilder()
-                    .setSigningKey(jwtUtil.getRsaKey().toPrivateKey())
+                    .setSigningKey(jwtUtil.getRsaKey().toPublicKey())
                     .requireIssuer(issuer)
                     .setAllowedClockSkewSeconds(30L) // allow a margin 30 sec difference
                     .build()
                     .parseClaimsJws(accessToken);
 
-            log.info("parse: {}", parse);
             SupabaseUser supabaseUser = new SupabaseUser(parse.getBody(), accessToken);
-            log.info("user: {}", supabaseUser);
             return supabaseUser;
         } catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             log.warn("Unable to parse JWT:", ex);
             return null;
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (JOSEException e) {
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException | JOSEException e) {
             throw new RuntimeException(e);
         }
     }

@@ -27,11 +27,17 @@ public class JwtUtil {
 
     private String jwtSecret;
     private String issuer;
+    private PubKey pubKey;
 
     public JwtUtil(@Value("${spring.security.oauth2.client.registration.nightfly.client-secret}") String jwtSecret,
-                   @Value("${spring.security.oauth2.client.provider.spring.issuer-uri}") String issuer) {
+                   @Value("${spring.security.oauth2.client.provider.spring.issuer-uri}") String issuer,
+                   PubKey pubKey) {
         this.jwtSecret = jwtSecret;
         this.issuer = issuer;
+        if (pubKey == null) {
+            throw new RuntimeException("Missing environment data: public key");
+        }
+        this.pubKey = pubKey;
     }
 
     public String getJwtSecret() {
@@ -52,7 +58,15 @@ public class JwtUtil {
     }
 
     public PublicKey getPublicKey() {
-        return loadPublicKey();
+        String formattedKey = pubKey.getPublicKey().replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+        byte[] decodedKey = Base64.getDecoder().decode(formattedKey);
+        try {
+            return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decodedKey));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String generateSecretKeyStringFrom(byte[] secret) {
@@ -60,7 +74,6 @@ public class JwtUtil {
     }
 
     public SecretKey fetchSecretKey() {
-        log.info("jwt_secret: {}", jwtSecret);
         if (jwtSecret == null || "".equals(jwtSecret)) {
             log.warn("Unable to perform authentication: Missing JWT secret. Make sure environment properties are configured and loaded.");
             return null;
