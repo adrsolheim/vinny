@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Slf4j
@@ -47,6 +49,10 @@ public class SimpleClientApplication {
 	public String jwt(@RequestParam String username,
 					  @RequestParam String password) {
 		return getJwtToken(username, password);
+	}
+	@GetMapping("/error")
+	public String error() {
+		return "Access denied";
 	}
 
 	private String getJwtToken(String username, String password) {
@@ -92,7 +98,7 @@ public class SimpleClientApplication {
 
 
 	@GetMapping("/batches")
-	public ResponseEntity<String> batches() {
+	public ResponseEntity<String> batches(Principal principal) {
 		String jwtToken = getJwtToken();
 
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();

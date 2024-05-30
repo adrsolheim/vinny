@@ -28,7 +28,7 @@ public class JwtInspectionFilter extends BasicAuthenticationFilter {
             log.info("Credentials: {}", authentication.getCredentials());
             log.info("Authorities: {}", authentication.getAuthorities());
             log.info("Details: {}", authentication.getDetails());
-            log.info("Principal: {}", (SupabaseUser) authentication.getPrincipal());
+            log.info("Principal: {}", authentication.getPrincipal());
         }
 
         chain.doFilter(request, response);

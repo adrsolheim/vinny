@@ -14,9 +14,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/**").authenticated();
-                })
+                .authorizeHttpRequests(authorize ->
+                    authorize.anyRequest().authenticated()
+                )
+                .oauth2Login(Customizer.withDefaults())
+                //.exceptionHandling(exception -> exception.accessDeniedHandler(handler -> handler.).accessDeniedPage("/error"))
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .build();
     }

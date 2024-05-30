@@ -31,13 +31,10 @@ class JwtAuthenticationTest {
     private String jwtSecret;
     private Instant now;
     private SecretKey key;
-    @Mock
-    private SupabaseAuthService supabaseAuthService;
     private String jwt;
 
     @BeforeAll
     void setup() {
-        supabaseAuthService = mock(SupabaseAuthService.class);
         this.now = Instant.parse("2030-12-03T10:15:30.00Z");
         this.TWO_DAYS_AGO = todayPlusDays(-2);
         this.TODAY        = todayPlusDays(0);

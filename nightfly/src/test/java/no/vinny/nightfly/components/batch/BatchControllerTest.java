@@ -4,7 +4,6 @@ import no.vinny.nightfly.components.batch.BatchController;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.config.Pagination;
-import no.vinny.nightfly.security.SupabaseAuthService;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,8 +23,6 @@ import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
 class BatchControllerTest {
     @Autowired
     MockMvc mockMvc;
-    @MockBean
-    SupabaseAuthService supabaseAuthService;
     @MockBean
     BatchService batchService;
     @MockBean
