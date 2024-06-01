@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.Principal;
 import java.util.Map;
 
 @Slf4j
@@ -28,14 +30,17 @@ public class SimpleClientApplication {
 	@Lazy
 	@Autowired
 	RestTemplate restTemplate;
+	@Lazy
+	@Autowired
+	OAuth2AuthorizedClientService authorizedClientService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SimpleClientApplication.class, args);
 	}
 
 	@GetMapping("/jwt")
-	public Map<String, String> jwt() {
-		return Map.of("jwt", getJwtToken());
+	public String jwt(Principal principal) {
+		return authorizedClientService.loadAuthorizedClient("nightfly", principal.getName()).getAccessToken().getTokenValue();
 	}
 
 	@GetMapping("/auth-jwt")
@@ -92,15 +97,18 @@ public class SimpleClientApplication {
 
 
 	@GetMapping("/batches")
-	public ResponseEntity<String> batches() {
-		String jwtToken = getJwtToken();
+	public ResponseEntity<String> batches(Principal principal) {
+		return restTemplate.exchange("http://localhost:8080/api/batches", HttpMethod.GET, createHttpRequest(principal), String.class);
+	}
 
+	private HttpEntity createHttpRequest(Principal principal) {
+		String jwtToken = authorizedClientService.loadAuthorizedClient("nightfly", principal.getName()).getAccessToken().getTokenValue();
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(jwtToken);
 
-		return restTemplate.exchange("http://localhost:8080/api/batches", HttpMethod.GET, new HttpEntity<>(body, headers), String.class);
+		return new HttpEntity(new LinkedMultiValueMap<>(), headers);
 	}
 
 	@GetMapping("/recipes")

@@ -1,3 +1,4 @@
+local.yml
 *.pem
 HELP.md
 target/

@@ -8,18 +8,18 @@ spring:
       enabled: true
   security:
     oauth2:
-      client:
-        provider:
-          spring:
-            issuer-uri: http://gatekeeper:9000
-        registration:
-          nightfly:
-            provider: spring
-            client-id: nightfly
-            authorization-grant-type: authorization_code
-            client-authentication-method: client_secret_basic
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: batches.read,batches.write,recipes.read,recipes.write,taps.read,taps.write,openid,profile
+      #client:
+      #  provider:
+      #    spring:
+      #      issuer-uri: http://gatekeeper:9000
+      #  registration:
+      #    nightfly:
+      #      provider: spring
+      #      client-id: nightfly
+      #      authorization-grant-type: authorization_code
+      #      client-authentication-method: client_secret_basic
+      #      redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+      #      scope: batches.read,batches.write,recipes.read,recipes.write,taps.read,taps.write,openid,profile
       resourceserver:
         jwt:
           issuer-uri: http://gatekeeper:9000

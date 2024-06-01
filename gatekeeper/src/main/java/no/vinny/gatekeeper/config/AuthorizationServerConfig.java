@@ -69,6 +69,7 @@ public class AuthorizationServerConfig {
         // Enable OpenID Connect 1.0
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults());
+        http.oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
         return http
                 // Unauthenticated -> redirect to login
                 .exceptionHandling((exceptions) -> exceptions
