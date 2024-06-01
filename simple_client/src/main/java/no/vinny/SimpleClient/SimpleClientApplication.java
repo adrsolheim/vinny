@@ -30,14 +30,17 @@ public class SimpleClientApplication {
 	@Lazy
 	@Autowired
 	RestTemplate restTemplate;
+	@Lazy
+	@Autowired
+	OAuth2AuthorizedClientService authorizedClientService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SimpleClientApplication.class, args);
 	}
 
 	@GetMapping("/jwt")
-	public Map<String, String> jwt() {
-		return Map.of("jwt", getJwtToken());
+	public String jwt(Principal principal) {
+		return authorizedClientService.loadAuthorizedClient("nightfly", principal.getName()).getAccessToken().getTokenValue();
 	}
 
 	@GetMapping("/auth-jwt")
@@ -49,10 +52,6 @@ public class SimpleClientApplication {
 	public String jwt(@RequestParam String username,
 					  @RequestParam String password) {
 		return getJwtToken(username, password);
-	}
-	@GetMapping("/error")
-	public String error() {
-		return "Access denied";
 	}
 
 	private String getJwtToken(String username, String password) {
@@ -99,14 +98,17 @@ public class SimpleClientApplication {
 
 	@GetMapping("/batches")
 	public ResponseEntity<String> batches(Principal principal) {
-		String jwtToken = getJwtToken();
+		return restTemplate.exchange("http://localhost:8080/api/batches", HttpMethod.GET, createHttpRequest(principal), String.class);
+	}
 
+	private HttpEntity createHttpRequest(Principal principal) {
+		String jwtToken = authorizedClientService.loadAuthorizedClient("nightfly", principal.getName()).getAccessToken().getTokenValue();
 		LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(jwtToken);
 
-		return restTemplate.exchange("http://localhost:8080/api/batches", HttpMethod.GET, new HttpEntity<>(body, headers), String.class);
+		return new HttpEntity(new LinkedMultiValueMap<>(), headers);
 	}
 
 	@GetMapping("/recipes")

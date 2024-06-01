@@ -18,7 +18,6 @@ public class SecurityConfig {
                     authorize.anyRequest().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())
-                //.exceptionHandling(exception -> exception.accessDeniedHandler(handler -> handler.).accessDeniedPage("/error"))
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .build();
     }
