@@ -16,10 +16,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -27,22 +31,34 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Configuration
 public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         //return username -> userRepository.findByUsername(username);
+        List<GrantedAuthority> authorities = Stream.of("batches.read",
+                                                                "batches.write",
+                                                                "recipes.read",
+                                                                "recipes.write",
+                                                                "taps.read",
+                                                                "taps.write")
+                                                        .map(SimpleGrantedAuthority::new)
+                                                        .collect(Collectors.toList());
         return new InMemoryUserDetailsManager(
                 User.builder()
                         .username("user")
                         .password(passwordEncoder().encode("password"))
-                        .roles("USER")
+                        .authorities(authorities)
                         .build(),
                 User.builder()
                         .username("admin")
                         .password(passwordEncoder().encode("password"))
-                        .roles("ADMIN","USER")
+                        .authorities(authorities)
                         .build()
         );
     }

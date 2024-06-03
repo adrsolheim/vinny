@@ -17,7 +17,8 @@ spring:
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: batches.read,batches.write,recipes.read,recipes.write,taps.read,taps.write,openid,profile
+            scope: api.nightfly,openid,profile
+            #scope: batches.read,batches.write,recipes.read,recipes.write,taps.read,taps.write,openid,profile
 #          simpleclient-oidc:
 #            provider: spring
 #            client-id: nightfly

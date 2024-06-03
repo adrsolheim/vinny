@@ -102,12 +102,7 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
-                .scope("batches.read")
-                .scope("batches.write")
-                .scope("recipes.read")
-                .scope("recipes.write")
-                .scope("taps.read")
-                .scope("taps.write")
+                .scope("api.nightfly")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
