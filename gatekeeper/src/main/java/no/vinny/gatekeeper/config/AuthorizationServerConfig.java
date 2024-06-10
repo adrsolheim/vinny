@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +21,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -64,49 +67,50 @@ public class AuthorizationServerConfig {
                 // Unauthenticated -> redirect to login
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(
-                                new LoginUrlAuthenticationEntryPoint("/login")
+                                new LoginUrlAuthenticationEntryPoint("/login")))
                                 //new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        )
-                )
-                // User standard login form
-                .formLogin(Customizer.withDefaults())
                 .build();
     }
 
-    @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder, NightflySettings nightflySettings) {
-        RegisteredClient simpleClient = RegisteredClient
-                .withId(UUID.randomUUID().toString())
-                .clientId("simpleclient")
-                .clientSecret(passwordEncoder.encode("simpleclient"))
-                .redirectUri("http://127.0.0.1:8082/login/oauth2/code/simpleclient-oidc")
-                .redirectUri("http://127.0.0.1:8082/authorized")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope("batches.read")
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .build();
-        RegisteredClient nightflyClient = RegisteredClient
-                .withId(UUID.randomUUID().toString())
-                .clientId("nightfly")
-                .clientSecret(passwordEncoder.encode(nightflySettings.getSecret()))
-                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/nightfly")
-                .redirectUri("http://127.0.0.1:8080/authorized")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope("api.nightfly")
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .build();
+    //@Bean
+    //public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder, NightflySettings nightflySettings) {
+    //    RegisteredClient simpleClient = RegisteredClient
+    //            .withId(UUID.randomUUID().toString())
+    //            .clientId("simpleclient")
+    //            .clientSecret(passwordEncoder.encode("simpleclient"))
+    //            .redirectUri("http://127.0.0.1:8082/login/oauth2/code/simpleclient-oidc")
+    //            .redirectUri("http://127.0.0.1:8082/authorized")
+    //            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+    //            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+    //            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+    //            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+    //            .scope(OidcScopes.OPENID)
+    //            .scope(OidcScopes.PROFILE)
+    //            .scope("batches.read")
+    //            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+    //            .build();
+    //    RegisteredClient nightflyClient = RegisteredClient
+    //            .withId(UUID.randomUUID().toString())
+    //            .clientId("nightfly")
+    //            .clientSecret(passwordEncoder.encode(nightflySettings.getSecret()))
+    //            .redirectUri("http://127.0.0.1:8080/login/oauth2/code/nightfly")
+    //            .redirectUri("http://127.0.0.1:8080/authorized")
+    //            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+    //            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+    //            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+    //            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+    //            .scope(OidcScopes.OPENID)
+    //            .scope(OidcScopes.PROFILE)
+    //            .scope("api.nightfly")
+    //            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+    //            .build();
 
-        return new InMemoryRegisteredClientRepository(simpleClient, nightflyClient);
+    //    return new InMemoryRegisteredClientRepository(simpleClient, nightflyClient);
+    //}
+
+    @Bean
+    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
 
     @Bean

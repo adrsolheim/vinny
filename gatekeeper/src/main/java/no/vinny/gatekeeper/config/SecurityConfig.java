@@ -59,6 +59,11 @@ public class SecurityConfig {
                         .username("admin")
                         .password(passwordEncoder().encode("password"))
                         .authorities(authorities)
+                        .build(),
+                User.builder()
+                        .username("empty")
+                        .password(passwordEncoder().encode("password"))
+                        .authorities(List.of())
                         .build()
         );
     }

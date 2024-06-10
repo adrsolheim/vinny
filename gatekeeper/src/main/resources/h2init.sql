@@ -1,4 +1,6 @@
-CREATE TABLE oauth2_registered_client (
+--DROP TABLE IF EXISTS oauth2_registered_client;
+
+CREATE TABLE IF NOT EXISTS oauth2_registered_client (
     id varchar(100) NOT NULL,
     client_id varchar(100) NOT NULL,
     client_id_issued_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
