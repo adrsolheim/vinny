@@ -1,5 +1,6 @@
 package no.vinny.gatekeeper;
 
+import lombok.extern.slf4j.Slf4j;
 import no.vinny.gatekeeper.config.NightflySettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 
 import java.util.UUID;
 
+@Slf4j
 @SpringBootApplication
 public class GatekeeperApplication {
 	@Autowired
@@ -29,7 +31,9 @@ public class GatekeeperApplication {
 	ApplicationRunner clientRunner(RegisteredClientRepository repository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			String clientId = "nightfly";
-			if (repository.findByClientId(clientId) == null) {
+			RegisteredClient client = repository.findByClientId(clientId);
+			log.info("::: client: {}", client);
+			if (client == null) {
 				repository.save(
 						RegisteredClient
       						.withId(UUID.randomUUID().toString())
