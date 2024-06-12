@@ -27,10 +27,12 @@ import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,34 +40,39 @@ import java.util.stream.Stream;
 @Configuration
 public class SecurityConfig {
 
+    //@Bean
+    //public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    //    //return username -> userRepository.findByUsername(username);
+    //    List<GrantedAuthority> authorities = Stream.of("batches.read",
+    //                                                            "batches.write",
+    //                                                            "recipes.read",
+    //                                                            "recipes.write",
+    //                                                            "taps.read",
+    //                                                            "taps.write")
+    //                                                    .map(SimpleGrantedAuthority::new)
+    //                                                    .collect(Collectors.toList());
+    //    return new InMemoryUserDetailsManager(
+    //            User.builder()
+    //                    .username("user")
+    //                    .password(passwordEncoder().encode("password"))
+    //                    .authorities(authorities)
+    //                    .build(),
+    //            User.builder()
+    //                    .username("admin")
+    //                    .password(passwordEncoder().encode("password"))
+    //                    .authorities(authorities)
+    //                    .build(),
+    //            User.builder()
+    //                    .username("empty")
+    //                    .password(passwordEncoder().encode("password"))
+    //                    .authorities(List.of())
+    //                    .build()
+    //    );
+    //}
+
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        //return username -> userRepository.findByUsername(username);
-        List<GrantedAuthority> authorities = Stream.of("batches.read",
-                                                                "batches.write",
-                                                                "recipes.read",
-                                                                "recipes.write",
-                                                                "taps.read",
-                                                                "taps.write")
-                                                        .map(SimpleGrantedAuthority::new)
-                                                        .collect(Collectors.toList());
-        return new InMemoryUserDetailsManager(
-                User.builder()
-                        .username("user")
-                        .password(passwordEncoder().encode("password"))
-                        .authorities(authorities)
-                        .build(),
-                User.builder()
-                        .username("admin")
-                        .password(passwordEncoder().encode("password"))
-                        .authorities(authorities)
-                        .build(),
-                User.builder()
-                        .username("empty")
-                        .password(passwordEncoder().encode("password"))
-                        .authorities(List.of())
-                        .build()
-        );
+    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean

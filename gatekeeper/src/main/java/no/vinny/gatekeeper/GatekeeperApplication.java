@@ -7,6 +7,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -14,8 +16,13 @@ import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @SpringBootApplication
@@ -50,6 +57,32 @@ public class GatekeeperApplication {
       						.scope("api.nightfly")
       						.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
       						.build()
+				);
+			}
+		};
+	}
+
+	@Bean
+	ApplicationRunner userRunner(JdbcUserDetailsManager userService, PasswordEncoder passwordEncoder) {
+		return args -> {
+			String username = "user";
+			log.info("::: UserRunner :::");
+			if (!userService.userExists(username)) {
+				log.info("::: Creating user");
+				List<GrantedAuthority> authorities = Stream.of("batches.read",
+				                                                        "batches.write",
+				                                                        "recipes.read",
+				                                                        "recipes.write",
+				                                                        "taps.read",
+				                                                        "taps.write")
+				                                                .map(SimpleGrantedAuthority::new)
+				                                                .collect(Collectors.toList());
+				userService.createUser(
+						            User.builder()
+						                    .username("user")
+						                    .password(passwordEncoder.encode("password"))
+						                    .authorities(authorities)
+						                    .build()
 				);
 			}
 		};
