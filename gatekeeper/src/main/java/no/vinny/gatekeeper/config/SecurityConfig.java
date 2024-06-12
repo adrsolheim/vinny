@@ -44,13 +44,13 @@ public class SecurityConfig {
     //public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
     //    //return username -> userRepository.findByUsername(username);
     //    List<GrantedAuthority> authorities = Stream.of("batches.read",
-    //                                                            "batches.write",
-    //                                                            "recipes.read",
-    //                                                            "recipes.write",
-    //                                                            "taps.read",
-    //                                                            "taps.write")
-    //                                                    .map(SimpleGrantedAuthority::new)
-    //                                                    .collect(Collectors.toList());
+    //                                                   "batches.write",
+    //                                                   "recipes.read",
+    //                                                   "recipes.write",
+    //                                                   "taps.read",
+    //                                                   "taps.write")
+    //                                                .map(SimpleGrantedAuthority::new)
+    //                                                .collect(Collectors.toList());
     //    return new InMemoryUserDetailsManager(
     //            User.builder()
     //                    .username("user")
