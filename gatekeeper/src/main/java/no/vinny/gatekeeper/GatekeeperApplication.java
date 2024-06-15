@@ -14,7 +14,9 @@ import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @Slf4j
@@ -48,6 +50,10 @@ public class GatekeeperApplication {
       						.scope(OidcScopes.OPENID)
       						.scope(OidcScopes.PROFILE)
       						.scope("api.nightfly")
+							.tokenSettings(TokenSettings.builder()
+									.accessTokenTimeToLive(Duration.ofHours(8))
+									.refreshTokenTimeToLive(Duration.ofHours(10))
+									.build())
       						.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
       						.build()
 				);
