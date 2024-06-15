@@ -11,23 +11,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -71,42 +65,6 @@ public class AuthorizationServerConfig {
                                 //new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                 .build();
     }
-
-    //@Bean
-    //public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder, NightflySettings nightflySettings) {
-    //    RegisteredClient simpleClient = RegisteredClient
-    //            .withId(UUID.randomUUID().toString())
-    //            .clientId("simpleclient")
-    //            .clientSecret(passwordEncoder.encode("simpleclient"))
-    //            .redirectUri("http://127.0.0.1:8082/login/oauth2/code/simpleclient-oidc")
-    //            .redirectUri("http://127.0.0.1:8082/authorized")
-    //            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-    //            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-    //            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-    //            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-    //            .scope(OidcScopes.OPENID)
-    //            .scope(OidcScopes.PROFILE)
-    //            .scope("batches.read")
-    //            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-    //            .build();
-    //    RegisteredClient nightflyClient = RegisteredClient
-    //            .withId(UUID.randomUUID().toString())
-    //            .clientId("nightfly")
-    //            .clientSecret(passwordEncoder.encode(nightflySettings.getSecret()))
-    //            .redirectUri("http://127.0.0.1:8080/login/oauth2/code/nightfly")
-    //            .redirectUri("http://127.0.0.1:8080/authorized")
-    //            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-    //            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-    //            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-    //            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-    //            .scope(OidcScopes.OPENID)
-    //            .scope(OidcScopes.PROFILE)
-    //            .scope("api.nightfly")
-    //            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-    //            .build();
-
-    //    return new InMemoryRegisteredClientRepository(simpleClient, nightflyClient);
-    //}
 
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
@@ -197,5 +155,15 @@ public class AuthorizationServerConfig {
                 context.getClaims().claims(c -> c.put("scope", claims));
             }
         };
+    }
+
+    @Bean
+    public JdbcOAuth2AuthorizationConsentService jdbcOAuth2AuthorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository repository) {
+        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, repository);
+    }
+
+    @Bean
+    public JdbcOAuth2AuthorizationService jdbcOAuth2AuthorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository repository) {
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate, repository);
     }
 }
