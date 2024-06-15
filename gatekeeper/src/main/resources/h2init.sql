@@ -130,6 +130,21 @@ create table if not exists oauth2_authorization
     PRIMARY KEY (id)
 );
 
+-- sessions
+create table if not exists spring_session
+(
+    primary_id            character(36) primary key not null,
+    session_id            character(36)             not null,
+    creation_time         bigint                    not null,
+    last_access_time      bigint                    not null,
+    max_inactive_interval integer                   not null,
+    expiry_time           bigint                    not null,
+    principal_name        character varying(100)
+);
+create unique index if not exists spring_session_ix1 on spring_session using btree (session_id);
+create index if not exists spring_session_ix2 on spring_session using btree (expiry_time);
+create index if not exists spring_session_ix3 on spring_session using btree (principal_name);
+
 INSERT INTO users (username, password, enabled) VALUES ('user', '$2a$10$KInja4YaK3iN6uS0SeuK9.ahGoA22WyMl4JJ4Fv1rGS7rU2nnXWSK', true);
 INSERT INTO users (username, password, enabled) VALUES ('empty', '$2a$10$tolE2Hwi/YbjzpMhR/wv3O1JgOdZpCTCA2xCAab1P4/qQgXT1jVSa', true);
 
