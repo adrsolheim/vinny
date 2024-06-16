@@ -1,6 +1,6 @@
 # Setup
 
-An RSA key pair is required. The private key needs to be in `PKCS#8` format (`PKCS#1` is standard). See `keygen.sh` for details
+Configure `/etc/hosts` on the host machine by mapping 127.0.0.1 to `gatekeeper`. An RSA key pair is required. The private key needs to be in `PKCS#8` format (`PKCS#1` is standard). See `keygen.sh` for details
 
 # Authorization Server
 
