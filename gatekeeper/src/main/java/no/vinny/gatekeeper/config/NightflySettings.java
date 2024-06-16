@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @EnableConfigurationProperties
 @Configuration
-@ConfigurationProperties(prefix = "nightfly")
+@ConfigurationProperties(prefix = "spring.security.oauth2.client.registration.nightfly")
 public class NightflySettings {
-    private String secret;
+    private String clientSecret;
 }

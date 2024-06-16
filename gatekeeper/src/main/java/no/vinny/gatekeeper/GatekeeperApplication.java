@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -40,7 +41,7 @@ public class GatekeeperApplication {
 						RegisteredClient
       						.withId(UUID.randomUUID().toString())
       						.clientId("nightfly")
-      						.clientSecret(passwordEncoder.encode(nightflySettings.getSecret()))
+      						.clientSecret(passwordEncoder.encode(nightflySettings.getClientSecret()))
       						.redirectUri("http://127.0.0.1:8082/login/oauth2/code/nightfly")
       						.redirectUri("http://127.0.0.1:8082/authorized")
       						.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
