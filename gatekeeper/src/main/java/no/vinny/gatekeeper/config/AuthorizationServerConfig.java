@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -14,6 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
@@ -120,6 +123,7 @@ public class AuthorizationServerConfig {
         }
         return new RSAKey.Builder((RSAPublicKey) pubKey)
                 .privateKey((RSAPrivateKey) privKey)
+                .keyID("localkey")
                 .build();
     }
 
@@ -165,5 +169,11 @@ public class AuthorizationServerConfig {
     @Bean
     public JdbcOAuth2AuthorizationService jdbcOAuth2AuthorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository repository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, repository);
+    }
+
+    @Bean
+    public TextEncryptor textEncryptor(@Value("${jwt.persistence.password}") String password,
+                                       @Value("${jwt.persistence.salt") String salt) {
+        return Encryptors.text(password, salt);
     }
 }
