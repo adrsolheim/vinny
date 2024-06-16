@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS authorities;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS oauth2_authorization_consent;
 DROP TABLE IF EXISTS oauth2_authorization;
+DROP TABLE IF EXISTS spring_session;
 
 CREATE TABLE IF NOT EXISTS oauth2_registered_client (
     id varchar(100) NOT NULL,
@@ -144,6 +145,15 @@ create table if not exists spring_session
 create unique index if not exists spring_session_ix1 on spring_session using btree (session_id);
 create index if not exists spring_session_ix2 on spring_session using btree (expiry_time);
 create index if not exists spring_session_ix3 on spring_session using btree (principal_name);
+
+create table if not exists rsa_key_pairs
+(
+    id          varchar(1000) not null primary key,
+    private_key text          not null,
+    public_key  text          not null,
+    created     date          not null,
+    unique (id, created )
+);
 
 INSERT INTO users (username, password, enabled) VALUES ('user', '$2a$10$KInja4YaK3iN6uS0SeuK9.ahGoA22WyMl4JJ4Fv1rGS7rU2nnXWSK', true);
 INSERT INTO users (username, password, enabled) VALUES ('empty', '$2a$10$tolE2Hwi/YbjzpMhR/wv3O1JgOdZpCTCA2xCAab1P4/qQgXT1jVSa', true);
