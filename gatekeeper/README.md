@@ -2,6 +2,19 @@
 
 Configure `/etc/hosts` on the host machine by mapping 127.0.0.1 to `gatekeeper`. An RSA key pair is required. The private key needs to be in `PKCS#8` format (`PKCS#1` is standard). See `keygen.sh` for details
 
+### Local
+
+Running the app locally require the following properties which will be loaded as environment variables during runtime
+```
+# local.yml
+nightfly:
+  client-secret: <secret value>
+jwt:
+  persistence:
+    password: <secret value>
+    salt: <secret value>
+```
+
 # Authorization Server
 
 Cookies are tied to hostname. Redirects will use `127.0.0.1` and not `localhost`.
