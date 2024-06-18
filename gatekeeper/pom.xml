@@ -46,6 +46,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Can be removed once spring auth server defaults to a spring security 6 compatible version -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-cas</artifactId>
+			<version>6.3.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
