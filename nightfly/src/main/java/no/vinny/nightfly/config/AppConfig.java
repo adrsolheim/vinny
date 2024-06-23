@@ -6,7 +6,6 @@ import no.vinny.nightfly.components.batch.AsyncBatchService;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Mapper;
-import no.vinny.nightfly.components.batch.impl.AsyncBatchServiceImpl;
 import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,28 +22,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @Configuration
 public class AppConfig {
 
-    @Bean
-    @Profile("reactive")
-    public AsyncBatchService asyncBatchService(AsyncBatchRepository asyncBatchRepository) {
-        return new AsyncBatchServiceImpl(asyncBatchRepository);
-    }
 
     @Bean
     public BatchService batchService(BatchRepository batchRepository, @Qualifier("batch-template") RedisTemplate redisTemplate) {
         return new BatchServiceImpl(batchRepository, redisTemplate);
     }
 
-    @Bean
-    @ConfigurationProperties("spring.datasource")
-    public HikariDataSource hikariDataSource() {
-        return DataSourceBuilder
-                .create()
-                .type(HikariDataSource.class)
-                .build();
-    }
-
-    @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(HikariDataSource hikariDataSource) {
-        return new NamedParameterJdbcTemplate(hikariDataSource);
-    }
 }
