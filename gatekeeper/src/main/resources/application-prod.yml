@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    jdbc-url: jdbc:mariadb://${DATABASE_HOST:localhost}:3306/gatekeeper
+    username: ${DB_USER:gatekeeper}
+    password: ${DB_PASS:gatekeeper}

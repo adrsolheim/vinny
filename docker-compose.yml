@@ -40,8 +40,29 @@ services:
     restart: on-failure
     ports:
       - 9000:9000
+    depends_on:
+      - gatekeeper_db
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      DATABASE_HOST: gatekeeper_db
+      DB_USER: gatekeeper
+      DB_PASS: gatekeeper
+
+  gatekeeper_db:
+    container_name: gatekeeper_db
+    image: mariadb:10.11
+    ports:
+      - 3307:3306
+    environment:
+      MARIADB_USER: gatekeeper
+      MARIADB_PASSWORD: gatekeeper
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: gatekeeper
+    command: --default-storage-engine innodb
+    restart: always
+    volumes:
+      - ./gatekeeper_db/data:/var/lib/mysql
+      - ./gatekeeper_db/scripts:/docker-entrypoint-initdb.d
   
   redis:
     container_name: redis

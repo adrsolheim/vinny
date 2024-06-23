@@ -4,6 +4,7 @@ local.yml
 
 # dirs
 nightfly_db/data/
+gatekeeper_db/data/
 secret*
 
 
