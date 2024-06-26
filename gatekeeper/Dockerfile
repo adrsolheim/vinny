@@ -4,4 +4,4 @@ WORKDIR /app
 COPY target/*.jar ./app.jar
 EXPOSE 9000
 
-ENTRYPOINT ["java", "--enable-preview", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "--enable-preview", "-jar", "app.jar"]
