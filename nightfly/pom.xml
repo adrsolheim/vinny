@@ -142,6 +142,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-aot</id>
+                        <goals>
+                            <goal>process-aot</goal>
+                        </goals>
+                    </execution>
+                </executions>
 				<configuration>
 				  <excludes>
 					<exclude>
@@ -150,6 +158,7 @@
 					</exclude>
 				  </excludes>
 				  <jvmArguments>--enable-preview</jvmArguments>
+				  <compilerArguments>--enable-preview</compilerArguments>
 				</configuration>
 			</plugin>
 			<plugin>
