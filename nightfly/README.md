@@ -36,6 +36,9 @@ docker run -e SPRING_PROFILES_ACTIVE=dev -dp 8080:8080 nightfly
 
 Regular applications should be run with the profile `cron`
 
+## Optimizations
+Spring AOT with CDS enabled. More than 80% of classes are loaded from CDS archive. Increases build times slightly by adding an extra training step
+
 ## Errors
 
 Default error response on invalid json POST request
@@ -58,6 +61,7 @@ Customized error response
     "errors": null
 }
 ```
+
 
 # Application
 
