@@ -22,5 +22,5 @@ COPY --from=optimizer app/snapshot-dependencies/ ./
 COPY --from=optimizer app/application/ ./
 EXPOSE 8080
 
-#RUN java -Dspring.aot.enabled=true -XX:SharedArchiveFile=application.jsa --enable-preview org.springframework.boot.loader.launch.JarLauncher
-ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:SharedArchiveFile=application.jsa" , "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher"]
+RUN java -Dspring.aot.enabled=true -Dspring.profiles.active=dev -XX:ArchiveClassesAtExit=./application.jsa -Dspring.context.exit=onRefresh --enable-preview org.springframework.boot.loader.launch.JarLauncher
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-Xlog:cds=debug:file=cds.log", "-Xlog:class+load=info:file=class-load.log", "-Xlog:class+path=debug:file=class-path.log", "-XX:SharedArchiveFile=application.jsa", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher"]
