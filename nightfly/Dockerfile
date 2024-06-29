@@ -1,20 +1,26 @@
-FROM eclipse-temurin:21-jdk-ubi9-minimal as builder
+FROM bellsoft/liberica-runtime-container:jdk-21-crac-cds-musl as builder
 
-WORKDIR /jarlayers
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+WORKDIR /app
+ADD . /app/nightfly
+RUN cd nightfly && ./mvnw -Dmaven.test.skip=true clean package
+
+FROM bellsoft/liberica-runtime-container:jdk-21-crac-cds-musl as optimizer
+
+WORKDIR /app
+ARG JAR_FILE=/app/nightfly/target/*.jar
+COPY --from=builder ${JAR_FILE} app.jar
 # ./dependencies, ./spring-boot-loader, ./snapshot-dependencies, ./application
 RUN java -Djarmode=layertools -jar app.jar extract
 
 
-
-FROM eclipse-temurin:21-jre-ubi9-minimal
+FROM bellsoft/liberica-runtime-container:jdk-21-crac-cds-musl
 
 WORKDIR /app
-COPY --from=builder jarlayers/dependencies/ ./
-COPY --from=builder jarlayers/spring-boot-loader/ ./
-COPY --from=builder jarlayers/snapshot-dependencies/ ./
-COPY --from=builder jarlayers/application/ ./
+COPY --from=optimizer app/dependencies/ ./
+COPY --from=optimizer app/spring-boot-loader/ ./
+COPY --from=optimizer app/snapshot-dependencies/ ./
+COPY --from=optimizer app/application/ ./
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher"]
+#RUN java -Dspring.aot.enabled=true -XX:SharedArchiveFile=application.jsa --enable-preview org.springframework.boot.loader.launch.JarLauncher
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:SharedArchiveFile=application.jsa" , "--enable-preview", "org.springframework.boot.loader.launch.JarLauncher"]
