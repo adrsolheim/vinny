@@ -21,11 +21,9 @@ public class BatchServiceImpl implements BatchService {
 
     private final static String REDIS_PREFIX = "Batch";
     private final BatchRepository batchRepository;
-    private final RedisTemplate<String, Batch> redisTemplate;
 
-    public BatchServiceImpl(BatchRepository batchRepository, @Qualifier("batch-template") RedisTemplate redisTemplate) {
+    public BatchServiceImpl(BatchRepository batchRepository) {
         this.batchRepository = batchRepository;
-        this.redisTemplate = redisTemplate;
     }
 
     @Override

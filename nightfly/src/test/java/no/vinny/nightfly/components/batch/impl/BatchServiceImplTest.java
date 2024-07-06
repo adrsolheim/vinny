@@ -102,10 +102,7 @@ class BatchServiceImplTest {
                 return null;
             }
         };
-        RedisTemplate<String, Batch> redisTemplate = mock(RedisTemplate.class);
-        when(redisTemplate.opsForValue()).thenReturn(mock(ValueOperations.class));
-        when(redisTemplate.opsForValue().get(anyString())).thenReturn(null);
-        batchService = new BatchServiceImpl(batchRepository, redisTemplate);
+        batchService = new BatchServiceImpl(batchRepository);
     }
 
     @Test

@@ -14,10 +14,13 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -32,7 +35,9 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
 
+@ConditionalOnProperty(prefix = "spring", name = "cache.type", havingValue = "redis")
 @Configuration
+@Import({RedisAutoConfiguration.class})
 public class RedisConfig implements CachingConfigurer {
   @Value("${redis.host}")
   private String redisHost;
