@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
+import static org.springframework.cloud.gateway.server.mvc.filter.TokenRelayFilterFunctions.tokenRelay;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
+import static org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates.path;
 
 @SpringBootApplication
 public class GateApplication {
@@ -25,9 +27,15 @@ public class GateApplication {
 	@Bean
 	public RouterFunction<ServerResponse> apiGet() {
 		return route()
-				.GET(API_PREFIX, http("http://nightfly:8080"))
+				.GET(API_PREFIX,  request -> ServerResponse.ok().body("Hello World"))
+				.POST(API_PREFIX, http())
+				.PUT(API_PREFIX, http())
+				.PATCH(API_PREFIX, http())
+				.DELETE(API_PREFIX, http())
+				//.filter(tokenRelay())
 				.build();
 	}
-	
+
+
 }
 
