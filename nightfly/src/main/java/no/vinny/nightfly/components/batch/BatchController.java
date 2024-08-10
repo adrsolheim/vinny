@@ -39,7 +39,6 @@ public class BatchController {
 
     @GetMapping
     public List<Batch> batches() {
-        Pageable pageable = PageRequest.of(0, pagination.getPageSize());
         return batchService.getAll();
     }
 
