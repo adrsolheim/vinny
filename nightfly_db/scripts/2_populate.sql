@@ -8,6 +8,11 @@ INSERT INTO batch (id, brewfather_id, name, status)         VALUES (13, 'NLltIco
 INSERT INTO batch (id, brewfather_id, name, status)         VALUES (14, 'NLltIcoo87foHbTz1N8rH0v0KXht6P', 'Juicy NEIPA',      'COMPLETED');
 INSERT INTO batch (id, brewfather_id, name, status)         VALUES (15, 'NLltIcoo87foHbTz1N8rH0v0KXht6A', 'NETTO',            'COMPLETED');
 
+INSERT INTO tap (id, batch) VALUES (1, 10);
+INSERT INTO tap (id, batch) VALUES (2, 11);
+INSERT INTO tap (id) VALUES (3);
+INSERT INTO tap (id) VALUES (4);
+
 INSERT INTO keg (capacity, brand, serial_number, purchase_condition, note) VALUES (23,  'AEB',     null, 'STORE', null);
 INSERT INTO keg (capacity, brand, serial_number, purchase_condition, note) VALUES (23,  'AEB',     null, 'STORE', null);
 INSERT INTO keg (capacity, brand, serial_number, purchase_condition, note) VALUES (19,  'AEB',     null, 'STORE', null);
@@ -28,7 +33,3 @@ INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VA
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (5, 12, 'DISCONNECTED', 'KEG', 'EMPTY',     5);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (6, 12, 'DISCONNECTED', 'KEG', 'NOT_EMPTY', 6);
 
-INSERT INTO tap (id, batch_unit) VALUES (1, 10);
-INSERT INTO tap (id, batch_unit) VALUES (2, 11);
-INSERT INTO tap (id) VALUES (3);
-INSERT INTO tap (id) VALUES (4);
