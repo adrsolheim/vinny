@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
+import static org.springframework.cloud.gateway.server.mvc.filter.TokenRelayFilterFunctions.tokenRelay;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
 import static org.springframework.cloud.gateway.server.mvc.predicate.GatewayRequestPredicates.path;
@@ -22,13 +23,7 @@ public class Routes {
     public RouterFunction<ServerResponse> backendRoute() {
         return route()
                 .route(path(API_PREFIX),  http(API_HOST))
-                .build();
-    }
-
-    @Bean
-    public RouterFunction<ServerResponse> frontendRoute() {
-        return route()
-                .route(path(UI_PREFIX),  http(UI_HOST))
+                .filter(tokenRelay())
                 .build();
     }
 }

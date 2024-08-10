@@ -34,6 +34,18 @@ services:
       - ./nightfly_db/data:/var/lib/mysql
       - ./nightfly_db/scripts:/docker-entrypoint-initdb.d
 
+  gate:
+    container_name: gate
+    build: ./gate
+    restart: on-failure
+    ports:
+      - 9090:9090
+    depends_on:
+      - nightfly
+      - gatekeeper
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
   gatekeeper:
     container_name: gatekeeper
     build: ./gatekeeper
