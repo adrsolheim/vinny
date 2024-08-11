@@ -42,6 +42,15 @@ async function populateCategories(categories) {
     }
 }
 
+async function populatePublicData() {
+    const baseUrl = "http://localhost:8080/api/"
+    request = req(baseUrl + "public");
+    const response = await fetch(request);
+    const data = await response.text();
+    let h3 = document.getElementById("publicData");
+    h3.innerText = data;
+}
+
 function createButtons(category) {
     let div = document.getElementById(category);
     let btn = document.createElement("button");
@@ -55,6 +64,7 @@ function createButtons(category) {
     });
 }
 
+populatePublicData();
 const categories = ["batches", "recipes", "taphouse"];
 populateCategories(categories).then(() => {
     for (category of categories) {
