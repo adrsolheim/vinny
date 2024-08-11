@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicController {
 
     @GetMapping
-    public String resource() {
+    public String publicResource() {
         return "This is public.";
+    }
+
+    @GetMapping("/protected")
+    public String protectedResource() {
+        return "This is protected.";
     }
 }

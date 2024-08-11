@@ -36,6 +36,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PATCH,  "/api/taps/**").hasAnyAuthority("SCOPE_taps.write")
                     .requestMatchers(HttpMethod.DELETE, "/api/taps/**").hasAnyAuthority("SCOPE_taps.write")
                     .requestMatchers(HttpMethod.GET,    "/api/taps/**").hasAnyAuthority("SCOPE_taps.read")
+                    .requestMatchers(HttpMethod.GET,    "/api/public/protected").authenticated()
                     .requestMatchers(HttpMethod.GET,    "/api/public").permitAll()
                     .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
