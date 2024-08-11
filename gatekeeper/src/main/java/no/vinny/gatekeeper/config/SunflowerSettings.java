@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "credentials.nightfly")
-public class NightflySettings {
+@ConfigurationProperties(prefix = "credentials.sunflower")
+public class SunflowerSettings {
     private String clientSecret;
 }
