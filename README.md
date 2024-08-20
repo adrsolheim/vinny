@@ -14,6 +14,7 @@
 |    (Auth)   |      |    (API)    |      |  (Frontend) |
 +-------------+      +-------------+      +-------------+
 ```
+## Install
 
 Requires `local.yml`
 - `gate`
@@ -51,6 +52,14 @@ jwt:
   persistence:
     password: <value>
     salt: <value>
+```
+
+#### Raspberry Pi
+
+Platform option must be specified when building the docker images on raspberry pi
+
+```
+docker build --platform linux/amd64 nightfly .
 ```
 
 ### Authorization Code Flow
