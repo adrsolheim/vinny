@@ -84,3 +84,8 @@ curl -X POST http://localhost:9000/oauth2/token \
     -u "nightfly:nightfly" \
     -d "grant_type=client_credentials&scope=batches.read batches.write openid profile"
 ```
+
+## Properties
+
+- `jti` (JWT id) - Unique identifier for a JWT
+- `sid` (Session id) - Unique identifier for the session associated with the token. Can be used to connect a token to a user session.
