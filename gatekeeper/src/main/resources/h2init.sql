@@ -87,8 +87,8 @@ create table if not exists oauth2_authorization
 -- sessions
 create table if not exists spring_session
 (
-    primary_id            varchar(36) primary key not null,
-    session_id            varchar(36)             not null,
+    primary_id            char(36) primary key not null,
+    session_id            char(36)             not null,
     creation_time         bigint                  not null,
     last_access_time      bigint                  not null,
     max_inactive_interval int                     not null,
@@ -101,9 +101,9 @@ create index if not exists spring_session_ix3 on spring_session using btree (pri
 
 create table if not exists spring_session_attributes
 (
-    session_primary_id varchar(36)          not null,
+    session_primary_id char(36)     not null,
     attribute_name     varchar(200) not null,
-    attribute_bytes    binary                  not null,
+    attribute_bytes    blob         not null,
     primary key (session_primary_id, attribute_name),
     foreign key (session_primary_id) references spring_session (primary_id)
         match simple on update no action on delete cascade
