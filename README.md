@@ -16,6 +16,11 @@
 ```
 ## Install
 
+After code modifications run with `--build` to ensure a cached jar is not used
+```
+docker compose up --build
+```
+
 Requires `local.yml`
 - `gate`
     - `client-secret`
