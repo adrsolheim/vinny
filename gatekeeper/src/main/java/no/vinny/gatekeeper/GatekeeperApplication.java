@@ -39,7 +39,6 @@ public class GatekeeperApplication {
 		return args -> {
 			String clientId = "nightfly";
 			RegisteredClient client = repository.findByClientId(clientId);
-			log.info("::: client: {}", client);
 			log.info("::: settings: {}", nightflySettings);
 			if (client == null) {
 				repository.save(

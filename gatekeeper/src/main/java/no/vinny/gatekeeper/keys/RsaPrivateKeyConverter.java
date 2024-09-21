@@ -10,9 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
@@ -26,7 +24,8 @@ public class RsaPrivateKeyConverter implements Serializer<RSAPrivateKey>, Deseri
     @Override
     public RSAPrivateKey deserialize(InputStream inputStream) throws IOException {
         String pem = textEncryptor.decrypt(FileCopyUtils.copyToString(new InputStreamReader(inputStream)));
-        String pemStripped = pem.replaceAll("-----BEGIN PRIVATE KEY-----", "")
+        String pemStripped = pem
+                .replaceAll("-----BEGIN PRIVATE KEY-----", "")
                 .replaceAll("-----END PRIVATE KEY-----", "")
                 .replaceAll("\\s", "");
         byte[] encoded = Base64.getDecoder().decode(pemStripped);
@@ -46,4 +45,5 @@ public class RsaPrivateKeyConverter implements Serializer<RSAPrivateKey>, Deseri
                 + "\n-----END PRIVATE KEY-----";
         outputStream.write(textEncryptor.encrypt(pem).getBytes());
     }
+
 }

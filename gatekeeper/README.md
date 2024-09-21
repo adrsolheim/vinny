@@ -89,3 +89,7 @@ curl -X POST http://localhost:9000/oauth2/token \
 
 - `jti` (JWT id) - Unique identifier for a JWT
 - `sid` (Session id) - Unique identifier for the session associated with the token. Can be used to connect a token to a user session.
+
+## Database
+
+`oauth2_authorization` stores both JWT token `access_token_value` and OpenID Connect token `oidc_id_token_value`
