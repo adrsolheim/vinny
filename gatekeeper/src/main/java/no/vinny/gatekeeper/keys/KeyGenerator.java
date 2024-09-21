@@ -1,5 +1,6 @@
 package no.vinny.gatekeeper.keys;
 
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.gatekeeper.config.NightflySettings;
@@ -26,10 +27,14 @@ public class KeyGenerator {
         this.nightflySettings = nightflySettings;
     }
 
-    RSAKeyPair generateKeyPair(String keyId) {
+    RsaKeyPairRepository.RsaKeyPair generateKeyPair(String keyId) {
         byte[] seed = generateSeed();
         RSAKey rsaKey = createRsaKey(seed, keyId);
-        return new RSAKeyPair(rsaKey, Instant.now());
+        try {
+            return new RsaKeyPairRepository.RsaKeyPair(keyId, Instant.now(), rsaKey.toRSAPublicKey(), rsaKey.toRSAPrivateKey());
+        } catch (JOSEException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private byte[] generateSeed() {
