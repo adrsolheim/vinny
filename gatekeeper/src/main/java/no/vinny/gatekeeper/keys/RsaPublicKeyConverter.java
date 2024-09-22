@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class RsaPublicKeyConverter implements Serializer<RSAPublicKey>, Deserializer<RSAPublicKey> {
@@ -28,9 +30,9 @@ public class RsaPublicKeyConverter implements Serializer<RSAPublicKey>, Deserial
                 .replaceAll("-----END PUBLIC KEY-----", "")
                 .replaceAll("\\s", "");
         byte[] encoded = Base64.getDecoder().decode(pemStripped);
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(encoded);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
         try {
-            return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(pkcs8EncodedKeySpec);
+            return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(keySpec);
         } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }

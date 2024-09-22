@@ -189,7 +189,7 @@ public class AuthorizationServerConfig {
     ApplicationListener<ApplicationReadyEvent> checkRsaKeyPairPresent(ApplicationEventPublisher publisher, JdbcRsaKeyPairRepository repository) {
         return event -> {
             if (repository.findAll().isEmpty()) {
-                publisher.publishEvent(new CreateRsaKeyPairEvent("localkey"));
+                publisher.publishEvent(new CreateRsaKeyPairEvent("vinny-local-key"));
             }
         };
     }

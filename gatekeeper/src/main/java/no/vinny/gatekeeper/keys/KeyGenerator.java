@@ -71,7 +71,7 @@ public class KeyGenerator {
         secureRandom.setSeed(seed);
 
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048,secureRandom);
+        keyPairGenerator.initialize(2048, secureRandom);
         return keyPairGenerator.generateKeyPair();
     }
 }
