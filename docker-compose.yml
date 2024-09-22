@@ -35,8 +35,8 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      start_period: 10s
-      interval: 10s
+      start_period: 5s
+      interval: 5s
       timeout: 5s
       retries: 3
     volumes:
@@ -89,8 +89,8 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      start_period: 10s
-      interval: 10s
+      start_period: 5s
+      interval: 5s
       timeout: 5s
       retries: 3
     volumes:
