@@ -185,4 +185,23 @@ public class AuthorizationServerConfig {
         return Encryptors.text(password, Hex.encodeHexString(salt.getBytes()));
     }
 
+    @Bean
+    ApplicationListener<ApplicationReadyEvent> checkRsaKeyPairPresent(ApplicationEventPublisher publisher, JdbcRsaKeyPairRepository repository) {
+        return event -> {
+            if (repository.findAll().isEmpty()) {
+                publisher.publishEvent(new CreateRsaKeyPairEvent("localkey"));
+            }
+        };
+    }
+
+    @Bean
+    ApplicationListener<CreateRsaKeyPairEvent> createRsaKeyPair(ApplicationEventPublisher publisher, JdbcRsaKeyPairRepository repository, KeyGenerator keyGenerator) {
+        return event -> {
+            String keyId = (String) event.getSource();
+            RsaKeyPairRepository.RsaKeyPair rsaKeyPair = keyGenerator.generateKeyPair(keyId);
+            repository.save(rsaKeyPair);
+            log.info("RSA key pair generated and persisted to server");
+        };
+    }
+
 }
