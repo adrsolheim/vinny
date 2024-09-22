@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS oauth2_authorization_consent;
 DROP TABLE IF EXISTS oauth2_authorization;
 DROP TABLE IF EXISTS spring_session;
+DROP TABLE IF EXISTS spring_session_attributes;
 
 CREATE TABLE IF NOT EXISTS oauth2_registered_client (
     id varchar(100) NOT NULL,
@@ -95,19 +96,18 @@ create table if not exists spring_session
     expiry_time           bigint                  not null,
     principal_name        varchar(100)
 );
-create unique index if not exists spring_session_ix1 on spring_session using btree (session_id);
-create index if not exists spring_session_ix2 on spring_session using btree (expiry_time);
-create index if not exists spring_session_ix3 on spring_session using btree (principal_name);
 
-create table if not exists spring_session_attributes
-(
-    session_primary_id char(36)     not null,
-    attribute_name     varchar(200) not null,
-    attribute_bytes    blob         not null,
-    primary key (session_primary_id, attribute_name),
-    foreign key (session_primary_id) references spring_session (primary_id)
-        match simple on update no action on delete cascade
-);
+CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON SPRING_SESSION (SESSION_ID);
+CREATE INDEX SPRING_SESSION_IX2 ON SPRING_SESSION (EXPIRY_TIME);
+CREATE INDEX SPRING_SESSION_IX3 ON SPRING_SESSION (PRINCIPAL_NAME);
+
+CREATE TABLE IF NOT EXISTS SPRING_SESSION_ATTRIBUTES (
+	SESSION_PRIMARY_ID CHAR(36) NOT NULL,
+	ATTRIBUTE_NAME VARCHAR(200) NOT NULL,
+	ATTRIBUTE_BYTES BLOB NOT NULL,
+	CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
+	CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
 create table if not exists rsa_key_pairs
 (

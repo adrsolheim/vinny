@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Component
 public class RsaKeyPairRepositoryJWKSource implements OAuth2TokenCustomizer<JwtEncodingContext>, JWKSource<SecurityContext> {
 
     private final JdbcRsaKeyPairRepository jdbcRsaKeyPairRepository;

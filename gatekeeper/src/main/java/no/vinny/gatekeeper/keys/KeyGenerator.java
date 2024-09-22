@@ -27,7 +27,7 @@ public class KeyGenerator {
         this.nightflySettings = nightflySettings;
     }
 
-    RsaKeyPairRepository.RsaKeyPair generateKeyPair(String keyId) {
+    public RsaKeyPairRepository.RsaKeyPair generateKeyPair(String keyId) {
         byte[] seed = generateSeed();
         RSAKey rsaKey = createRsaKey(seed, keyId);
         try {

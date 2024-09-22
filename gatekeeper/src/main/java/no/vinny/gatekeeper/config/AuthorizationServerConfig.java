@@ -5,9 +5,16 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.gatekeeper.event.CreateRsaKeyPairEvent;
+import no.vinny.gatekeeper.keys.JdbcRsaKeyPairRepository;
+import no.vinny.gatekeeper.keys.KeyGenerator;
+import no.vinny.gatekeeper.keys.RsaKeyPairRepository;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -82,14 +89,14 @@ public class AuthorizationServerConfig {
                 .build();
     }
 
-    @Bean
-    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        //byte[] seed = MessageDigest.getInstance("SHA-256").digest(nightflySettings.getSecret().getBytes("utf-8"));
-        //RSAKey rsaKey = createRsaKey(seed);
-        RSAKey rsaKey = loadRsaKeyPair();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
-    }
+    //@Bean
+    //public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    //    //byte[] seed = MessageDigest.getInstance("SHA-256").digest(nightflySettings.getSecret().getBytes("utf-8"));
+    //    //RSAKey rsaKey = createRsaKey(seed);
+    //    RSAKey rsaKey = loadRsaKeyPair();
+    //    JWKSet jwkSet = new JWKSet(rsaKey);
+    //    return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
+    //}
 
     private static RSAKey createRsaKey(byte[] seed) throws NoSuchAlgorithmException {
         KeyPair keyPair = createKeyPair(seed);
@@ -147,20 +154,20 @@ public class AuthorizationServerConfig {
         return keyPairGenerator.generateKeyPair();
     }
 
-    @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
-        return context -> {
-            if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
-                Set<String> userAuthorities = context.getPrincipal().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-                Set<String> authorizedScopes = context.getAuthorizedScopes();
-                Set<String> claims = new HashSet<>();
-                claims.addAll(userAuthorities);
-                claims.addAll(authorizedScopes);
-                log.info("OAuth2TokenCustomizer :: Adding user claims {}", userAuthorities);
-                context.getClaims().claims(c -> c.put("scope", claims));
-            }
-        };
-    }
+    //@Bean
+    //public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
+    //    return context -> {
+    //        if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
+    //            Set<String> userAuthorities = context.getPrincipal().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+    //            Set<String> authorizedScopes = context.getAuthorizedScopes();
+    //            Set<String> claims = new HashSet<>();
+    //            claims.addAll(userAuthorities);
+    //            claims.addAll(authorizedScopes);
+    //            log.info("OAuth2TokenCustomizer :: Adding user claims {}", userAuthorities);
+    //            context.getClaims().claims(c -> c.put("scope", claims));
+    //        }
+    //    };
+    //}
 
     @Bean
     public JdbcOAuth2AuthorizationConsentService jdbcOAuth2AuthorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository repository) {
@@ -177,4 +184,5 @@ public class AuthorizationServerConfig {
                                        @Value("${jwt.persistence.salt") String salt) {
         return Encryptors.text(password, Hex.encodeHexString(salt.getBytes()));
     }
+
 }
