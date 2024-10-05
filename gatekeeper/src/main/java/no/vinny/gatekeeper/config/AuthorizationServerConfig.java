@@ -56,9 +56,6 @@ import java.util.stream.Collectors;
 @Configuration
 public class AuthorizationServerConfig {
 
-    @Autowired
-    private NightflySettings nightflySettings;
-
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {

@@ -3,7 +3,7 @@ package no.vinny.gatekeeper.keys;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.gatekeeper.config.NightflySettings;
+import no.vinny.gatekeeper.config.ServiceSettings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -21,10 +21,10 @@ import java.time.Instant;
 @Component
 public class KeyGenerator {
 
-    private final NightflySettings nightflySettings;
+    private final ServiceSettings settings;
 
-    public KeyGenerator(NightflySettings nightflySettings) {
-        this.nightflySettings = nightflySettings;
+    public KeyGenerator(ServiceSettings settings) {
+        this.settings = settings;
     }
 
     public RsaKeyPairRepository.RsaKeyPair generateKeyPair(String keyId) {
@@ -38,12 +38,12 @@ public class KeyGenerator {
     }
 
     private byte[] generateSeed() {
-        if (nightflySettings == null || !StringUtils.hasText(nightflySettings.getClientSecret())) {
+        if (settings == null || !StringUtils.hasText(settings.getSecret("nightfly"))) {
             log.error(">> KeyGenerator :: Application secret could not be loaded. Ensure secret is configured");
             throw new RuntimeException(">> KeyGenerator :: Application secret could not be loaded. Ensure secret is configured");
         }
         try {
-            return MessageDigest.getInstance("SHA-256").digest(nightflySettings.getClientSecret().getBytes("utf-8"));
+            return MessageDigest.getInstance("SHA-256").digest(settings.getSecret("nightfly").getBytes("utf-8"));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex ) {
             log.error(">> KeyGenerator :: ", ex);
             throw new RuntimeException(ex);

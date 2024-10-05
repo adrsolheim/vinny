@@ -1,8 +1,7 @@
 package no.vinny.gatekeeper;
 
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.gatekeeper.config.NightflySettings;
-import no.vinny.gatekeeper.config.SunflowerSettings;
+import no.vinny.gatekeeper.config.ServiceSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +16,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -26,9 +26,7 @@ import java.util.UUID;
 @EnableConfigurationProperties
 public class GatekeeperApplication {
 	@Autowired
-	NightflySettings nightflySettings;
-	@Autowired
-	SunflowerSettings sunflowerSettings;
+	ServiceSettings serviceSettings;
 
 	public static void main(String[] args) {
 		SpringApplication.run(GatekeeperApplication.class, args);
@@ -37,15 +35,17 @@ public class GatekeeperApplication {
 	@Bean
 	ApplicationRunner clientRunner(RegisteredClientRepository repository, PasswordEncoder passwordEncoder) {
 		return args -> {
+			validateConfiguration();
 			String clientId = "nightfly";
 			RegisteredClient client = repository.findByClientId(clientId);
-			log.info("::: settings: {}", nightflySettings);
+			log.info("::: service settings: {}", serviceSettings.getCredentials());
+			log.info("::: settings: {}", serviceSettings.getSecret("nighfly"));
 			if (client == null) {
 				repository.save(
 						RegisteredClient
       						.withId(UUID.randomUUID().toString())
-      						.clientId("nightfly")
-      						.clientSecret(passwordEncoder.encode(nightflySettings.getClientSecret()))
+      						.clientId(clientId)
+      						.clientSecret(passwordEncoder.encode(serviceSettings.getSecret(clientId)))
       						.redirectUri("http://127.0.0.1:8082/login/oauth2/code/nightfly")
       						.redirectUri("http://127.0.0.1:8082/authorized")
       						.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -70,8 +70,8 @@ public class GatekeeperApplication {
 				repository.save(
 						RegisteredClient
 								.withId(UUID.randomUUID().toString())
-								.clientId("sunflower")
-								.clientSecret(passwordEncoder.encode(sunflowerSettings.getClientSecret()))
+								.clientId(clientId)
+								.clientSecret(passwordEncoder.encode(serviceSettings.getSecret(clientId)))
 								.redirectUri("http://127.0.0.1:5000/login/oauth2/code/sunflower")
 								.redirectUri("http://127.0.0.1:5000/authorized")
 								.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -86,5 +86,14 @@ public class GatekeeperApplication {
 				);
 			}
 		};
+	}
+
+	public void validateConfiguration() {
+		if (serviceSettings == null) {
+			throw new RuntimeException("ServiceSettings bean is null");
+		}
+		if (!StringUtils.hasText(serviceSettings.getSecret("nightfly")) || !StringUtils.hasText(serviceSettings.getSecret("sunflower"))) {
+			throw new RuntimeException("Client secret is null or could not be injected. Ensure local.yml is present and populated");
+		}
 	}
 }
