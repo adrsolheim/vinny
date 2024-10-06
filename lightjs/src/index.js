@@ -1,3 +1,6 @@
+import { config } from "./util/local.js";
+
+
 function req(url) {
     return new Request(url, {
         method: "GET",
@@ -17,17 +20,20 @@ function header() {
 }
 
 async function fetchData(url, resource) {
-    request = req(url+resource);
-    const response = await fetch(request);
-    const data = await response.json();
-
-    return JSON.parse(JSON.stringify(data));
+    const request = req(url+resource);
+    return fetch(request).then(response => {
+        console.log(response.statusText);
+        if (response.ok) {
+            return JSON.parse(JSON.stringify(response.json()));
+        }
+        return [];
+    })
 }
 
 
 async function populateCategories(categories) {
     const baseUrl = "http://localhost:8080/api/"
-    for (i in categories) {
+    for (let i in categories) {
         let category = categories[i];
         let jsonList = await fetchData(baseUrl, category);
         let div = document.getElementById(category);
@@ -44,7 +50,7 @@ async function populateCategories(categories) {
 
 async function populatePublicData() {
     const baseUrl = "http://localhost:8080/api/"
-    request = req(baseUrl + "public");
+    const request = req(baseUrl + "public");
     const response = await fetch(request);
     const data = await response.text();
     let h3 = document.getElementById("publicData");
@@ -64,10 +70,12 @@ function createButtons(category) {
     });
 }
 
+console.log("api key: " + config.apiKey);
+
 populatePublicData();
 const categories = ["batches", "recipes", "taphouse"];
 populateCategories(categories).then(() => {
-    for (category of categories) {
+    for (const category of categories) {
         createButtons(category);
     }
 })
