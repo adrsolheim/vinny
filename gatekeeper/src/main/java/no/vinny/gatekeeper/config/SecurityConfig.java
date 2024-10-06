@@ -12,11 +12,34 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        // Allow localhost for testing
+        corsConfiguration.addAllowedOrigin("http://127.0.0.1:3000");
+        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.addAllowedOrigin("http://127.0.0.1:5500");
+        corsConfiguration.addAllowedOrigin("http://localhost:5500");
+
+
+        corsConfiguration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
+        corsConfiguration.addAllowedHeader("*"); // Allow all headers
+
+        // Apply CORS configuration to the path where the authorization endpoints reside
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration); // Apply to all endpoints
+
+        return new CorsFilter(source);
+    }
 
     //@Bean
     //public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
