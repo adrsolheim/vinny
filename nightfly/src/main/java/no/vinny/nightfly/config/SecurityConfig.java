@@ -3,6 +3,7 @@ package no.vinny.nightfly.config;
 import no.vinny.nightfly.security.JwtInspectionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -14,6 +15,7 @@ import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
+@Profile("!noauth")
 public class SecurityConfig {
 
     @Bean
