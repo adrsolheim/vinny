@@ -5,11 +5,13 @@ import './index.css'
 
 import HomePage from "./pages/HomePage"
 import AboutPage from "./pages/AboutPage"
+import NotFound from './pages/ErrorPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <HomePage />,
+    errorElement: <NotFound />
   },
   {
     path: '/about',
