@@ -1,35 +1,9 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+
+import Batch from "../types/batch";
+
 export default function BatchesPage() {
-  interface Batch {
-    id: number,
-    brewfatherId: string,
-    name: string,
-    status: string,
-    recipes: Recipe[],
-    batchUnits: BatchUnit[]
-  }
-  interface BatchUnit {
-    id: number,
-    batchId: number,
-    tapStatus: string,
-    packaging: string,
-    volumeStatus: string,
-    keg: Keg
-  }
-  interface Keg {
-    id: number,
-    capacity: number,
-    brand: string,
-    serialNumber: string,
-    purchaseCondition: string,
-    note: string   
-  }
-  interface Recipe {
-    id: number,
-    brewfatherId: string,
-    name: string
-  }
   const [batches, setBatches] = useState<Batch[]>([]);
   const BASE_URL = 'http://127.0.0.1:8080';
 
