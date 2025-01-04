@@ -20,13 +20,13 @@ export default function BatchesPage() {
         <div>
             <NavLink to='/'>Back</NavLink>
             <h1>Brews</h1>
-            <div className="card">
+            <div>
                 {batches.map((batch, idx) => {
                     return <NavLink key={idx} to={`batches/${batch.id.toString()}`}>{batch.name}</NavLink>                
                     })}
             </div>
             <div>
-              <Outlet />
+              <Outlet context={batches}/>
             </div>
         </div>
     );

@@ -1,18 +1,19 @@
 
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 
 import Batch from "../types/batch";
 
 export default function BatchPage() {
   const params = useParams<{batchId: string}>();
-  const [batches] = useState<Batch[]>([]);
+  //const [batches] = useState<Batch[]>([]);
+  const batchesState = useOutletContext<Batch[]>();
   const bid: number = parseInt(params.batchId ?? "nan")
-  const batch: Batch | undefined = isNaN(bid) ? undefined : batches.find(b => b.id == bid);
+  const batch: Batch | undefined = isNaN(bid) ? undefined : batchesState.find(b => b.id === bid);
   if (batch === undefined) {
     return (
       <div>
-        <p>Batch not found</p>
+        <p>Batch {bid} not found.</p>
       </div>
     )
   }
