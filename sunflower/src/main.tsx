@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage"
 import AboutPage from "./pages/AboutPage"
 import NotFound from './pages/ErrorPage';
 import BatchesPage from './pages/BatchesPage';
+import BatchPage from './pages/BatchPage';
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/batches',
-    element: <BatchesPage />
+    element: <BatchesPage />,
+    children: [
+      {
+        path: 'batches/:batchId',
+        element: <BatchPage />
+      }
+    ]
   },
 ]);
 createRoot(document.getElementById('root')!).render(

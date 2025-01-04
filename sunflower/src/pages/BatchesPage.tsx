@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 import Batch from "../types/batch";
 
@@ -21,11 +21,12 @@ export default function BatchesPage() {
             <NavLink to='/'>Back</NavLink>
             <h1>Brews</h1>
             <div className="card">
-                <ul>
-                {batches.map((batch) => {
-                    return <li key={batch.id}>{batch.name}</li>
-                })}
-                </ul>
+                {batches.map((batch, idx) => {
+                    return <NavLink key={idx} to={`batches/${batch.id.toString()}`}>{batch.name}</NavLink>                
+                    })}
+            </div>
+            <div>
+              <Outlet />
             </div>
         </div>
     );
