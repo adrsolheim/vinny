@@ -20,12 +20,13 @@ export default function HomePage() {
     fetchRecipes();
   }, []);
     return (
+      <>
         <div>
-            <h1>Home</h1>
-            <NavLink to='/batches'>Batches</NavLink>
-                {recipes.map((recipe) => {
-                    return <Card />
-                })}
+                {recipes.map((r) => <Card recipe={r}/>)}
         </div>
+        <div>
+            <NavLink to='/batches'>Batches</NavLink>
+        </div>
+      </>
     );
 }
