@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
+import Card from "../components/Card";
 
 import Batch from "../types/batch";
 

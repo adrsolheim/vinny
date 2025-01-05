@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import Card from '../components/Card';
 
 export default function HomePage() {
   interface Recipe {
@@ -22,13 +23,9 @@ export default function HomePage() {
         <div>
             <h1>Home</h1>
             <NavLink to='/batches'>Batches</NavLink>
-            <div className="card">
-                <ul>
                 {recipes.map((recipe) => {
-                    return <li key={recipe.id}>{recipe.name}</li>
+                    return <Card />
                 })}
-                </ul>
-            </div>
         </div>
     );
 }
