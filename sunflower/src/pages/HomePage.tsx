@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Card from '../components/Card';
+import styles from '../app.module.css';
 
 export default function HomePage() {
   interface Recipe {
@@ -21,11 +22,18 @@ export default function HomePage() {
   }, []);
     return (
       <>
+        <nav className={styles.nav}>
+          <ul>
+            <li>
+              <NavLink to='/batches'>Batches</NavLink>
+            </li>
+            <li>
+              <NavLink to='/recipes'>Recipes</NavLink>
+            </li>
+          </ul>
+        </nav>
         <div>
                 {recipes.map((r) => <Card recipe={r}/>)}
-        </div>
-        <div>
-            <NavLink to='/batches'>Batches</NavLink>
         </div>
       </>
     );
