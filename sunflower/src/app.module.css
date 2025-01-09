@@ -8,11 +8,16 @@
     text-align: center;
     max-width: 300px;
     display: inline-block;
+    white-space: pre-wrap;
+}
+.cardhighlight {
+    box-shadow: 5px 5px 5px rgb(204, 113, 60);
 }
 .card .cardimage {
     border-radius: 30%;
     box-shadow: 0 0 8px 8px #242424 inset;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .card .cardtitle {

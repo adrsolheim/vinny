@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import Card from '../components/Card';
+import Card from '../components/RecipeCard';
 import { Recipe } from '../types/recipe';
 
 export default function RecipesPage() {
