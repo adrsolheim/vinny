@@ -8,6 +8,7 @@ import AboutPage from "./pages/AboutPage"
 import NotFound from './pages/ErrorPage';
 import BatchesPage from './pages/BatchesPage';
 import BatchPage from './pages/BatchPage';
+import RecipesPage from './pages/RecipesPage';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     element: <AboutPage />
   },
   {
+    path: '/recipes',
+    element: <RecipesPage />,
+  },
+  {
     path: '/batches',
     element: <BatchesPage />,
     children: [
@@ -27,7 +32,7 @@ const router = createBrowserRouter([
         path: 'batches/:batchId',
         element: <BatchPage />
       }
-    ]
+    ],
   },
 ]);
 createRoot(document.getElementById('root')!).render(
