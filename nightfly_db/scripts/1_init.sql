@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS nightfly.batch_unit (
 
 CREATE TABLE IF NOT EXISTS nightfly.tap (
     id TINYINT NOT NULL PRIMARY KEY,
+    active BOOLEAN,
     batch BIGINT,
     FOREIGN KEY (batch) REFERENCES batch(id)
 );

@@ -91,7 +91,7 @@ INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VA
 
 INSERT INTO tap (id, active, batch) VALUES (1, TRUE, 10);
 INSERT INTO tap (id, active, batch) VALUES (2, TRUE, 11);
-INSERT INTO tap (id, active) VALUES (3, FALSE);
-INSERT INTO tap (id, active) VALUES (4, FALSE);
+INSERT INTO tap (id, active, batch) VALUES (3, FALSE, 12);
+INSERT INTO tap (id, active, batch) VALUES (4, FALSE, 15);
 
 

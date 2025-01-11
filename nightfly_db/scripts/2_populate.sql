@@ -8,10 +8,10 @@ INSERT INTO batch (id, brewfather_id, name, status)         VALUES (13, 'NLltIco
 INSERT INTO batch (id, brewfather_id, name, status)         VALUES (14, 'NLltIcoo87foHbTz1N8rH0v0KXht6P', 'Juicy NEIPA',      'COMPLETED');
 INSERT INTO batch (id, brewfather_id, name, status)         VALUES (15, 'NLltIcoo87foHbTz1N8rH0v0KXht6A', 'NETTO',            'COMPLETED');
 
-INSERT INTO tap (id, batch) VALUES (1, 10);
-INSERT INTO tap (id, batch) VALUES (2, 11);
-INSERT INTO tap (id) VALUES (3);
-INSERT INTO tap (id) VALUES (4);
+INSERT INTO tap (id, active, batch) VALUES (1, TRUE, 10);
+INSERT INTO tap (id, active, batch) VALUES (2, TRUE, 11);
+INSERT INTO tap (id, active) VALUES (3, FALSE);
+INSERT INTO tap (id, active) VALUES (4, FALSE);
 
 INSERT INTO keg (capacity, brand, serial_number, purchase_condition, note) VALUES (23,  'AEB',     null, 'STORE', null);
 INSERT INTO keg (capacity, brand, serial_number, purchase_condition, note) VALUES (23,  'AEB',     null, 'STORE', null);
