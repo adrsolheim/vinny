@@ -2,7 +2,7 @@ import logo from '../assets/light_beer_mug.jpg';
 import styles from '../app.module.css';
 import { Recipe } from '../types/recipe';
 
-export default function recipeCard(props: { recipe: Recipe; }) {
+export default function RecipeCard(props: Readonly<{ recipe: Recipe; }>) {
     const recipe: Recipe = props.recipe;
     return (
         <div className={styles.card}>
