@@ -10,43 +10,76 @@
     display: inline-block;
     white-space: pre-wrap;
 }
-.cardhighlight {
-    box-shadow: 5px 5px 5px rgb(204, 113, 60);
-}
+
+
 .card .cardimage {
     border-radius: 30%;
     box-shadow: 0 0 8px 8px #242424 inset;
     margin-bottom: 10px;
     margin-top: 10px;
+    opacity: 0.5;
+}
+
+.cardhighlight {
+    box-shadow: 6px 6px 10px #cc713c;
+}
+
+.cardhighlight .cardimage {
+    opacity: 1;
+    box-shadow: 0 0 1px 1px rgb(255, 255, 255);
 }
 
 .card .cardtitle {
-  color: rgba(255, 255, 255, 0.87);
+  color: rgba(122, 122, 122, 0.87);
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
 }
 .card .cardtext {
-  color: rgba(199, 193, 193, 0.87);
+  color: rgba(122, 122, 122, 0.87);
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.card .cardnumber {
+  color: rgba(255, 255, 255, 0.87);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.card .cardtexthighlight {
+  color: rgba(255, 255, 255, 0.87);
+  text-decoration: underline;
+  text-decoration-thickness: 0.05em;
+  text-underline-offset: 10px;
+}
 
-.nav {
+
+.navbar {
   background-color: rgb(47, 47, 47);
   color: white;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   padding: 0 10px;  
 }
+.navbar img {
 
-.nav a {
-  color: inherit;
+  padding: 16px;
 }
-
-.nav ul {
+.navlist {
+  display: flex;
+}
+.navlist ul {
   list-style: none;
 }
 
-.nav li {
+.navbar a {
+  color: inherit;
+}
+
+.navbar ul {
+}
+
+.navbar li {
   font-size: 1.2rem;
+  float: left;
+  padding: 16px;
 }
