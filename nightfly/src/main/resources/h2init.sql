@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS batch_unit (
 
 CREATE TABLE IF NOT EXISTS tap (
     id TINYINT NOT NULL PRIMARY KEY,
+    active BOOLEAN,
     batch BIGINT,
     FOREIGN KEY (batch) REFERENCES batch(id)
 );
@@ -88,9 +89,9 @@ INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VA
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (5, 12, 'DISCONNECTED', 'KEG', 'EMPTY',     5);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (6, 12, 'DISCONNECTED', 'KEG', 'NOT_EMPTY', 6);
 
-INSERT INTO tap (id, batch) VALUES (1, 10);
-INSERT INTO tap (id, batch) VALUES (2, 11);
-INSERT INTO tap (id) VALUES (3);
-INSERT INTO tap (id) VALUES (4);
+INSERT INTO tap (id, active, batch) VALUES (1, TRUE, 10);
+INSERT INTO tap (id, active, batch) VALUES (2, TRUE, 11);
+INSERT INTO tap (id, active) VALUES (3, FALSE);
+INSERT INTO tap (id, active) VALUES (4, FALSE);
 
 

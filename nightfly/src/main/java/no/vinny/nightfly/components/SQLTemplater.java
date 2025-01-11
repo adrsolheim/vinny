@@ -17,17 +17,6 @@ public class SQLTemplater {
 
     }
 
-    public static String tapQuery() {
-        return STR."""
-                SELECT \{tapColumns()}, \{batchColumns(true,false)} FROM tap t
-                LEFT JOIN batch b on b.id = t.batch
-                """.replace('\n', ' ');
-    }
-
-    public static String tapUpdate() {
-        return "UPDATE tap SET batch = :batch WHERE id = :id ";
-    }
-
     public static String batchInsert() {
         return "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     }
@@ -61,9 +50,5 @@ public class SQLTemplater {
 
     private static String recipeColumns() {
         return "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name";
-    }
-
-    private static String tapColumns() {
-        return "t.id t_id, t.batch t_batch";
     }
 }

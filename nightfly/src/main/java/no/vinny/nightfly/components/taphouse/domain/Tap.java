@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import no.vinny.nightfly.components.batch.domain.Batch;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class Tap implements Comparable<Tap> {
     private Long id;
+    private boolean active;
     private Batch batch;
 
     @Override

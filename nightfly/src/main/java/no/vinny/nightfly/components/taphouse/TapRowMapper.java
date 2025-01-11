@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class TapRowMapper implements RowMapper<Tap> {
     @Override
     public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Tap(rs.getObject("t_id", Long.class), mapBatch(rs));
+        return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), mapBatch(rs));
     }
 
     private Batch mapBatch(ResultSet rs) throws SQLException {

@@ -37,7 +37,7 @@ public class TapServiceImpl implements TapService {
     @Override
     public List<Tap> findActive() {
         return findAll().stream()
-                .filter(tap -> tap.getBatch() != null)
+                .filter(tap -> tap.getBatch() != null || tap.isActive())
                 .collect(Collectors.toList());
     }
 

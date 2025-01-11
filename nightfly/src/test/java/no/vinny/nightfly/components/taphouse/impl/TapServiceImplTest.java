@@ -75,9 +75,9 @@ class TapServiceImplTest {
         List<Tap> active = tapService.findActive();
 
         assertEquals(3, active.size());
-        assertTrue(active.contains(new Tap(1L, batchesList().get(0))));
-        assertTrue(active.contains(new Tap(2L, batchesList().get(1))));
-        assertTrue(active.contains(new Tap(3L, batchesList().get(2))));
+        assertTrue(active.contains(new Tap(1L, true, batchesList().get(0))));
+        assertTrue(active.contains(new Tap(2L, true, batchesList().get(1))));
+        assertTrue(active.contains(new Tap(3L, true, batchesList().get(2))));
     }
 
     @Test
@@ -90,10 +90,10 @@ class TapServiceImplTest {
 
     private Map<Long, Tap> taps() {
         return Map.of(
-                1L, new Tap(1L, batchesList().get(0)),
-                2L, new Tap(2L, batchesList().get(1)),
-                3L, new Tap(3L, batchesList().get(2)),
-                4L, new Tap(4L, null)
+                1L, new Tap(1L, true, batchesList().get(0)),
+                2L, new Tap(2L, true, batchesList().get(1)),
+                3L, new Tap(3L, true, batchesList().get(2)),
+                4L, new Tap(4L, false, null)
         );
     }
 

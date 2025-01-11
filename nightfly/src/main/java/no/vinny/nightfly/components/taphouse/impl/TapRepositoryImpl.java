@@ -15,8 +15,8 @@ import java.util.Map;
 public class TapRepositoryImpl implements TapRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final String TAP_QUERY = SQLTemplater.tapQuery();
-    private final String TAP_UPDATE = SQLTemplater.tapUpdate();
+    private final String SELECT_TAP = "SELECT t.id t_id, t.active t_active, t.batch t_batch, b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status FROM tap t LEFT JOIN batch b on b.id = t.batch";
+    private final String UPDATE_TAP = "UPDATE tap SET active = :active, batch = :batch";
     private final TapRowMapper mapper;
 
     public TapRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -26,18 +26,19 @@ public class TapRepositoryImpl implements TapRepository {
 
     @Override
     public Tap find(Long tap) {
-        String sql = TAP_QUERY + " WHERE t.id = :tap";
+        String sql = SELECT_TAP + " WHERE t.id = :tap";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(Map.of("tap", tap)), mapper);
     }
 
     @Override
     public List<Tap> findAll() {
-        return jdbcTemplate.query(TAP_QUERY, mapper);
+        return jdbcTemplate.query(SELECT_TAP, mapper);
     }
 
     @Override
     public int update(Tap tap) {
-        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "batch", tap.getBatch()));
-        return jdbcTemplate.update(TAP_UPDATE, params);
+        String sql = UPDATE_TAP + " WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batch", tap.getBatch()));
+        return jdbcTemplate.update(sql, params);
     }
 }
