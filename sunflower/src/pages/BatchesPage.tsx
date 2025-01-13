@@ -16,18 +16,36 @@ export default function BatchesPage() {
     fetchBatches();
   }, []);
 
+
     return (
         <div>
             <NavLink to='/'>Back</NavLink>
-            <h1>Brews</h1>
-            <ul>
-                {batches.map((batch, idx) => {
-                    return <li><NavLink key={idx} to={`batches/${batch.id.toString()}`}>{batch.name}</NavLink></li>   
-                    })}
-            </ul>
+            <BatchTable batches={batches} />            
             <div>
               <Outlet context={batches}/>
             </div>
         </div>
     );
+}
+
+function BatchTable({batches}: { batches: Batch[]}) {
+  return (
+    <>
+    <tr>
+      <th>Batches</th>
+    </tr>
+   { batches.map(b => <BatchRow batch={b}/>) }
+    </>
+  );
+}
+
+function BatchRow({ batch}: {batch: Batch}) {
+  return (
+    <tr>
+      <td>{batch.id}</td>
+      <td>{batch.name}</td>
+      <td>{batch.status}</td>
+    </tr>
+
+  );
 }
