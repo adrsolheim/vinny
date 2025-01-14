@@ -24,7 +24,7 @@ export default function HomePage() {
         <NavLink to={'/'}><img src={logo} alt='beer mug logo' style={{ height: '50px' }} /></NavLink>
         <nav className={styles.navlist}>
           <ul>
-            {navList.map((path, idx) => <li><NavLink key={idx} to={path}>{path}</NavLink></li>)}
+            {navList.map((path, idx) => <li><NavLink key={idx} to={path.toLowerCase()}>{path}</NavLink></li>)}
           </ul>
         </nav>
       </header>
