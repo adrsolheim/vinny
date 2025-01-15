@@ -11,6 +11,7 @@ export default function RecipeCard(props: Readonly<{ tap: Tap; }>) {
             <img className={styles.cardimage} src={logo} alt="tap handle logo" />
             <h2 className={`${styles.cardtitle} ${tap.active ? styles.cardtexthighlight : ''}`}>{tap.batch?.name ?? " "}</h2>
             <h4 className={styles.cardnumber}>{tap.id}</h4>
+            <input type="button" className={styles.btn} value="+"/>
         </div>
     );
 }
