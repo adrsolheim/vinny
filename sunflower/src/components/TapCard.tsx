@@ -5,7 +5,6 @@ import Tap from '../types/tap';
 
 export default function RecipeCard(props: Readonly<{ tap: Tap; }>) {
     const tap: Tap = props.tap;
-    console.log(tap)
     return (
         <div className={`${styles.card} ${tap.active ? styles.cardhighlight : ''}`}>
             <img className={styles.cardimage} src={logo} alt="tap handle logo" />
