@@ -4,9 +4,11 @@ import Card from '../components/TapCard';
 import { NavLink } from 'react-router-dom';
 import styles from '../app.module.css';
 import logo from '../assets/orange_beer_mug.svg';
+import Sidebar from '../components/Sidebar';
 
 export default function HomePage() {
   const [taps, setTaps] = useState<Tap[]>([]);
+  const [sidebarActive, setSidebarActive] = useState<boolean>(false);
   const BASE_URL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
@@ -19,8 +21,11 @@ export default function HomePage() {
   }, []);
     return (
       <>
-        <Header />
-        <Taps taps={taps}/>
+        <TopHeader setSidebarActive={setSidebarActive} sidebarActive={sidebarActive}/>
+        <Sidebar active={sidebarActive}/>
+        <main>
+          <Taps taps={taps}/>
+        </main>
       </>
     );
 }
@@ -43,5 +48,12 @@ function Taps({ taps } : { taps:  Tap[] }) {
       {taps.map((t) => <Card tap={t}/>)}
     </div>
 
+  );
+}
+
+function TopHeader({ sidebarActive, setSidebarActive } : { sidebarActive: boolean, setSidebarActive : Function}) {
+  const clickToggle = () => { setSidebarActive(!sidebarActive) };
+  return (
+    <header><img src={logo} alt="beer mug logo" onClick={clickToggle}/></header>
   );
 }
