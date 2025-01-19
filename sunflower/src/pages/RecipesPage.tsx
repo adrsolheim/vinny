@@ -16,8 +16,8 @@ export default function RecipesPage() {
     fetchRecipes();
   }, []);
     return (
-        <div>
-            {recipes.map((r) => <Card recipe={r}/>)}
-        </div>
+        <main>            
+          {recipes.map((r) => <Card recipe={r}/>)}
+        </main>
     );
 }
