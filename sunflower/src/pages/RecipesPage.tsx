@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Card from '../components/RecipeCard';
 import { Recipe } from '../types/recipe';
+import styles from '../app.module.css';
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -16,8 +17,9 @@ export default function RecipesPage() {
     fetchRecipes();
   }, []);
     return (
-        <main>            
-          {recipes.map((r) => <Card recipe={r}/>)}
-        </main>
+      <>
+        {recipes.map((r) => <Card recipe={r}/>)}
+      </>
+          
     );
 }

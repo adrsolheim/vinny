@@ -1,11 +1,17 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #121212e3;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
 }
 main {
-  display: flex;
-  justify-content: center;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 0%;
+  justify-content: space-around;
+  margin-left: 350px;
+  margin-right: 350px;
   place-items: center;
   min-width: 320px;
   min-height: 90vh;
@@ -75,7 +81,6 @@ header img:hover {
 }
 
 .recipecard {
-  position: relative;
   border: 1px solid hsl(0, 1%, 37%);
   box-shadow: 5px 5px 5px black;
   background-color: #3d291150;
@@ -84,7 +89,6 @@ header img:hover {
   border-radius: 10%;
   text-align: center;
   max-width: 300px;
-  display: inline-block;
   white-space: pre-wrap;
   color: rgba(255, 255, 255, 0.87);
   font-family: Arial, Helvetica, sans-serif;
@@ -100,41 +104,25 @@ header img:hover {
 }
 
 .card {
-    position: relative;
-    border: 1px solid hsl(0, 1%, 37%);
-    box-shadow: 5px 5px 5px black;
-    background-color: #3d291150;
-    padding: 20px;
-    margin: 20px;
-    border-radius: 10%;
-    text-align: center;
-    width: 220px;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
+  display: grid;
+  grid-template-rows: 10fr 4fr 2fr 2fr;
+  justify-content: space-around;
+  border: 1px solid hsl(0, 1%, 37%);
+  box-shadow: 5px 5px 5px black;
+  background-color: #3d291150;
+  border-radius: 10%;
+  text-align: center;
+  width: 250px;
+  height: 350px;
+  padding-top: 15px;
 
-}
-
-.tmp {
-    white-space: pre-wrap;
 }
 
 
 .card .cardimage {
     border-radius: 30%;
     box-shadow: 0 0 8px 8px #242424 inset;
-    margin-bottom: 10px;
-    margin-top: 10px;
     opacity: 0.5;
-}
-.card .btn {
-  position: absolute;
-  color:lightgray;
-  bottom: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size:x-large;
 }
 
 .card svg {

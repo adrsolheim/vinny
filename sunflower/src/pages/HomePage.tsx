@@ -23,9 +23,7 @@ export default function HomePage() {
       <>
         <TopHeader setSidebarActive={setSidebarActive} sidebarActive={sidebarActive}/>
         <Sidebar active={sidebarActive}/>
-        <main>
-          <Taps taps={taps}/>
-        </main>
+        <Taps taps={taps}/>
       </>
     );
 }
@@ -44,9 +42,9 @@ function Header() {
 
 function Taps({ taps } : { taps:  Tap[] }) {
   return (
-    <div>
+    <main>
       {taps.map((t) => <Card tap={t}/>)}
-    </div>
+    </main>
 
   );
 }
