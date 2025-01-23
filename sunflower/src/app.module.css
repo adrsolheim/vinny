@@ -1,4 +1,5 @@
 body {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   background-color: #121212e3;
@@ -8,7 +9,7 @@ body {
 main {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 0%;
+  column-gap: 3em;
   justify-content: space-around;
   margin-left: 350px;
   margin-right: 350px;
@@ -63,7 +64,7 @@ header img:hover {
 }
 
 .sidebar {
-  background-color: #26190a50;
+  background-color: #5f584d;
   display: inline;
   box-shadow: inset 0 15px 60px #00000050;
   position: absolute;
