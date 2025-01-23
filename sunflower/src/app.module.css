@@ -55,7 +55,7 @@ header {
 }
 
 header img {
-  margin: 20px;
+  margin: 10px;
   height: 50px;
 }
 
@@ -74,8 +74,8 @@ header img:hover {
   height: 95vh;
   width: 200px;
   left: -100%;
-  transition: all 1s;
-  padding-top: 30px;
+  transition: all 0.6s;
+  padding-top: 20px;
 }
 .sidebar.active {
   left: 0;
@@ -106,8 +106,7 @@ header img:hover {
 
 .card {
   display: grid;
-  grid-template-rows: 10fr 4fr 2fr 2fr;
-  justify-content: space-around;
+  grid-template-rows: 5fr 2fr minmax(0, 1fr) minmax(0, 1fr);
   border: 1px solid hsl(0, 1%, 37%);
   box-shadow: 5px 5px 5px black;
   background-color: #3d291150;
@@ -124,10 +123,7 @@ header img:hover {
     border-radius: 30%;
     box-shadow: 0 0 8px 8px #242424 inset;
     opacity: 0.5;
-}
-
-.card svg {
-  background-color: red;
+    max-width: 100%;
 }
 
 
@@ -142,13 +138,16 @@ header img:hover {
 
 .card .cardtitle {
   color: rgba(122, 122, 122, 0.87);
-  margin: 0;
 }
 .card .cardtext {
   color: rgba(122, 122, 122, 0.87);
 }
 
 .card .cardnumber {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   color: rgba(255, 255, 255, 0.87);
 }
 .card .cardtexthighlight {
@@ -160,9 +159,9 @@ header img:hover {
 .card .cardcontent {
 }
 .card .cardtail {
-  border: white;
-  border-style: solid;
-  justify-content: center;
+  display: flex;
+  justify-content: end;
+  padding: 0px 10px 10px 0px;
 }
 
 
