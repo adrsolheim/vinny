@@ -29,9 +29,11 @@ main {
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-ul li {
+.sidebar ul li, 
+.navbar ul li {
   font-size: 1rem;
   margin: 0 20px 10px 20px;
   margin-bottom: 10px;
@@ -40,16 +42,22 @@ ul li {
   padding-bottom: 5px;
 }
 
-a {
-  font-weight: 500;
-  color: inherit;
+.sidebar ul li:hover,
+.sidebar ul a.active ,
+.navbar ul li:hover,
+.navbar ul a.active {
+  color: white;
+  background: #3a3a3a;
   text-decoration: inherit;
 }
 
-ul li:hover,
-ul a.active {
-  color: white;
-  background: #3a3a3a;
+.cardtail ul {
+  display: flex;
+}
+
+a {
+  font-weight: 500;
+  color: inherit;
   text-decoration: inherit;
 }
 
@@ -122,12 +130,11 @@ header img:hover {
   text-align: center;
   width: 250px;
   height: 350px;
-  padding-top: 15px;
-
 }
 
 
 .card .cardimage {
+    margin-top: 15px;
     border-radius: 30%;
     box-shadow: 0 0 8px 8px #242424 inset;
     opacity: 0.5;
@@ -164,12 +171,21 @@ header img:hover {
   text-decoration-thickness: 0.05em;
   text-underline-offset: 10px;
 }
-.card .cardcontent {
-}
+
 .card .cardtail {
+  border: 1px solid hsl(0, 0%, 100%);
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 0px 10px 10px 0px;
+}
+
+.card .cardbutton {
+  align-items: center;
+  justify-content: center;
+}
+
+.card .iconbutton {
+  padding: 5px;
 }
 
 
