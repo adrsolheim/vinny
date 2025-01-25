@@ -1,5 +1,12 @@
-body {
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
   box-sizing: border-box;
+}
+
+body {
   margin: 0;
   padding: 0;
   background-color: #121212e3;
