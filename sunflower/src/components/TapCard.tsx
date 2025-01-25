@@ -5,8 +5,14 @@ import Tap from '../types/tap';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
 import { useState } from 'react';
 
+// TODO: All buttons hidden by default, show on hover
+
 export default function TapCard(props: Readonly<{ tap: Tap; }>) {
     const tap: Tap = props.tap;
+    const dropdownItems = [
+      { icon: <BaselineAddCircleOutline />, operation: 'Settings' },
+      { icon: <BaselineAddCircleOutline />, operation: 'Logout' },
+    ];
     return (
         <div className={`${styles.card} ${tap.active ? styles.cardhighlight : ''}`}>
             <div ><img className={styles.cardimage} src={logo} alt="tap handle logo" /></div>
@@ -15,8 +21,10 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
             <div className={styles.cardtail }>
                 <CardButtonRow>
                     <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
+                      <DropdownMenu items={dropdownItems} />
                     </CardButton>
                     <CardButton icon={<BaselineAddCircleOutline color='red'/>}>
+                      <DropdownMenu items={dropdownItems} />
                     </CardButton>
                 </CardButtonRow>
             </div>
@@ -32,6 +40,13 @@ interface CardButtonProps {
   // this should be React.ReactElement?
   icon: JSX.Element;
   children?: React.ReactNode;
+}
+interface DropdownProps {
+  items: DropdownItemProps[];
+}
+interface DropdownItemProps {
+  icon: JSX.Element;
+  operation: string;
 }
 
 function CardButtonRow(props : CardButtonRowProps) {
@@ -54,5 +69,20 @@ function CardButton(props : CardButtonProps) {
       </a>
       {open && props.children}
     </li>
+  );
+}
+
+function DropdownMenu(props : DropdownProps) {
+  function DropdownItem(props : DropdownItemProps) {
+    return (
+      <li>
+        <a href="#">{props.icon} {props.operation}</a>
+      </li>
+    );
+  }
+  return (
+    <div className={styles.dropdownmenu}>
+      {props.items.map((item, i) => <DropdownItem key={i} icon={item.icon} operation={item.operation} />)}
+    </div>
   );
 }

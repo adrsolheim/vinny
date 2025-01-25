@@ -173,7 +173,6 @@ header img:hover {
 }
 
 .card .cardtail {
-  border: 1px solid hsl(0, 0%, 100%);
   display: flex;
   justify-content: flex-end;
   padding: 0px 10px 10px 0px;
@@ -188,4 +187,11 @@ header img:hover {
   padding: 5px;
 }
 
-
+.dropdownmenu {
+  position: absolute;
+  transform: translate(20px, -15px);
+  background-color: white;
+  z-index: 1;
+  height: 350px;
+  width: 100px;
+}
