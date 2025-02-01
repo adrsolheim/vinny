@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     element: <BatchesPage />,
     children: [
       {
-        path: 'batches/:batchId',
+        path: ':batchId',
         element: <BatchPage />
       }
     ],

@@ -30,12 +30,16 @@ export default function BatchesPage() {
 
 function BatchTable({batches}: { batches: Batch[]}) {
   return (
-    <>
-    <tr>
-      <th>Batches</th>
-    </tr>
-   { batches.map(b => <BatchRow batch={b}/>) }
-    </>
+    <table>
+      <thead>
+        <tr>
+          <th>Batches</th>
+        </tr>
+      </thead>
+      <tbody>
+        { batches.map(b => <BatchRow key={b.id} batch={b}/>) }
+      </tbody>
+    </table>
   );
 }
 
