@@ -8,7 +8,7 @@ export default function Gui() {
     return (
         <>
             <Header sidebarActive={active} setSidebarActive={setActive}/>
-            <Sidebar active={active} />
+            <Sidebar active={active} setActive={setActive}/>
             <Outlet />
         </>
     );

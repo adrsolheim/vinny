@@ -72,6 +72,10 @@ header {
   border-width: 0px;
 }
 
+.headerlogo {
+  width: 200px;
+}
+
 header img {
   margin: 10px;
   height: 50px;
