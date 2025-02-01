@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router';
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
@@ -8,30 +8,37 @@ import NotFound from './pages/ErrorPage';
 import BatchesPage from './pages/BatchesPage';
 import BatchPage from './pages/BatchPage';
 import RecipesPage from './pages/RecipesPage';
+import Gui from './components/Gui';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <HomePage />,
-    errorElement: <NotFound />
-  },
-  {
-    path: '/about',
-    element: <AboutPage />
-  },
-  {
-    path: '/recipes',
-    element: <RecipesPage />,
-  },
-  {
-    path: '/batches',
-    element: <BatchesPage />,
+    element: <Gui/>,
+    errorElement: <NotFound />,
     children: [
       {
-        path: ':batchId',
-        element: <BatchPage />
-      }
-    ],
+        path: '/',
+        element: <HomePage />,
+        errorElement: <NotFound />
+      },
+      {
+        path: '/about',
+        element: <AboutPage />
+      },
+      {
+        path: '/recipes',
+        element: <RecipesPage />,
+      },
+      {
+        path: '/batches',
+        element: <BatchesPage />,
+        children: [
+          {
+            path: ':batchId',
+            element: <BatchPage />
+          }
+        ],
+      },
+    ]
   },
 ]);
 createRoot(document.getElementById('root')!).render(

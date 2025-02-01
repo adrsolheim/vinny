@@ -1,14 +1,9 @@
 import Tap from '../types/tap';
 import { useState, useEffect } from 'react';
 import Card from '../components/TapCard';
-import { NavLink } from 'react-router-dom';
-import styles from '../app.module.css';
-import logo from '../assets/orange_beer_mug.svg';
-import Sidebar from '../components/Sidebar';
 
 export default function HomePage() {
   const [taps, setTaps] = useState<Tap[]>([]);
-  const [sidebarActive, setSidebarActive] = useState<boolean>(false);
   const BASE_URL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
@@ -19,39 +14,17 @@ export default function HomePage() {
     };
     fetchTaps();
   }, []);
-    return (
-      <>
-        <TopHeader setSidebarActive={setSidebarActive} sidebarActive={sidebarActive}/>
-        <Sidebar active={sidebarActive}/>
-        <Taps taps={taps}/>
-      </>
-    );
-}
-
-function Header() {
-  const navList: string[] = ['Batches', 'Recipes'];
-  return <header className={styles.navbar}>
-            <NavLink to={'/'}><img src={logo} alt='beer mug logo' style={{ height: '50px' }} /></NavLink>
-            <nav className={styles.navlist}>
-              <ul>
-                {navList.map((path, idx) => <li><NavLink key={idx} to={path.toLowerCase()}>{path}</NavLink></li>)}
-              </ul>
-            </nav>
-          </header>
+  
+  return (
+    <Taps taps={taps}/>
+  );
 }
 
 function Taps({ taps } : { taps:  Tap[] }) {
   return (
     <main>
-      {taps.map((t) => <Card tap={t}/>)}
+      {taps.map((t) => <Card key={t.id} tap={t}/>)}
     </main>
 
-  );
-}
-
-function TopHeader({ sidebarActive, setSidebarActive } : { sidebarActive: boolean, setSidebarActive : Function}) {
-  const clickToggle = () => { setSidebarActive(!sidebarActive) };
-  return (
-    <header><img src={logo} alt="beer mug logo" onClick={clickToggle}/></header>
   );
 }

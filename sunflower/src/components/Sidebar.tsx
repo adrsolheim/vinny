@@ -6,7 +6,7 @@ export default function Sidebar({ active }: {active: boolean }) {
     return (
         <div className={ active ? `${styles.sidebar} ${styles.active}` : styles.sidebar}>
             <ul>
-                {menuItems.map(item => <NavLink to={item.toLowerCase()}><li>{item}</li></NavLink>)}
+                {menuItems.map((item, idx) => <NavLink key={idx} to={item.toLowerCase()}><li>{item}</li></NavLink>)}
             </ul>
         </div>
     );

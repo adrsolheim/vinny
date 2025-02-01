@@ -18,13 +18,10 @@ export default function BatchesPage() {
 
 
     return (
-        <div>
-            <NavLink to='/'>Back</NavLink>
+        <main>
             <BatchTable batches={batches} />            
-            <div>
-              <Outlet context={batches}/>
-            </div>
-        </div>
+            <Outlet context={batches}/>
+        </main>
     );
 }
 
