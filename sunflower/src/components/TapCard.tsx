@@ -23,7 +23,7 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
                     <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
                       <DropdownMenu items={dropdownItems} />
                     </CardButton>
-                    <CardButton icon={<BaselineAddCircleOutline color='red'/>}>
+                    <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
                       <DropdownMenu items={dropdownItems} />
                     </CardButton>
                 </CardButtonRow>
