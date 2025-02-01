@@ -10,8 +10,8 @@ import { useState } from 'react';
 export default function TapCard(props: Readonly<{ tap: Tap; }>) {
     const tap: Tap = props.tap;
     const dropdownItems = [
-      { icon: <BaselineAddCircleOutline />, operation: 'Settings' },
-      { icon: <BaselineAddCircleOutline />, operation: 'Logout' },
+      { icon: <BaselineAddCircleOutline color='white'/>, operation: 'Settings' },
+      { icon: <BaselineAddCircleOutline color='white'/>, operation: 'Activate' },
     ];
     return (
         <div className={`${styles.card} ${tap.active ? styles.cardhighlight : ''}`}>

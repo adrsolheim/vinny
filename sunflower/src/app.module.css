@@ -189,9 +189,24 @@ header img:hover {
 
 .dropdownmenu {
   position: absolute;
+  padding: 5px;   
+  flex-direction: column;
   transform: translate(20px, -15px);
-  background-color: white;
+  background-color: #3a3a3a;
+  color: white;
+  border: 1px solid hsl(0, 1%, 37%);
   z-index: 1;
-  height: 350px;
-  width: 100px;
+  width: 125px;
+}
+
+.dropdownmenu a,
+.dropdownmenu li {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+}
+
+.dropdownmenu svg {
+  display: block;
+  padding-right: 8px;
 }
