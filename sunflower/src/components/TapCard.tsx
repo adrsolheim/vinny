@@ -4,6 +4,7 @@ import styles from '../app.module.css';
 import Tap from '../types/tap';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
 import { useState } from 'react';
+import TapModal from './TapModal';
 
 // TODO: All buttons hidden by default, show on hover
 
@@ -20,6 +21,9 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
             <div className={styles.cardnumber}><p>{tap.id}</p></div>
             <div className={styles.cardtail }>
                 <CardButtonRow>
+                    <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
+                      <TapModal />
+                    </CardButton>
                     <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
                       <DropdownMenu items={dropdownItems} />
                     </CardButton>
