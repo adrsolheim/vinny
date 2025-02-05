@@ -21,9 +21,7 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
             <div className={styles.cardnumber}><p>{tap.id}</p></div>
             <div className={styles.cardtail }>
                 <CardButtonRow>
-                    <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
-                      <TapModal />
-                    </CardButton>
+                    <ModalButton icon={<BaselineAddCircleOutline color='white'/>} />
                     <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
                       <DropdownMenu items={dropdownItems} />
                     </CardButton>
@@ -53,7 +51,7 @@ interface DropdownItemProps {
   operation: string;
 }
 
-function CardButtonRow(props : CardButtonRowProps) {
+function CardButtonRow(props : Readonly<CardButtonRowProps>) {
   return (
     <nav>    
       <ul>
@@ -64,7 +62,7 @@ function CardButtonRow(props : CardButtonRowProps) {
   );
 }
 
-function CardButton(props : CardButtonProps) {
+function CardButton(props : Readonly<CardButtonProps>) {
   const [open, setOpen] = useState<boolean>(false);
   return (
     <li className={styles.cardbutton}>
@@ -76,17 +74,29 @@ function CardButton(props : CardButtonProps) {
   );
 }
 
-function DropdownMenu(props : DropdownProps) {
-  function DropdownItem(props : DropdownItemProps) {
-    return (
-      <li>
-        <a href="#">{props.icon} {props.operation}</a>
-      </li>
-    );
-  }
+function ModalButton(props : Readonly<CardButtonProps>) {
+  const [open, setOpen] = useState<boolean>(false);
+  return (
+    <li className={styles.cardbutton}>
+      <a className={styles.iconbutton} href="#" onClick={() => setOpen(!open)}>
+        {props.icon}
+      </a>
+      {open && <TapModal open={open} setOpen={setOpen} />}
+    </li>
+  );
+}
+
+function DropdownMenu(props : Readonly<DropdownProps>) {
   return (
     <div className={styles.dropdownmenu}>
       {props.items.map((item, i) => <DropdownItem key={i} icon={item.icon} operation={item.operation} />)}
     </div>
+  );
+}
+function DropdownItem(props : Readonly<DropdownItemProps>) {
+  return (
+    <li>
+      <a href="#">{props.icon} {props.operation}</a>
+    </li>
   );
 }
