@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { createPortal } from "react-dom";
 import styles from '../app.module.css';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
 
-export default function TapModal(props: ModalProps) {
+export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;
     return (
         <>       
@@ -15,7 +14,7 @@ export default function TapModal(props: ModalProps) {
     );
 }
 
-function ModalContent (props: ModalProps) {
+function ModalContent (props: Readonly<ModalProps>) {
     return (
         <div className={styles.modal}>
             <div className={styles.modalcontent}>
@@ -38,7 +37,7 @@ interface CardButtonProps {
   setOpen: Function;
   children?: React.ReactNode;
 }
-function CardButton(props : CardButtonProps) {
+function CardButton(props : Readonly<CardButtonProps>) {
   const setOpen = props.setOpen;
   return (
     <li className={styles.cardbutton}>
