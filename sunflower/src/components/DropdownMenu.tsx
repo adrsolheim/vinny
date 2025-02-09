@@ -8,7 +8,7 @@ export default function DropdownMenu(props: DropdownProps) {
     return(
         <div className={styles.dropdownMenu}>
             <DropdownButton menuOpen={menuOpen} setMenuOpen={setMenuOpen} buttonText={props.item}/>
-            {menuOpen && <DropdownContent items={props.items}/>}
+            {menuOpen && <DropdownContent items={props.items} setItem={props.setItem} setMenuOpen={setMenuOpen}/>}
         </div>
     );
 }
@@ -19,4 +19,5 @@ interface DropdownProps {
     setMenuOpen: Function;
     item: string;
     items: string[];
+    setItem: Function;
 }

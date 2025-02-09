@@ -18,12 +18,13 @@ export default function TapModal(props: Readonly<ModalProps>) {
 
 function ModalContent (props: Readonly<ModalProps>) {
     const itemList: string [] = ['hello', 'foo', 'bar'];
+    const [activeItem, setActiveItem] = useState<string>(itemList[0]);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     return (
         <div className={styles.modal}>
           <div className={styles.modalcontent}>
-            <DropdownMenu item={itemList[0]} items={itemList} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
-            <CardButton icon={<BaselineAddCircleOutline color='white' />} open={props.open} setOpen={props.setOpen} />
+            <DropdownMenu item={activeItem} items={itemList} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setItem={setActiveItem}/>
+            <CardButton icon={<BaselineAddCircleOutline color='white' />} open={props.open} setOpen={props.setOpen} end={true} />
           </div>
         </div>
     );
@@ -40,11 +41,12 @@ interface CardButtonProps {
   open: boolean;
   setOpen: Function;
   children?: React.ReactNode;
+  end?: boolean;
 }
 function CardButton(props : Readonly<CardButtonProps>) {
   const setOpen = props.setOpen;
   return (
-    <li className={styles.cardbutton}>
+    <li className={`${styles.cardbutton} ${props.end ? styles.last : ''}`}>
       <a className={styles.iconbutton} href="#" onClick={() => setOpen(false)}>
         {props.icon}
       </a>
