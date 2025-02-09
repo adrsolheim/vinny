@@ -1,6 +1,8 @@
 import { createPortal } from "react-dom";
 import styles from '../app.module.css';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
+import DropdownMenu from "./DropdownMenu";
+import { useState } from "react";
 
 export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;
@@ -15,12 +17,14 @@ export default function TapModal(props: Readonly<ModalProps>) {
 }
 
 function ModalContent (props: Readonly<ModalProps>) {
+    const itemList: string [] = ['hello', 'foo', 'bar'];
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
     return (
         <div className={styles.modal}>
-            <div className={styles.modalcontent}>
-                <p>This is a modal</p>
-                <CardButton icon={<BaselineAddCircleOutline color='white' />} {...props}/>
-            </div>
+          <div className={styles.modalcontent}>
+            <DropdownMenu item={itemList[0]} items={itemList} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
+            <CardButton icon={<BaselineAddCircleOutline color='white' />} open={props.open} setOpen={props.setOpen} />
+          </div>
         </div>
     );
 }

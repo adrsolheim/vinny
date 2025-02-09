@@ -20,6 +20,11 @@ body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
 }
+
+p {
+  display: block;
+  margin: 1rem 0;
+}
 main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -258,15 +263,46 @@ header img:hover {
 }
 
 .modalcontent {
+  position: relative;
   justify-content: center;
-  align-items: center;
+  align-items: start;
+  display: flex;
   width: 40%;
+  height: 80%;
   background-color: #4a453c;
   border: 2px solid rgb(39, 36, 36);
   margin: 0;
-  position: absolute;
   top: 50%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.dropdownmenu {
+  display: flex;
+
+}
+
+.dropdownmenubutton {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: rgba(222, 218, 218, 0.217) 0px 8px 24px;
+}
+
+.dropmenuicon {
+  margin-left: 1rem;
+}
+
+.dropdowncontent {
+  flex-direction: column;
+  align-items: center;
+  min-width: 100%;
+  max-width: 40vh;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
