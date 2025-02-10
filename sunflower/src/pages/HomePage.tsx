@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Card from '../components/TapCard';
 
 export default function HomePage() {
-  const [taps, setTaps] = useState<Tap[]>([]);
+  const [taps, setTaps] = useState<Tap[]>(defaultTaps());
   const BASE_URL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
@@ -27,4 +27,8 @@ function Taps({ taps } : { taps:  Tap[] }) {
     </main>
 
   );
+}
+
+function defaultTaps(): Tap[] {
+  return Array(4).fill(null).map((_, i) => ({ id: i+1, active: false, batch: undefined}))
 }
