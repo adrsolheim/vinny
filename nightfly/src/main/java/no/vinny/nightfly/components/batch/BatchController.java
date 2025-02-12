@@ -3,6 +3,8 @@ package no.vinny.nightfly.components.batch;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
+import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -72,4 +75,11 @@ public class BatchController {
         log.info("Update request for id {}. Batch: {}", id, updateBatch);
         return batchService.update(updateBatch);
     }
+
+    @GetMapping("/units")
+    public List<BatchUnit> batchUnits(@RequestParam Set<Long> batchIds,
+                                      @RequestParam Set<TapStatus> excludeTapStatus) {
+        return batchService.get(id).orElseThrow(() -> new EntityNotFoundException(STR."Batch by id=\{id} not found"));
+    }
+
 }

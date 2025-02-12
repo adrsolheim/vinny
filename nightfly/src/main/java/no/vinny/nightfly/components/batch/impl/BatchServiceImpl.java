@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
+import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -133,6 +136,11 @@ public class BatchServiceImpl implements BatchService {
         }
         batchRepository.update(batch);
         return get(batch.getId()).get();
+    }
+
+    @Override
+    public List<BatchUnit> getAll(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
+        batchRepository.findUnits()
     }
 
     private void stall() {

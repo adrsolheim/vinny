@@ -113,6 +113,21 @@ public class BatchRepositoryImpl implements BatchRepository {
         return jdbcTemplate.query(SELECT_BATCH_ONLY + " WHERE b.tap_status = :tapStatus", params, new BatchRowMapper());
     }
 
+    @Override
+    public List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        String sql = "SELECT * FROM batch_unit WHERE 1=1 ";
+        if (!batchIds.isEmpty()) {
+            sql += " AND id IN (:batchIds)";
+            params.addValue("batchIds", batchIds);
+        }
+        if (!excludeTapStatus.isEmpty()) {
+            sql += " AND tap_status NOT IN (:excludeTapStatus)";
+            params.addValue("excludeTapStatus", excludeTapStatus);
+        }
+        jdbcTemplate.query(sql, params, );
+    }
+
     private Map<String, Object> convertToMap(Batch batch) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", batch.getId());

@@ -6,6 +6,7 @@ import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface BatchRepository {
     int insert(Batch batch);
@@ -25,4 +26,6 @@ public interface BatchRepository {
     List<Batch> findAll();
 
     List<Batch> findByTapStatus(TapStatus status);
+
+    List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus);
 }
