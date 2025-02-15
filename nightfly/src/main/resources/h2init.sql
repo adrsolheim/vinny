@@ -65,19 +65,19 @@ INSERT INTO batch (id, brewfather_id, name, status)         VALUES (13, 'NLltIco
 INSERT INTO batch (id, brewfather_id, name, status)         VALUES (14, 'NLltIcoo87foHbTz1N8rH0v0KXht6P', 'Juicy NEIPA',      'COMPLETED');
 INSERT INTO batch (id, brewfather_id, name, status)         VALUES (15, 'NLltIcoo87foHbTz1N8rH0v0KXht6A', 'NETTO',            'COMPLETED');
 
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (1,  23,  'AEB',     null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (2,  23,  'AEB',     null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (3,  19,  'AEB',     null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (4,  19,  'AEB',     null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (5,  19,  'AEB',     null, 'STORE', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (1,  23,  'AEB',     null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (2,  23,  'AEB',     null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (3,  19,  'AEB',     null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (4,  19,  'AEB',     null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (5,  19,  'AEB',     null, 'NEW', null);
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (6,  19,  'AEB',     null, 'USED', null);
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (7,  19,  'AEB',     null, 'USED', null);
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (8,  19,  'AEB',     null, 'USED', null);
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (9,  19,  'AEB',     null, 'USED', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (10, 19,  'KEGLAND', null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (11, 19,  'KEGLAND', null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (12, 12,  'KEGLAND', null, 'STORE', null);
-INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (13, 9.5, 'KEGLAND', null, 'STORE', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (10, 19,  'KEGLAND', null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (11, 19,  'KEGLAND', null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (12, 12,  'KEGLAND', null, 'NEW', null);
+INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (13, 9.5, 'KEGLAND', null, 'NEW', null);
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (14, 9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (15, 9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (16, 9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');

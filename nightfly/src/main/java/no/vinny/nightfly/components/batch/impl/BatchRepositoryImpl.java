@@ -21,8 +21,13 @@ public class BatchRepositoryImpl implements BatchRepository {
     private static final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe";
     private static final String RECIPE_COLUMNS = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name";
     private static final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch_id, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
+    private static final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
 
-    private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + ", " + RECIPE_COLUMNS + ", " + BATCH_UNIT_COLUMNS + " FROM batch b INNER JOIN batch_unit bu on bu.batch = b.id LEFT JOIN recipe r on r.id = b.recipe ";
+    private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS
+            + ", " + RECIPE_COLUMNS
+            + ", " + BATCH_UNIT_COLUMNS
+            + ", " + KEG_COLUMNS
+            + " FROM batch b INNER JOIN batch_unit bu on bu.batch = b.id LEFT JOIN keg k ON k.id = bu.keg LEFT JOIN recipe r on r.id = b.recipe ";
     private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
 
     private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap_status, packaging, volume_status, keg) VALUES (:batch, :tapStatus, :packaging, :volumeStatus, :keg)";
