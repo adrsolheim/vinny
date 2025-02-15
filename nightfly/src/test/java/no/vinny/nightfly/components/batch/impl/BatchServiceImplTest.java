@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -99,6 +100,11 @@ class BatchServiceImplTest {
 
             @Override
             public List<Batch> findByTapStatus(TapStatus status) {
+                return null;
+            }
+
+            @Override
+            public List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
                 return null;
             }
         };

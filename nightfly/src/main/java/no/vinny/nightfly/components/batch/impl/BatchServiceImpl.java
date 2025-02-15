@@ -6,6 +6,7 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
+import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -139,10 +142,34 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public List<BatchUnit> getAll(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
-        batchRepository.findUnits()
+    public List<BatchUnitDTO> findAllBy(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
+       return getAll().stream()
+               .filter(batch -> ignore(batchIds) || batchIds.contains(batch.getId()))
+               .flatMap(this::toDTO)
+               .filter(bu -> ignore(excludeTapStatus) || !excludeTapStatus.contains(bu.getTapStatus()))
+               .collect(Collectors.toList());
     }
 
+    private boolean ignore(Set set) {
+        return set == null || set.isEmpty();
+    }
+
+    private Stream<BatchUnitDTO> toDTO(Batch batch) {
+        if (batch.getBatchUnits() == null || batch.getBatchUnits().isEmpty()) {
+            return Stream.of();
+        }
+        return batch.getBatchUnits().stream()
+                .map(bu -> BatchUnitDTO.builder()
+                        .id(bu.getId())
+                        .batchId(batch.getId())
+                        .brewfatherId(batch.getBrewfatherId())
+                        .name(batch.getName())
+                        .tapStatus(bu.getTapStatus())
+                        .packaging(bu.getPackaging())
+                        .volumeStatus(bu.getVolumeStatus())
+                        .keg(bu.getKeg())
+                        .build());
+    }
     private void stall() {
         try {
             Thread.sleep(2000);

@@ -1,7 +1,7 @@
 package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchUnit;
+import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 
 import java.util.List;
@@ -18,6 +18,7 @@ public interface BatchService {
    Batch update(Batch batch);
    Batch upsert(Batch batch);
    Batch replace(Batch batch);
-   List<BatchUnit> getAll(Set<Long> batchIds, Set<TapStatus> excludeTapStatus);
+
+   List<BatchUnitDTO> findAllBy(Set<Long> batchIds, Set<TapStatus> excludeTapStatus);
 
 }
