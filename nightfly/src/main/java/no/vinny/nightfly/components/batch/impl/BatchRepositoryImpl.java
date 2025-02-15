@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.SQLTemplater;
+import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -116,7 +117,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     @Override
     public List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        String sql = "SELECT * FROM batch_unit WHERE 1=1 ";
+        String sql = "SELECT r.name r_name, r.brewfather_id r_brewfather_id, b.id b_id, bu.id bu_id, bu.tap_status bu_tap_status, bu.volume_status bu_volume_status FROM recipe r INNER JOIN batch b on b.recipe = r.id INNER JOIN batch_unit bu ON bu.batch = b.id WHERE 1=1 ";
         if (!batchIds.isEmpty()) {
             sql += " AND id IN (:batchIds)";
             params.addValue("batchIds", batchIds);
@@ -125,7 +126,7 @@ public class BatchRepositoryImpl implements BatchRepository {
             sql += " AND tap_status NOT IN (:excludeTapStatus)";
             params.addValue("excludeTapStatus", excludeTapStatus);
         }
-        jdbcTemplate.query(sql, params, );
+        jdbcTemplate.query(sql, params, new BatchUnitRowMapper());
     }
 
     private Map<String, Object> convertToMap(Batch batch) {
