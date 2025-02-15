@@ -3,8 +3,6 @@ package no.vinny.nightfly.components.batch.impl;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
-import no.vinny.nightfly.components.SQLTemplater;
-import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -20,12 +18,16 @@ import java.util.*;
 @Repository
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String SELECT_BATCH = SQLTemplater.batchQuery(true, true);
-    private static final String SELECT_BATCH_ONLY = SQLTemplater.batchQuery(true, false);
-    private static final String INSERT_BATCH_UNIT = SQLTemplater.batchUnitInsert();
-    private static final String INSERT_BATCH = SQLTemplater.batchInsert();
-    private static final String UPDATE_BATCH = SQLTemplater.batchUpdate();
-    private static final String BATCH_COUNT = SQLTemplater.batchCount();
+    private static final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe";
+    private static final String RECIPE_COLUMNS = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name";
+
+    private static final String SELECT_BATCH = "SELECT " + BATCH_COLUMNS + ", " + RECIPE_COLUMNS + " FROM batch b LEFT JOIN recipe r on r.id = b.recipe ";
+    private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
+
+    private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap_status, packaging, volume_status, keg) VALUES (:batch, :tapStatus, :packaging, :volumeStatus, :keg)";
+    private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
+    private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
+    private static final String BATCH_COUNT = "SELECT COUNT(*) FROM batch";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -126,7 +128,8 @@ public class BatchRepositoryImpl implements BatchRepository {
             sql += " AND tap_status NOT IN (:excludeTapStatus)";
             params.addValue("excludeTapStatus", excludeTapStatus);
         }
-        jdbcTemplate.query(sql, params, new BatchUnitRowMapper());
+        //jdbcTemplate.query(sql, params, new BatchUnitRowMapper());
+        return null;
     }
 
     private Map<String, Object> convertToMap(Batch batch) {

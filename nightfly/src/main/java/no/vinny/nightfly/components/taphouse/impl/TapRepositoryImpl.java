@@ -1,6 +1,5 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
-import no.vinny.nightfly.components.SQLTemplater;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowMapper;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
