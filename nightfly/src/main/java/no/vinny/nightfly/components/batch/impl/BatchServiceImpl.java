@@ -7,6 +7,7 @@ import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
+import no.vinny.nightfly.components.batch.domain.VolumeStatus;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -142,10 +143,11 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public List<BatchUnitDTO> findAllBy(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
+    public List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus) {
        return getAll().stream()
                .filter(batch -> ignore(batchIds) || batchIds.contains(batch.getId()))
                .flatMap(this::toDTO)
+               .filter(bu -> volumeStatus == null || bu.getVolumeStatus() == volumeStatus)
                .filter(bu -> ignore(excludeTapStatus) || !excludeTapStatus.contains(bu.getTapStatus()))
                .collect(Collectors.toList());
     }

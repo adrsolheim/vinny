@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
+import no.vinny.nightfly.components.batch.domain.VolumeStatus;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,9 @@ public class BatchController {
 
     @GetMapping("/units")
     public List<BatchUnitDTO> batchUnits(@RequestParam(required = false) Set<Long> batchIds,
+                                         @RequestParam(required = false) VolumeStatus volumeStatus,
                                          @RequestParam(required = false) Set<TapStatus> excludeTapStatus) {
-        return batchService.findAllBy(batchIds, excludeTapStatus);
+        return batchService.findAllBy(batchIds, volumeStatus, excludeTapStatus);
     }
 
 
