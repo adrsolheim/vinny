@@ -2,14 +2,24 @@ import { createPortal } from "react-dom";
 import styles from '../app.module.css';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
 import DropdownMenu from "./DropdownMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import BatchUnit from "../types/batchUnit";
+import { fetchBatchUnits } from "../util/datafetch";
 
 export default function TapModal(props: Readonly<ModalProps>) {
+    const [batchUnits, setBatchUnits] = useState<BatchUnit[]>([]); 
+    useEffect(() => {
+      const getBatchUnits = async () =>{
+        const units = await fetchBatchUnits();
+        setBatchUnits(units);
+      } 
+      getBatchUnits();
+    }, []);
     const open = props.open;
     return (
         <>       
         {open && createPortal(
-            <ModalContent open={props.open} setOpen={props.setOpen}/>,
+            <ModalContent open={props.open} setOpen={props.setOpen} batchUnits={batchUnits}/>,
             document.body
         )}
         </>   
@@ -17,13 +27,13 @@ export default function TapModal(props: Readonly<ModalProps>) {
 }
 
 function ModalContent (props: Readonly<ModalProps>) {
-    const itemList: string [] = ['hello', 'foo', 'bar'];
-    const [activeItem, setActiveItem] = useState<string>(itemList[0]);
+    const batchUnits = props.batchUnits;
+    const [activeItem, setActiveItem] = useState<string>('...');
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     return (
         <div className={styles.modal}>
           <div className={styles.modalcontent}>
-            <DropdownMenu item={activeItem} items={itemList} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setItem={setActiveItem}/>
+            <DropdownMenu item={activeItem} items={batchUnits} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setItem={setActiveItem}/>
             <CardButton icon={<BaselineAddCircleOutline color='white' />} open={props.open} setOpen={props.setOpen} end={true} />
           </div>
         </div>
@@ -33,6 +43,7 @@ function ModalContent (props: Readonly<ModalProps>) {
 interface ModalProps {
   open: boolean;
   setOpen: Function;
+  batchUnits: BatchUnit[];
 }
 
 interface CardButtonProps {

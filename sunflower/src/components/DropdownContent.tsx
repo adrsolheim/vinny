@@ -1,22 +1,23 @@
 import styles from '../app.module.css';
+import BatchUnit from '../types/batchUnit';
 
 export default function DropdownContent(props: DropdownContentProps) {
     const items = props.items;
-    const handleClick = (i: string) => {
-       props.setItem(i);
+    const handleClick = (unit: BatchUnit) => {
+       props.setItem(unit.name);
        props.setMenuOpen(false);
     };
     return (
         <div className={styles.dropdowncontent}>
             <ul>
-                {items.map(i => <li onClick={() => handleClick(i)}>{i}</li>)}
+                {items.map(i => <li onClick={() => handleClick(i)}>{i.name}</li>)}
             </ul>
         </div>
     );
 }
 
 interface DropdownContentProps {
-    items: string[];
+    items: BatchUnit[];
     setItem: Function;
     setMenuOpen: Function;
 }

@@ -1,3 +1,4 @@
+import Keg from "./keg"
 import { Recipe } from "./recipe"
 
 export default interface Batch {
@@ -15,12 +16,4 @@ export default interface Batch {
     packaging: string,
     volumeStatus: string,
     keg: Keg
-  }
-  interface Keg {
-    id: number,
-    capacity: number,
-    brand: string,
-    serialNumber: string,
-    purchaseCondition: string,
-    note: string   
   }
