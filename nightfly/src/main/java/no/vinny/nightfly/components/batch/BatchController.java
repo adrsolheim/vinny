@@ -3,14 +3,11 @@ package no.vinny.nightfly.components.batch;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
 import no.vinny.nightfly.components.batch.domain.VolumeStatus;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +31,7 @@ public class BatchController {
     // TODO: return message if missing
     @GetMapping("/{id}")
     public Batch batch(@PathVariable Long id) {
-            return batchService.get(id).orElseThrow(() -> new EntityNotFoundException(STR."Batch by id=\{id} not found"));
+            return batchService.get(id).orElseThrow(() -> new EntityNotFoundException(String.format("Batch by id=%d not found", id)));
     }
 
     @GetMapping("/brewfather/{id}")

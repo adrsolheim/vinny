@@ -8,6 +8,8 @@ import no.vinny.nightfly.config.AppConfig;
 import no.vinny.nightfly.components.recipe.impl.RecipeRepositoryImpl;
 import no.vinny.nightfly.components.recipe.impl.RecipeServiceImpl;
 import no.vinny.nightfly.config.redis.RedisConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -33,6 +35,7 @@ public class DataLoaderApplication implements ApplicationRunner {
     private ScheduledSync scheduledSync;
 
     public static void main(String[] args) {
+        Logger log = LoggerFactory.getLogger(DataLoaderApplication.class);
         log.info("STARTING : DataLoaderApplication run");
         SpringApplication.run(DataLoaderApplication.class, args);
         log.info("RUNNING : Run complete.");
