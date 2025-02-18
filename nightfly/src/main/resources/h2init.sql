@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS batch_unit (
 CREATE TABLE IF NOT EXISTS tap (
     id TINYINT NOT NULL PRIMARY KEY,
     active BOOLEAN,
-    batch BIGINT,
-    FOREIGN KEY (batch) REFERENCES batch(id)
+    batch_unit BIGINT,
+    FOREIGN KEY (batch_unit) REFERENCES batch_unit(id)
 );
 
 CREATE TABLE IF NOT EXISTS account (
@@ -83,15 +83,15 @@ INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) V
 INSERT INTO keg (id, capacity, brand, serial_number, purchase_condition, note) VALUES (16, 9.5, 'UNKNOWN', null, 'USED', 'Fat fra utlandet / brusfat');
 
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (1, 10, 'CONNECTED',    'KEG', 'NOT_EMPTY', 1);
-INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (2, 10, 'WAITING',      'KEG', 'NOT_EMPTY', 2);
-INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (3, 11, 'SERVING',      'KEG', 'NOT_EMPTY', 3);
+INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (2, 10, 'CONNECTED',    'KEG', 'NOT_EMPTY', 2);
+INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (3, 11, 'CONNECTED',    'KEG', 'NOT_EMPTY', 3);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (4, 11, 'DISCONNECTED', 'KEG', 'EMPTY',     4);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (5, 12, 'DISCONNECTED', 'KEG', 'EMPTY',     5);
-INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (6, 12, 'DISCONNECTED', 'KEG', 'NOT_EMPTY', 6);
+INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (6, 12, 'CONNECTED',    'KEG', 'NOT_EMPTY', 6);
 
-INSERT INTO tap (id, active, batch) VALUES (1, TRUE, 10);
-INSERT INTO tap (id, active, batch) VALUES (2, TRUE, 11);
-INSERT INTO tap (id, active, batch) VALUES (3, FALSE, 12);
-INSERT INTO tap (id, active, batch) VALUES (4, FALSE, 15);
+INSERT INTO tap (id, active, batch_unit) VALUES (1, TRUE,  1);
+INSERT INTO tap (id, active, batch_unit) VALUES (2, TRUE,  2);
+INSERT INTO tap (id, active, batch_unit) VALUES (3, FALSE, 4);
+INSERT INTO tap (id, active, batch_unit) VALUES (4, FALSE, 5);
 
 
