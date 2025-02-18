@@ -1,11 +1,14 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
+import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -37,27 +40,26 @@ public class TapServiceImpl implements TapService {
     @Override
     public List<Tap> findActive() {
         return findAll().stream()
-                .filter(tap -> tap.getBatch() != null || tap.isActive())
+                .filter(tap -> tap.getBatchUnit() != null || tap.isActive())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Tap connectBatch(Long tap, Long batchId) {
+    public Tap connectBatch(Long tap, Long batchUnitId) {
         Tap taphandle = find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
-        Batch batch = Optional.of(batchService.get(batchId))
-                .get()
-                .orElseThrow(() -> new ResourceNotFoundException("Batch not found: " + batchId));
-        if (taphandle.getBatch() != null) {
-            Batch oldBatch = taphandle.getBatch();
-            oldBatch.setStatus(BatchStatus.ARCHIVED);
-            batchService.update(oldBatch);
+        BatchUnit batchUnit = batchService.getBatchUnit(batchUnitId).orElseThrow(() -> new ResourceNotFoundException("BatchUnit not found: " + batchUnitId));
+        if (taphandle.getBatchUnit() != null) {
+            BatchUnit oldBatchUnit = taphandle.getBatchUnit();
+            oldBatchUnit.setTapStatus(TapStatus.DISCONNECTED);
+            batchService.update(oldBatchUnit);
         }
-        taphandle.setBatch(batch);
-        batchService.update(batch);
+        taphandle.setBatchUnit(batchUnit);
+        batchService.update(batchUnit);
         update(taphandle);
 
         return taphandle;
     }
+
 
     public void update(Tap tap) {
         tapRepository.update(tap);

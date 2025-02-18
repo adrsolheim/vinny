@@ -31,8 +31,8 @@ public class TaphouseController {
         return tapService.findActive();
     }
 
-    @PostMapping("{tap}/connect/{batchId}")
-    public Tap connectBatch(@PathVariable Long tap, @PathVariable Long batchId) {
+    @PostMapping("{tap}/connect/{batchUnitId}")
+    public Tap connectBatch(@PathVariable Long tap, @PathVariable Long batchUnitId) {
         return tapService.connectBatch(tap, batchId);
     }
 }

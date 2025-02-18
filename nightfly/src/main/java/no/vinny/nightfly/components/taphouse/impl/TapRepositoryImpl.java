@@ -13,10 +13,19 @@ import java.util.Map;
 @Repository
 public class TapRepositoryImpl implements TapRepository {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final String SELECT_TAP = "SELECT t.id t_id, t.active t_active, t.batch t_batch, b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status FROM tap t LEFT JOIN batch b on b.id = t.batch";
+    private final String TAP_COLUMNS = "t.id t_id, t.active t_active";
+    private final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch_id, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
+    private final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
+
+    private final String SELECT_TAP = "SELECT "
+            + TAP_COLUMNS + ", "
+            + BATCH_UNIT_COLUMNS + ", "
+            + KEG_COLUMNS + " "
+            + "FROM tap t LEFT JOIN batch_unit bu ON bu.id = t.batch_unit LEFT JOIN keg k ON bu.keg = keg.id";
     private final String UPDATE_TAP = "UPDATE tap SET active = :active, batch = :batch";
+
     private final TapRowMapper mapper;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public TapRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
