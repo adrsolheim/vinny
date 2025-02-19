@@ -1,8 +1,7 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.Packaging;
+import no.vinny.nightfly.components.batch.domain.*;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
@@ -75,9 +74,9 @@ class TapServiceImplTest {
         List<Tap> active = tapService.findActive();
 
         assertEquals(3, active.size());
-        assertTrue(active.contains(new Tap(1L, true, batchesList().get(0))));
-        assertTrue(active.contains(new Tap(2L, true, batchesList().get(1))));
-        assertTrue(active.contains(new Tap(3L, true, batchesList().get(2))));
+        assertTrue(active.contains(new Tap(1L, true, batchUnitMap().get(1L))));
+        assertTrue(active.contains(new Tap(2L, true, batchUnitMap().get(2L))));
+        assertTrue(active.contains(new Tap(3L, true, batchUnitMap().get(3L))));
     }
 
     @Test
@@ -90,9 +89,9 @@ class TapServiceImplTest {
 
     private Map<Long, Tap> taps() {
         return Map.of(
-                1L, new Tap(1L, true, batchesList().get(0)),
-                2L, new Tap(2L, true, batchesList().get(1)),
-                3L, new Tap(3L, true, batchesList().get(2)),
+                1L, new Tap(1L, true, batchUnitMap().get(1L)),
+                2L, new Tap(2L, true, batchUnitMap().get(2L)),
+                3L, new Tap(3L, true, batchUnitMap().get(3L)),
                 4L, new Tap(4L, false, null)
         );
     }
@@ -116,5 +115,26 @@ class TapServiceImplTest {
                                     .build())
                             .collect(Collectors.toList());
         return batches;
+    }
+
+    /**
+     *
+     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
+     VALUES (1, 10, 'CONNECTED',    'KEG', 'NOT_EMPTY', 1);
+     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
+     VALUES (2, 10, 'CONNECTED',    'KEG', 'NOT_EMPTY', 2);
+     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
+     VALUES (3, 11, 'CONNECTED',    'KEG', 'NOT_EMPTY', 3);
+     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
+     VALUES (4, 11, 'DISCONNECTED', 'KEG', 'EMPTY',     4);
+     */
+
+    private Map<Long, BatchUnit> batchUnitMap() {
+        Keg defaultKeg = Keg.builder().id(1L).capacity(19.5).build();
+        return Map.of(
+                1L, BatchUnit.builder().id(1L).batchId(10L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
+                2L, BatchUnit.builder().id(2L).batchId(11L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
+                3L, BatchUnit.builder().id(3L).batchId(12L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build()
+        );
     }
 }

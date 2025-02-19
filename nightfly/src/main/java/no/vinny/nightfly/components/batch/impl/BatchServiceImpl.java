@@ -38,6 +38,12 @@ public class BatchServiceImpl implements BatchService {
     public Optional<Batch> get(Long id) {
         return batchRepository.findById(id);
     }
+
+    @Override
+    public Optional<BatchUnit> getBatchUnit(Long batchUnitId) {
+
+        return Optional.empty();
+    }
     //public Optional<Batch> get(Long id) {
     //    String redisKey = String.format("%s::%s", REDIS_PREFIX, id);
     //    Batch batch = redisTemplate.opsForValue().get(redisKey);
@@ -140,6 +146,16 @@ public class BatchServiceImpl implements BatchService {
         }
         batchRepository.update(batch);
         return get(batch.getId()).get();
+    }
+
+    @Override
+    public BatchUnit update(BatchUnit batchUnit) {
+        if (batchUnit.getBatchId() == null) {
+            log.error("Update rejected because batch unit id is null: {}", batchUnit);
+            throw new IllegalArgumentException("Update rejected because batch unit id is null");
+        }
+        batchRepository.update(batchUnit);
+        return batchRepository.getBatchUnit(batchUnit.getBatchId()).orElseThrow();
     }
 
     @Override

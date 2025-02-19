@@ -3,6 +3,7 @@ package no.vinny.nightfly.components.batch.impl;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
+import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -31,9 +32,12 @@ public class BatchRepositoryImpl implements BatchRepository {
     private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
 
     private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap_status, packaging, volume_status, keg) VALUES (:batch, :tapStatus, :packaging, :volumeStatus, :keg)";
+    private static final String UPDATE_BATCH_UNIT = "UPDATE batch_unit SET batch = :batchId, tap_status = :tapStatus, packaging = :packaging, volume_status = :volumeStatus, keg = :keg WHERE id = :id";
+
     private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
     private static final String BATCH_COUNT = "SELECT COUNT(*) FROM batch";
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -75,12 +79,12 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     public void update(Batch batch) {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batch));
-        params.addValue("id", batch.getId());
-        params.addValue("brewfatherId", batch.getBrewfatherId());
-        params.addValue("name", batch.getName());
-        params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
-        params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         jdbcTemplate.update(UPDATE_BATCH, params);
+    }
+
+    public void update(BatchUnit batchUnit) {
+        MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batchUnit));
+        jdbcTemplate.update(UPDATE_BATCH_UNIT, params);
     }
 
     public Long count() {
@@ -139,12 +143,22 @@ public class BatchRepositoryImpl implements BatchRepository {
         return null;
     }
 
+    @Override
+    public Optional<BatchUnit> getBatchUnit(Long batchUnitId) {
+        String sql = "SELECT " + BATCH_UNIT_COLUMNS + ", " + KEG_COLUMNS + " FROM batch_unit bu LEFT JOIN keg k on bu.keg = k.id WHERE bu.id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", batchUnitId);
+        List<BatchUnit> result = jdbcTemplate.query(sql, params, new BatchUnitRowMapper());
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+
     private Map<String, Object> convertToMap(Batch batch) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", batch.getId());
         batchMap.put("brewfatherId", batch.getBrewfatherId());
         batchMap.put("name", batch.getName());
-        batchMap.put("status", batch.getStatus());
+        batchMap.put("status", batch.getStatus() == null ? null : batch.getStatus().name());
         batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
         return batchMap;
     }

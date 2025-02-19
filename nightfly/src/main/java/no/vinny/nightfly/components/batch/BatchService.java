@@ -1,6 +1,7 @@
 package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.components.batch.domain.Batch;
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
 import no.vinny.nightfly.components.batch.domain.VolumeStatus;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 public interface BatchService {
    Optional<Batch> get(Long id);
+   Optional<BatchUnit> getBatchUnit(Long batchUnitId);
    Optional<Batch> getByBrewfatherId(String id);
    int add(Batch batch);
    List<Batch> getAll();
@@ -19,7 +21,7 @@ public interface BatchService {
    Batch update(Batch batch);
    Batch upsert(Batch batch);
    Batch replace(Batch batch);
-
+   BatchUnit update(BatchUnit batchUnit);
    List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus);
 
 }

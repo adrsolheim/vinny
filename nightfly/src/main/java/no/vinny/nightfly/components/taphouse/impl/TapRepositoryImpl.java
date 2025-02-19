@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
+import no.vinny.nightfly.components.batch.domain.BatchUnit;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowMapper;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class TapRepositoryImpl implements TapRepository {
@@ -22,7 +24,7 @@ public class TapRepositoryImpl implements TapRepository {
             + BATCH_UNIT_COLUMNS + ", "
             + KEG_COLUMNS + " "
             + "FROM tap t LEFT JOIN batch_unit bu ON bu.id = t.batch_unit LEFT JOIN keg k ON bu.keg = keg.id";
-    private final String UPDATE_TAP = "UPDATE tap SET active = :active, batch = :batch";
+    private final String UPDATE_TAP = "UPDATE tap SET active = :active, batch_unit = :batchUnit";
 
     private final TapRowMapper mapper;
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -46,7 +48,7 @@ public class TapRepositoryImpl implements TapRepository {
     @Override
     public int update(Tap tap) {
         String sql = UPDATE_TAP + " WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batch", tap.getBatch()));
+        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batch", Optional.ofNullable(tap.getBatchUnit()).map(BatchUnit::getBatchId).orElse(null)));
         return jdbcTemplate.update(sql, params);
     }
 }

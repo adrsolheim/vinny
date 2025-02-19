@@ -73,6 +73,11 @@ class BatchServiceImplTest {
             }
 
             @Override
+            public void update(BatchUnit batchUnit) {
+
+            }
+
+            @Override
             public Long count() {
                 return Long.valueOf(batchesById.size());
             }
@@ -106,6 +111,11 @@ class BatchServiceImplTest {
             @Override
             public List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus) {
                 return null;
+            }
+
+            @Override
+            public Optional<BatchUnit> getBatchUnit(Long batchUnitId) {
+                return Optional.empty();
             }
         };
         batchService = new BatchServiceImpl(batchRepository);

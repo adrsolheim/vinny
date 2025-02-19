@@ -16,6 +16,7 @@ public interface BatchRepository {
     int delete(Long id);
 
     void update(Batch batch);
+    void update(BatchUnit batchUnit);
 
     Long count();
 
@@ -28,4 +29,6 @@ public interface BatchRepository {
     List<Batch> findByTapStatus(TapStatus status);
 
     List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus);
+
+    Optional<BatchUnit> getBatchUnit(Long batchUnitId);
 }

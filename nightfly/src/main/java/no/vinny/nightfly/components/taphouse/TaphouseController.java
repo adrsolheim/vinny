@@ -33,6 +33,6 @@ public class TaphouseController {
 
     @PostMapping("{tap}/connect/{batchUnitId}")
     public Tap connectBatch(@PathVariable Long tap, @PathVariable Long batchUnitId) {
-        return tapService.connectBatch(tap, batchId);
+        return tapService.connectBatch(tap, batchUnitId);
     }
 }
