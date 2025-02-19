@@ -28,7 +28,7 @@ public class TapRowMapper implements RowMapper<Tap> {
                 .build();
         return BatchUnit.builder()
                 .id(rs.getLong("bu_id"))
-                .batchId(rs.getObject("bu_batch", Long.class))
+                .batchId(rs.getObject("bu_batch_id", Long.class))
                 .tapStatus(rs.getString("bu_tap_status") == null ? null : TapStatus.valueOf(rs.getString("bu_tap_status")))
                 .packaging(rs.getString("bu_packaging") == null ? null : Packaging.valueOf(rs.getString("bu_packaging")))
                 .volumeStatus(rs.getString("bu_volume_status") == null ? null : VolumeStatus.valueOf(rs.getString("bu_volume_status")))

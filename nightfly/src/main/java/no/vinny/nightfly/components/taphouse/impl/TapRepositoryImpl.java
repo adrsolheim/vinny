@@ -23,7 +23,7 @@ public class TapRepositoryImpl implements TapRepository {
             + TAP_COLUMNS + ", "
             + BATCH_UNIT_COLUMNS + ", "
             + KEG_COLUMNS + " "
-            + "FROM tap t LEFT JOIN batch_unit bu ON bu.id = t.batch_unit LEFT JOIN keg k ON bu.keg = keg.id";
+            + "FROM tap t LEFT JOIN batch_unit bu ON bu.id = t.batch_unit LEFT JOIN keg k ON bu.keg = k.id";
     private final String UPDATE_TAP = "UPDATE tap SET active = :active, batch_unit = :batchUnit";
 
     private final TapRowMapper mapper;
