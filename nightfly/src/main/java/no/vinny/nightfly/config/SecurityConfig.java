@@ -4,21 +4,27 @@ import no.vinny.nightfly.security.JwtInspectionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
+
 @Configuration
 @EnableWebSecurity
-@Profile("!noauth")
 public class SecurityConfig {
 
     @Bean
+    @Profile("!noauth")
+    @Order(HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf((csrf) -> csrf.disable())
@@ -47,5 +53,17 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtInspectionFilter(), AuthorizationFilter.class)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
                 return http.build();
+    }
+
+    @Bean
+    @Profile("noauth")
+    @Order(HIGHEST_PRECEDENCE)
+    public SecurityFilterChain noSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .authorizeHttpRequests((request) -> request
+                        .anyRequest().permitAll());
+        return http.build();
     }
 }
