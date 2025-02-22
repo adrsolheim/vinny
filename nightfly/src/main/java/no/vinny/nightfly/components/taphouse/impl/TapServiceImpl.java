@@ -11,6 +11,7 @@ import no.vinny.nightfly.components.taphouse.domain.Tap;
 import no.vinny.nightfly.components.taphouse.domain.TapStatus;
 import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +45,7 @@ public class TapServiceImpl implements TapService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public Tap connectBatch(Long tap, Long batchUnitId) {
         Tap taphandle = find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
