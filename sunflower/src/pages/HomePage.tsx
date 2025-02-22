@@ -29,5 +29,5 @@ function Taps({ taps } : { taps:  Tap[] }) {
 }
 
 function defaultTaps(): Tap[] {
-  return Array(4).fill(null).map((_, i) => ({ id: i+1, active: false, batch: undefined}))
+  return Array(4).fill(null).map((_, i) => ({ id: i+1, active: false, batchUnit: undefined}))
 }

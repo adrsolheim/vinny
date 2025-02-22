@@ -3,8 +3,10 @@ import logo from '../assets/tap_handle.jpg';
 import styles from '../app.module.css';
 import Tap from '../types/tap';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TapModal from './TapModal';
+import BatchUnit from '../types/batchUnit';
+import { fetchBatchUnits } from '../util/datafetch';
 
 // TODO: All buttons hidden by default, show on hover
 
@@ -17,7 +19,7 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
     return (
         <div className={`${styles.card} ${tap.active ? styles.cardhighlight : ''}`}>
             <div ><img className={styles.cardimage} src={logo} alt="tap handle logo" /></div>
-            <div className={`${styles.cardtitle} ${tap.active ? styles.cardtexthighlight : ''}`}><p>{tap.batch?.name ?? " "}</p></div>
+            <div className={`${styles.cardtitle} ${tap.active ? styles.cardtexthighlight : ''}`}><p>{tap.batchUnit?.name ?? " "}</p></div>
             <div className={styles.cardnumber}><p>{tap.id}</p></div>
             <div className={styles.cardtail }>
                 <CardButtonRow>
@@ -76,12 +78,20 @@ function CardButton(props : Readonly<CardButtonProps>) {
 
 function ModalButton(props : Readonly<CardButtonProps>) {
   const [open, setOpen] = useState<boolean>(false);
+  const [batchUnits, setBatchUnits] = useState<BatchUnit[]>([]); 
+  useEffect(() => {
+    const getBatchUnits = async () =>{
+      const units = await fetchBatchUnits();
+      setBatchUnits(units);
+    } 
+    getBatchUnits();
+  }, []);
   return (
     <li className={styles.cardbutton}>
       <a className={styles.iconbutton} href="#" onClick={() => setOpen(!open)}>
         {props.icon}
       </a>
-      {open && <TapModal open={open} setOpen={setOpen} />}
+      {open && <TapModal batchUnits={batchUnits} open={open} setOpen={setOpen} />}
     </li>
   );
 }

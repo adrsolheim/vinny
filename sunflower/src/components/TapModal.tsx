@@ -7,15 +7,8 @@ import BatchUnit from "../types/batchUnit";
 import { fetchBatchUnits } from "../util/datafetch";
 
 export default function TapModal(props: Readonly<ModalProps>) {
-    const [batchUnits, setBatchUnits] = useState<BatchUnit[]>([]); 
-    useEffect(() => {
-      const getBatchUnits = async () =>{
-        const units = await fetchBatchUnits();
-        setBatchUnits(units);
-      } 
-      getBatchUnits();
-    }, []);
     const open = props.open;
+    const batchUnits = props.batchUnits;
     return (
         <>       
         {open && createPortal(

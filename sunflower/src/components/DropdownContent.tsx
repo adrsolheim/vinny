@@ -10,7 +10,7 @@ export default function DropdownContent(props: DropdownContentProps) {
     return (
         <div className={styles.dropdowncontent}>
             <ul>
-                {items.map(i => <li onClick={() => handleClick(i)}>{i.name}</li>)}
+                {items.map((bu, i) => <li key={i} onClick={() => handleClick(bu)}>{bu.name}</li>)}
             </ul>
         </div>
     );

@@ -1,7 +1,7 @@
-import Batch from "./batch";
+import BatchUnit from "./batchUnit";
 
 export default interface Tap {
     id: number,
     active: boolean,
-    batch: Batch | undefined
+    batchUnit: BatchUnit | undefined
 }
