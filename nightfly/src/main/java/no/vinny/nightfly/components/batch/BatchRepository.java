@@ -31,4 +31,7 @@ public interface BatchRepository {
     List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus);
 
     Optional<BatchUnit> getBatchUnit(Long batchUnitId);
+
+    Optional<Batch> getBatchAndBatchUnit(Long batchUnitId);
+
 }

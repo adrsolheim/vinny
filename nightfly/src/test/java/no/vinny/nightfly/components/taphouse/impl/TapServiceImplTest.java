@@ -129,12 +129,12 @@ class TapServiceImplTest {
      VALUES (4, 11, 'DISCONNECTED', 'KEG', 'EMPTY',     4);
      */
 
-    private Map<Long, BatchUnit> batchUnitMap() {
+    private Map<Long, BatchUnitDTO> batchUnitMap() {
         Keg defaultKeg = Keg.builder().id(1L).capacity(19.5).build();
         return Map.of(
-                1L, BatchUnit.builder().id(1L).batchId(10L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
-                2L, BatchUnit.builder().id(2L).batchId(11L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
-                3L, BatchUnit.builder().id(3L).batchId(12L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build()
+                1L, BatchUnitDTO.builder().id(1L).batchId(10L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
+                2L, BatchUnitDTO.builder().id(2L).batchId(11L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
+                3L, BatchUnitDTO.builder().id(3L).batchId(12L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build()
         );
     }
 }

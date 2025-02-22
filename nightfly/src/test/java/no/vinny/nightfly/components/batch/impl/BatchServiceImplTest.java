@@ -117,6 +117,11 @@ class BatchServiceImplTest {
             public Optional<BatchUnit> getBatchUnit(Long batchUnitId) {
                 return Optional.empty();
             }
+
+            @Override
+            public Optional<Batch> getBatchAndBatchUnit(Long batchUnitId) {
+                return Optional.empty();
+            }
         };
         batchService = new BatchServiceImpl(batchRepository);
     }

@@ -1,6 +1,7 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
+import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowMapper;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
@@ -16,14 +17,16 @@ import java.util.Optional;
 public class TapRepositoryImpl implements TapRepository {
 
     private final String TAP_COLUMNS = "t.id t_id, t.active t_active";
-    private final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch_id, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
+    private final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe";
+    private final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
     private final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
 
     private final String SELECT_TAP = "SELECT "
             + TAP_COLUMNS + ", "
+            + BATCH_COLUMNS + ", "
             + BATCH_UNIT_COLUMNS + ", "
             + KEG_COLUMNS + " "
-            + "FROM tap t LEFT JOIN batch_unit bu ON bu.id = t.batch_unit LEFT JOIN keg k ON bu.keg = k.id";
+            + "FROM tap t LEFT JOIN batch_unit bu ON bu.id = t.batch_unit LEFT JOIN batch b ON b.id = bu.batch LEFT JOIN keg k ON bu.keg = k.id";
     private final String UPDATE_TAP = "UPDATE tap SET active = :active, batch_unit = :batchUnit";
 
     private final TapRowMapper mapper;
@@ -48,7 +51,7 @@ public class TapRepositoryImpl implements TapRepository {
     @Override
     public int update(Tap tap) {
         String sql = UPDATE_TAP + " WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batch", Optional.ofNullable(tap.getBatchUnit()).map(BatchUnit::getBatchId).orElse(null)));
+        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batch", Optional.ofNullable(tap.getBatchUnit()).map(BatchUnitDTO::getId).orElse(null)));
         return jdbcTemplate.update(sql, params);
     }
 }

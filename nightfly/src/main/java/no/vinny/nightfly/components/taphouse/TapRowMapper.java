@@ -15,7 +15,11 @@ public class TapRowMapper implements RowMapper<Tap> {
         return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), mapBatchUnit(rs));
     }
 
-    private BatchUnit mapBatchUnit(ResultSet rs) throws SQLException {
+    private BatchUnitDTO mapBatchUnit(ResultSet rs) throws SQLException {
+        Long batchUnitId = rs.getObject("bu_id", Long.class);
+        if (batchUnitId == null) {
+            return null;
+        }
         Long kegId = rs.getObject("bu_keg", Long.class);
         Keg keg = kegId == null ? null
                 : Keg.builder()
@@ -26,9 +30,11 @@ public class TapRowMapper implements RowMapper<Tap> {
                 .purchaseCondition(rs.getString("k_purchase_condition") == null ? null : PurchaseCondition.valueOf(rs.getString("k_purchase_condition")))
                 .note(rs.getString("k_note"))
                 .build();
-        return BatchUnit.builder()
-                .id(rs.getLong("bu_id"))
-                .batchId(rs.getObject("bu_batch_id", Long.class))
+        return BatchUnitDTO.builder()
+                .id(batchUnitId)
+                .name(rs.getString("b_name"))
+                .brewfatherId(rs.getString("b_brewfather_id"))
+                .batchId(rs.getObject("bu_batch", Long.class))
                 .tapStatus(rs.getString("bu_tap_status") == null ? null : TapStatus.valueOf(rs.getString("bu_tap_status")))
                 .packaging(rs.getString("bu_packaging") == null ? null : Packaging.valueOf(rs.getString("bu_packaging")))
                 .volumeStatus(rs.getString("bu_volume_status") == null ? null : VolumeStatus.valueOf(rs.getString("bu_volume_status")))

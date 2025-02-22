@@ -23,5 +23,6 @@ public interface BatchService {
    Batch replace(Batch batch);
    BatchUnit update(BatchUnit batchUnit);
    List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus);
+   Optional<BatchUnitDTO> getBatchUnitById(Long batchUnitId);
 
 }

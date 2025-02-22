@@ -168,6 +168,14 @@ public class BatchServiceImpl implements BatchService {
                .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<BatchUnitDTO> getBatchUnitById(Long batchUnitId) {
+        if (batchUnitId == null) return Optional.empty();
+        return batchRepository.getBatchAndBatchUnit(batchUnitId)
+                .map(this::toSingle);
+
+    }
+
     private boolean ignore(Set set) {
         return set == null || set.isEmpty();
     }
@@ -187,6 +195,24 @@ public class BatchServiceImpl implements BatchService {
                         .volumeStatus(bu.getVolumeStatus())
                         .keg(bu.getKeg())
                         .build());
+    }
+    private BatchUnitDTO toSingle(Batch batch) {
+        if (batch.getBatchUnits() == null || batch.getBatchUnits().isEmpty()) {
+            return null;
+        }
+        return batch.getBatchUnits().stream()
+                .map(bu -> BatchUnitDTO.builder()
+                        .id(bu.getId())
+                        .batchId(batch.getId())
+                        .brewfatherId(batch.getBrewfatherId())
+                        .name(batch.getName())
+                        .tapStatus(bu.getTapStatus())
+                        .packaging(bu.getPackaging())
+                        .volumeStatus(bu.getVolumeStatus())
+                        .keg(bu.getKeg())
+                        .build())
+                .findAny()
+                .orElse(null);
     }
     private void stall() {
         try {

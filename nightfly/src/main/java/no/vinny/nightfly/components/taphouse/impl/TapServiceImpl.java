@@ -5,6 +5,7 @@ import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.batch.domain.Batch;
 import no.vinny.nightfly.components.batch.domain.BatchStatus;
 import no.vinny.nightfly.components.batch.domain.BatchUnit;
+import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.components.taphouse.domain.Tap;
@@ -49,14 +50,14 @@ public class TapServiceImpl implements TapService {
     @Override
     public Tap connectBatch(Long tap, Long batchUnitId) {
         Tap taphandle = find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
-        BatchUnit batchUnit = batchService.getBatchUnit(batchUnitId).orElseThrow(() -> new ResourceNotFoundException("BatchUnit not found: " + batchUnitId));
+        BatchUnitDTO batchUnit = batchService.getBatchUnitById(batchUnitId).orElseThrow(() -> new ResourceNotFoundException("BatchUnit not found: " + batchUnitId));
         if (taphandle.getBatchUnit() != null) {
-            BatchUnit oldBatchUnit = taphandle.getBatchUnit();
+            BatchUnit oldBatchUnit = batchService.getBatchUnit(taphandle.getBatchUnit().getId()).orElseThrow(() -> new ResourceNotFoundException("BatchUnit not found: " + batchUnitId));
             oldBatchUnit.setTapStatus(TapStatus.DISCONNECTED);
             batchService.update(oldBatchUnit);
         }
         taphandle.setBatchUnit(batchUnit);
-        batchService.update(batchUnit);
+        // TODO: keep record if previous tap? batchService.update(batchUnit);
         update(taphandle);
 
         return taphandle;
