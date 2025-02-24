@@ -5,6 +5,7 @@ import DropdownMenu from "./DropdownMenu";
 import { useEffect, useState } from "react";
 import BatchUnit from "../types/batchUnit";
 import { fetchBatchUnits } from "../util/datafetch";
+import StandardButton from "./StandardButton";
 
 export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;
@@ -23,11 +24,14 @@ function ModalContent (props: Readonly<ModalProps>) {
     const batchUnits = props.batchUnits;
     const [activeItem, setActiveItem] = useState<string>('...');
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const close = () => {
+      props.setOpen(false); 
+    };
     return (
         <div className={styles.modal}>
           <div className={styles.modalcontent}>
             <DropdownMenu item={activeItem} items={batchUnits} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setItem={setActiveItem}/>
-            <CardButton icon={<BaselineAddCircleOutline color='white' />} open={props.open} setOpen={props.setOpen} end={true} />
+            <StandardButton onClick={() => props.setOpen(false)} text="Close" end={true}/>
           </div>
         </div>
     );
