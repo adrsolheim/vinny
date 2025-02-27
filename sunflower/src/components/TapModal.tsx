@@ -2,10 +2,11 @@ import { createPortal } from "react-dom";
 import styles from '../app.module.css';
 import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
 import DropdownMenu from "./DropdownMenu";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BatchUnit from "../types/batchUnit";
 import { fetchBatchUnits } from "../util/datafetch";
 import StandardButton from "./StandardButton";
+import { TapContext } from "../contexts/Context";
 
 export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;
@@ -22,11 +23,9 @@ export default function TapModal(props: Readonly<ModalProps>) {
 
 function ModalContent (props: Readonly<ModalProps>) {
     const batchUnits = props.batchUnits;
-    const [activeItem, setActiveItem] = useState<string>('...');
+    const tap = useContext(TapContext);
+    const [activeItem, setActiveItem] = useState<string>(tap?.batchUnit?.name ?? '<empty>');
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-    const close = () => {
-      props.setOpen(false); 
-    };
     return (
         <div className={styles.modal}>
           <div className={styles.modalcontent}>

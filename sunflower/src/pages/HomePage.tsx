@@ -1,7 +1,8 @@
 import Tap from '../types/tap';
 import { useState, useEffect } from 'react';
-import Card from '../components/TapCard';
+import TapCard from '../components/TapCard';
 import { fetchTaps } from '../util/datafetch';
+
 
 export default function HomePage() {
   const [taps, setTaps] = useState<Tap[]>(defaultTaps());
@@ -22,7 +23,7 @@ export default function HomePage() {
 function Taps({ taps } : { taps:  Tap[] }) {
   return (
     <main>
-      {taps.map((t) => <Card key={t.id} tap={t}/>)}
+      {taps.map((t) => <TapCard key={t.id} tap={t}/>)}
     </main>
 
   );

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import TapModal from './TapModal';
 import BatchUnit from '../types/batchUnit';
 import { fetchBatchUnits } from '../util/datafetch';
+import { TapContext } from '../contexts/Context';
 
 // TODO: All buttons hidden by default, show on hover
 
@@ -17,6 +18,7 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
       { icon: <BaselineAddCircleOutline color='white'/>, operation: 'Activate' },
     ];
     return (
+      <TapContext.Provider value={tap}>        
         <div className={`${styles.card} ${tap.active ? styles.cardhighlight : ''}`}>
             <div ><img className={styles.cardimage} src={logo} alt="tap handle logo" /></div>
             <div className={`${styles.cardtitle} ${tap.active ? styles.cardtexthighlight : ''}`}><p>{tap.batchUnit?.name ?? " "}</p></div>
@@ -33,6 +35,8 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
                 </CardButtonRow>
             </div>
         </div>
+      </TapContext.Provider>
+
     );
 }
 
