@@ -7,6 +7,7 @@ import BatchUnit from "../types/batchUnit";
 import { fetchBatchUnits } from "../util/datafetch";
 import StandardButton from "./StandardButton";
 import { TapContext } from "../contexts/Context";
+import Tap from "../types/tap";
 
 export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;
@@ -24,13 +25,20 @@ export default function TapModal(props: Readonly<ModalProps>) {
 function ModalContent (props: Readonly<ModalProps>) {
     const batchUnits = props.batchUnits;
     const tap = useContext(TapContext);
-    const [activeItem, setActiveItem] = useState<string>(tap?.batchUnit?.name ?? '<empty>');
+    const [activeItem, setActiveItem] = useState<Tap | null>(tap);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const update = () => {
+
+      props.setOpen(false);
+    };
     return (
         <div className={styles.modal}>
           <div className={styles.modalcontent}>
             <DropdownMenu item={activeItem} items={batchUnits} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setItem={setActiveItem}/>
-            <StandardButton onClick={() => props.setOpen(false)} text="Close" end={true}/>
+            <div className={styles.last}>
+            <StandardButton onClick={() => props.setOpen(false)} text="Save" />
+            <StandardButton onClick={() => props.setOpen(false)} text="Close" />
+            </div>
           </div>
         </div>
     );

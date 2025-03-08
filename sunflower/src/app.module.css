@@ -70,6 +70,8 @@ ul, li {
   -webkit-user-select: none;
   touch-action: manipulation;
   vertical-align: middle;
+
+  margin: 5px;
 }
 
 .standardbutton:hover,

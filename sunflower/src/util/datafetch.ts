@@ -14,3 +14,10 @@ export async function fetchBatchUnits(): Promise<BatchUnit[]> {
     const batchUnits = (await response.json()) as BatchUnit[];
     return batchUnits;
 }
+
+export async function updateTap(tapId: number, batchUnitId: number): Promise<Tap> {
+    const response = await fetch(`${BASE_URL}/api/taphouse/${tapId}/connect/${batchUnitId}`);
+    const tap = (await response.json()) as Tap;
+    return tap;
+}
+
