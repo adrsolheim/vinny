@@ -10,9 +10,9 @@
 	</parent>
 
 	<groupId>no.vinny</groupId>
-	<artifactId>nightfly</artifactId>
+	<artifactId>nightfly-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>nightfly</name>
+	<name>nightfly-api</name>
 	<description>Backend</description>
 
 	<profiles>

@@ -17,7 +17,7 @@
   </parent>
 
   <modules>
-    <module>nightfly</module>
+    <module>api</module>
   </modules>
 
   <properties>
@@ -34,6 +34,4 @@
       <url>https://projectlombok.org/edge-releases</url>
     </repository>
   </repositories>
-  <dependencies>
-  </dependencies>
 </project>
