@@ -17,7 +17,7 @@
   </parent>
 
   <modules>
-    <module>api</module>
+    <module>nightfly-api</module>
   </modules>
 
   <properties>
