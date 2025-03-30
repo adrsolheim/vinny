@@ -1,5 +1,16 @@
 # Run project
 
+## Issues
+
+[Lombok and Java 23](https://github.com/projectlombok/lombok/issues/3752#issuecomment-2366819375)
+> As of JDK 23, annotation processing is only run with some explicit configuration of annotation processing or with an explicit request to run annotation processing on the javac command line.
+ 
+Fixed by using `proc=full` with maven for now
+```
+mvn -Dmaven.compiler.proc=full clean package
+```
+
+
 ### Local
 The `dev` Spring profile executes the project without the need for external services, e.g., an H2 memory database. `prod` is the default profile.
 ```
