@@ -1,10 +1,10 @@
 --DROP TABLE IF EXISTS oauth2_registered_client;
-DROP TABLE IF EXISTS authorities;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS oauth2_authorization_consent;
-DROP TABLE IF EXISTS oauth2_authorization;
-DROP TABLE IF EXISTS spring_session;
-DROP TABLE IF EXISTS spring_session_attributes;
+--DROP TABLE IF EXISTS authorities;
+--DROP TABLE IF EXISTS users;
+--DROP TABLE IF EXISTS oauth2_authorization_consent;
+--DROP TABLE IF EXISTS oauth2_authorization;
+--DROP TABLE IF EXISTS spring_session;
+--DROP TABLE IF EXISTS spring_session_attributes;
 
 CREATE TABLE IF NOT EXISTS oauth2_registered_client (
     id varchar(100) NOT NULL,
@@ -117,6 +117,10 @@ create table if not exists rsa_key_pairs
     created     date          not null,
     unique (id, created )
 );
+
+DELETE FROM users;
+DELETE FROM authorities;
+
 
 INSERT INTO users (username, password, enabled) VALUES ('user', '$2a$10$KInja4YaK3iN6uS0SeuK9.ahGoA22WyMl4JJ4Fv1rGS7rU2nnXWSK', true);
 --INSERT INTO users (username, password, enabled) VALUES ('empty', '$2a$10$hRVMURGv7.xz4Ow2ruVLBeE0mMM6XFshctOeqBQ1VCc.41gp90zoi', true);
