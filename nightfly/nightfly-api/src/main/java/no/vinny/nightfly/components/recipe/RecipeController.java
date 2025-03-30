@@ -2,11 +2,9 @@ package no.vinny.nightfly.components.recipe;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
+import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.config.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

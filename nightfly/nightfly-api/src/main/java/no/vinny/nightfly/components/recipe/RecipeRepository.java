@@ -1,6 +1,6 @@
 package no.vinny.nightfly.components.recipe;
 
-import no.vinny.nightfly.components.recipe.domain.Recipe;
+import no.vinny.nightfly.domain.Recipe;
 
 import java.util.List;
 import java.util.Optional;

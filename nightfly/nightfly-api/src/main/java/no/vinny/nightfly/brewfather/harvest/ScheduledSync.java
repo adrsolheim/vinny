@@ -2,11 +2,11 @@ package no.vinny.nightfly.brewfather.harvest;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.Mapper;
+import no.vinny.nightfly.domain.batch.Batch;
+import no.vinny.nightfly.components.batch.Mapper;
 import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.brewfather.domain.RecipeJson;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
+import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.components.recipe.RecipeService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service
 @Slf4j
+@Service
 public class ScheduledSync {
 
     private final BrewfatherSettings brewfatherSettings;

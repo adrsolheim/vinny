@@ -2,7 +2,7 @@ package no.vinny.nightfly.components.recipe.impl;
 
 import jakarta.servlet.ServletOutputStream;
 import no.vinny.nightfly.components.recipe.RecipeService;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
+import no.vinny.nightfly.domain.Recipe;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;

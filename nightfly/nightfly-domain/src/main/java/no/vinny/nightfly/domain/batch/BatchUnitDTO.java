@@ -1,8 +1,8 @@
-package no.vinny.nightfly.components.batch.domain;
+package no.vinny.nightfly.domain.batch;
 
 import lombok.Builder;
 import lombok.Data;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.tap.TapStatus;
 
 @Data
 @Builder

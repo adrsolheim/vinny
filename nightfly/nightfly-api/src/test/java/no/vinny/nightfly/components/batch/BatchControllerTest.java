@@ -2,7 +2,7 @@ package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.components.batch.BatchController;
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.Batch;
+import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.config.Pagination;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
+import static no.vinny.nightfly.domain.batch.BatchStatus.COMPLETED;
 
 
 @ActiveProfiles(value = "dev")

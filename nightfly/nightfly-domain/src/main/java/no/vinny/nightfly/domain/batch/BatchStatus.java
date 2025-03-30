@@ -1,10 +1,9 @@
-package no.vinny.nightfly.components.batch.domain;
+package no.vinny.nightfly.domain.batch;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 public enum BatchStatus {
     FERMENTING("Fermenting", 0),
     BREWING("Brewing", 1),
@@ -17,6 +16,11 @@ public enum BatchStatus {
     private final String value;
     @Getter
     private final int order;
+
+    BatchStatus(String status, int order) {
+        this.value = status;
+        this.order = order;
+    }
 
     @Override
     public String toString() {

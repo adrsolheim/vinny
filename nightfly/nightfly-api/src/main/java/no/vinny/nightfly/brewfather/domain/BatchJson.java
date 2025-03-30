@@ -2,7 +2,7 @@ package no.vinny.nightfly.brewfather.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import no.vinny.nightfly.components.batch.domain.BatchStatus;
+import no.vinny.nightfly.domain.batch.BatchStatus;
 
 import java.time.Instant;
 

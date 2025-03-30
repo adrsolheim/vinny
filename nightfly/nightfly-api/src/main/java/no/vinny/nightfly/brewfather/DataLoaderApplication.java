@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.impl.BatchRepositoryImpl;
 import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import no.vinny.nightfly.brewfather.harvest.ScheduledSync;
-import no.vinny.nightfly.config.AppConfig;
 import no.vinny.nightfly.components.recipe.impl.RecipeRepositoryImpl;
 import no.vinny.nightfly.components.recipe.impl.RecipeServiceImpl;
 import no.vinny.nightfly.config.redis.RedisConfig;
@@ -19,7 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 
-@Import({AppConfig.class,
+@Import({
         BatchServiceImpl.class,
         BatchRepositoryImpl.class,
         RecipeServiceImpl.class,

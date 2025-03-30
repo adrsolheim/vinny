@@ -1,16 +1,17 @@
-package no.vinny.nightfly.components.batch.domain;
+package no.vinny.nightfly.domain.batch;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.*;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import no.vinny.nightfly.domain.Recipe;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Batch implements Serializable {
     private Long id;

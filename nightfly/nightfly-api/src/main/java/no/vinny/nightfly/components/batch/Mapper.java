@@ -1,8 +1,9 @@
-package no.vinny.nightfly.components.batch.domain;
+package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.brewfather.domain.RecipeJson;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
+import no.vinny.nightfly.domain.batch.Batch;
+import no.vinny.nightfly.domain.Recipe;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;

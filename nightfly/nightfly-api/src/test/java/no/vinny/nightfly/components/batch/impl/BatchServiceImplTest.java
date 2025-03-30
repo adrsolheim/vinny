@@ -2,17 +2,12 @@ package no.vinny.nightfly.components.batch.impl;
 
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchStatus;
-import no.vinny.nightfly.components.batch.domain.BatchUnit;
-import no.vinny.nightfly.components.batch.domain.Mapper;
-import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.batch.Batch;
+import no.vinny.nightfly.domain.batch.BatchUnit;
+import no.vinny.nightfly.domain.tap.TapStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.List;
 import java.util.Map;
@@ -23,12 +18,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
-import static no.vinny.nightfly.components.batch.domain.BatchStatus.FERMENTING;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static no.vinny.nightfly.domain.batch.BatchStatus.COMPLETED;
+import static no.vinny.nightfly.domain.batch.BatchStatus.FERMENTING;
 
 class BatchServiceImplTest {
 

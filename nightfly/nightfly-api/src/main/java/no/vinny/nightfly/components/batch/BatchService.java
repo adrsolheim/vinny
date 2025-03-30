@@ -1,10 +1,10 @@
 package no.vinny.nightfly.components.batch;
 
-import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchUnit;
-import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
-import no.vinny.nightfly.components.batch.domain.VolumeStatus;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.batch.Batch;
+import no.vinny.nightfly.domain.batch.BatchUnit;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
+import no.vinny.nightfly.domain.batch.VolumeStatus;
+import no.vinny.nightfly.domain.tap.TapStatus;
 
 import java.util.List;
 import java.util.Optional;

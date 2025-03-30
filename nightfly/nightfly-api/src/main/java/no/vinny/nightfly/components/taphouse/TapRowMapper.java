@@ -1,8 +1,8 @@
 package no.vinny.nightfly.components.taphouse;
 
-import no.vinny.nightfly.components.batch.domain.*;
-import no.vinny.nightfly.components.taphouse.domain.Tap;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.batch.*;
+import no.vinny.nightfly.domain.tap.Tap;
+import no.vinny.nightfly.domain.tap.TapStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

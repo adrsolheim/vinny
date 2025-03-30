@@ -17,6 +17,7 @@
   </parent>
 
   <modules>
+    <module>nightfly-domain</module>
     <module>nightfly-api</module>
   </modules>
 

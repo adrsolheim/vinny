@@ -1,4 +1,4 @@
-package no.vinny.nightfly.components.batch.domain;
+package no.vinny.nightfly.domain.batch;
 
 public enum Packaging {
     KEG("Keg", "Fat"),

@@ -1,11 +1,10 @@
 package no.vinny.nightfly.components.batch;
 
-import no.vinny.nightfly.components.batch.domain.*;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.batch.*;
+import no.vinny.nightfly.domain.tap.TapStatus;
+import no.vinny.nightfly.domain.Recipe;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -45,13 +44,13 @@ public class BatchRowMapper implements ResultSetExtractor<List<Batch>> {
             Long batchId = rs.getLong("b_id");
             Batch batch = batches.get(batchId);
             if (batch == null) {
-                batch = new Batch(
-                        rs.getLong("b_id"),
-                        rs.getString("b_brewfather_id"),
-                        rs.getString("b_name"),
-                        rs.getObject("b_status") != null ? BatchStatus.valueOf(rs.getString("b_status").toUpperCase()) : null,
-                        mapRecipe(rs),
-                        null);
+                batch = Batch.builder()
+                        .id(rs.getLong("b_id"))
+                        .brewfatherId(rs.getString("b_brewfather_id"))
+                        .name(rs.getString("b_name"))
+                        .status(rs.getObject("b_status") != null ? BatchStatus.valueOf(rs.getString("b_status").toUpperCase()) : null)
+                        .recipe(mapRecipe(rs))
+                        .build();
                 batches.put(batchId, batch);
             }
             Long unitId = rs.getObject("bu_id", Long.class);

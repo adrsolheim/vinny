@@ -1,10 +1,10 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
-import no.vinny.nightfly.components.batch.domain.BatchUnit;
-import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
+import no.vinny.nightfly.domain.batch.BatchUnit;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowMapper;
-import no.vinny.nightfly.components.taphouse.domain.Tap;
+import no.vinny.nightfly.domain.tap.Tap;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

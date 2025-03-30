@@ -2,11 +2,11 @@ package no.vinny.nightfly.components.batch;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.components.batch.domain.Batch;
-import no.vinny.nightfly.components.batch.domain.BatchUnitDTO;
-import no.vinny.nightfly.components.batch.domain.VolumeStatus;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
+import no.vinny.nightfly.domain.batch.VolumeStatus;
+import no.vinny.nightfly.domain.tap.TapStatus;
 import no.vinny.nightfly.config.Pagination;
+import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

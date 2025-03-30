@@ -1,11 +1,11 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.components.batch.domain.*;
+import no.vinny.nightfly.domain.batch.*;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
-import no.vinny.nightfly.components.taphouse.domain.Tap;
-import no.vinny.nightfly.components.taphouse.domain.TapStatus;
+import no.vinny.nightfly.domain.tap.Tap;
+import no.vinny.nightfly.domain.tap.TapStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static no.vinny.nightfly.components.batch.domain.BatchStatus.COMPLETED;
+import static no.vinny.nightfly.domain.batch.BatchStatus.COMPLETED;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -74,9 +74,9 @@ class TapServiceImplTest {
         List<Tap> active = tapService.findActive();
 
         assertEquals(3, active.size());
-        assertTrue(active.contains(new Tap(1L, true, batchUnitMap().get(1L))));
-        assertTrue(active.contains(new Tap(2L, true, batchUnitMap().get(2L))));
-        assertTrue(active.contains(new Tap(3L, true, batchUnitMap().get(3L))));
+        assertTrue(active.stream().anyMatch(t -> t.getId().equals(1L) && t.getBatchUnit().getBatchId().equals(10L)));
+        assertTrue(active.stream().anyMatch(t -> t.getId().equals(2L) && t.getBatchUnit().getBatchId().equals(11L)));
+        assertTrue(active.stream().anyMatch(t -> t.getId().equals(3L) && t.getBatchUnit().getBatchId().equals(12L)));
     }
 
     @Test

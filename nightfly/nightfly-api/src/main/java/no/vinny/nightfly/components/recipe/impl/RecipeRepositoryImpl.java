@@ -2,8 +2,8 @@ package no.vinny.nightfly.components.recipe.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
-import no.vinny.nightfly.components.recipe.domain.Recipe;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
+import no.vinny.nightfly.domain.Recipe;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
