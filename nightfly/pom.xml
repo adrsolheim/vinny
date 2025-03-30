@@ -18,6 +18,7 @@
 
   <modules>
     <module>nightfly-domain</module>
+    <module>nightfly-client</module>
     <module>nightfly-api</module>
   </modules>
 
