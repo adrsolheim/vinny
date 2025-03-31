@@ -1,10 +1,10 @@
 package no.vinny.client;
 
-import no.vinny.nightfly.domain.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
 public class NightflyRunner implements CommandLineRunner {
@@ -18,7 +18,9 @@ public class NightflyRunner implements CommandLineRunner {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(NightflyRunner.class, args);
+        new SpringApplicationBuilder(NightflyRunner.class)
+                .web(WebApplicationType.NONE)
+                .run(args);
     }
 
     @Override

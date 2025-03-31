@@ -1,5 +1,9 @@
 spring:
   application:
     name: nightfly-client
+  web-application-type: none
+  config:
+    # Local development properties outside version control
+    import: optional:classpath:local.yml
 server:
   port: 0

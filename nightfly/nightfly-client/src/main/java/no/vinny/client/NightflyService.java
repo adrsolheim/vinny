@@ -1,29 +1,26 @@
 package no.vinny.client;
 
 import no.vinny.nightfly.domain.Recipe;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Optional;
-
 @Service
 public class NightflyService {
-    private final RestClient restClient;
+    private String clientSecret;
     private static final String baseUrl = "http://localhost:8080";
     private static final String authUrl = "http://localhost:9000/oauth2/token";
 
-    public NightflyService() {
+    private final RestClient restClient;
+
+    public NightflyService(@Value("${nightfly.secret}") String clientSecret) {
         this.restClient = RestClient.create();
+        this.clientSecret = clientSecret;
     }
+
     public Recipe getRecipe(Long id) {
         return restClient.get()
                 .uri(baseUrl + "/api/recipes/{id}", id)
@@ -40,7 +37,7 @@ public class NightflyService {
                 .uri(authUrl)
                 .body(body)
                 .headers(headers -> {
-                    headers.setBasicAuth("nightfly", "<injected secret>");
+                    headers.setBasicAuth("nightfly", clientSecret);
                 })
                 .retrieve()
                 .toEntity(String.class)
