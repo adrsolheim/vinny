@@ -17,7 +17,7 @@ public class NightflyService {
     private final RestClient restClient;
 
     public NightflyService(@Value("${nightfly.secret}") String clientSecret) {
-        this.restClient = RestClient.create();
+        this.restClient = RestClient.builder().requestInterceptor(new AccessTokenInterceptor("nightfly", clientSecret)).build();
         this.clientSecret = clientSecret;
     }
 

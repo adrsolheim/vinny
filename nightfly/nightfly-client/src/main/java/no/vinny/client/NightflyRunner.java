@@ -1,5 +1,6 @@
 package no.vinny.client;
 
+import no.vinny.nightfly.domain.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
@@ -25,9 +26,9 @@ public class NightflyRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //Recipe recipe = nightflyService.getRecipe(100001L);
-        //System.out.println(recipe);
-        String auth = nightflyService.auth();
-        System.out.println(auth);
+        Recipe recipe = nightflyService.getRecipe(100001L);
+        System.out.println(recipe);
+        //String auth = nightflyService.auth();
+        //System.out.println(auth);
     }
 }
