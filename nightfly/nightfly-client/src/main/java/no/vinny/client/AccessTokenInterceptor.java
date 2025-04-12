@@ -23,7 +23,7 @@ public class AccessTokenInterceptor implements ClientHttpRequestInterceptor {
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        if (request.getHeaders().get("Authentication") == null) {
+        if (request.getHeaders().get("Authorization") == null) {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "client_credentials");
             Token token = RestClient.create().post()
@@ -35,7 +35,7 @@ public class AccessTokenInterceptor implements ClientHttpRequestInterceptor {
                     .retrieve()
                     .toEntity(Token.class)
                     .getBody();
-            request.getHeaders().set("Authentication", "Bearer " + token.access_token());
+            request.getHeaders().set("Authorization", "Bearer " + token.access_token());
         }
         return execution.execute(request,body);
     }
