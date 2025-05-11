@@ -8,7 +8,9 @@ import NotFound from './pages/ErrorPage';
 import BatchesPage from './pages/BatchesPage';
 import BatchPage from './pages/BatchPage';
 import RecipesPage from './pages/RecipesPage';
+import LoginPage from './pages/Login';
 import Gui from './components/Gui';
+import Callback from './pages/Callback';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,14 @@ const router = createBrowserRouter([
           }
         ],
       },
+      {
+        path: '/login',
+        element: <LoginPage />
+      },
+      {
+        path: '/login/oauth2/code/sunflower',
+        element: <Callback />
+      }
     ]
   },
 ]);

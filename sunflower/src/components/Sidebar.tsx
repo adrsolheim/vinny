@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import styles from '../app.module.css';
 
 export default function Sidebar({ active, setActive }: {active: boolean, setActive: Function }) {
-    const menuItems: string[] = ['Batches', 'Recipes', 'Profile'];
+    const menuItems: string[] = ['Batches', 'Recipes', 'Profile', 'Login'];
     const activate = () => setActive(true);
     const deactivate = () => setActive(false);
     return (
