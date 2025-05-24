@@ -10,6 +10,7 @@ export default function Callback() {
         if (code) {
             getToken(code)
             .then((token) => { 
+                // TODO: Store in react context instead
                 localStorage.setItem("token", token["access_token"])
                 navigate("/")
             })

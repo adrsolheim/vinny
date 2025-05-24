@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -71,11 +72,16 @@ public class GatekeeperApplication {
 						RegisteredClient
 								.withId(UUID.randomUUID().toString())
 								.clientId(clientId)
-								.clientSecret(passwordEncoder.encode(serviceSettings.getSecret(clientId)))
+								.redirectUri("http://localhost:5000/login/oauth2/code/sunflower")
 								.redirectUri("http://127.0.0.1:5000/login/oauth2/code/sunflower")
-								.redirectUri("http://127.0.0.1:5000/authorized")
-								.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-								.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+								//.redirectUri("http://127.0.0.1:5000/authorized")
+								//.redirectUri("http://localhost:5000/callback/{registrationId}")
+								.clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+								.clientSettings(ClientSettings.builder()
+										.requireAuthorizationConsent(false)
+										.requireProofKey(true)
+										.build())
+								.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 								.scope("api.nightfly")
 								.tokenSettings(TokenSettings.builder()
 										.accessTokenTimeToLive(Duration.ofHours(8))
@@ -85,6 +91,8 @@ public class GatekeeperApplication {
 								.build()
 				);
 			}
+			client = repository.findByClientId(clientId);
+			log.info("{}", client.getRedirectUris());
 		};
 	}
 
