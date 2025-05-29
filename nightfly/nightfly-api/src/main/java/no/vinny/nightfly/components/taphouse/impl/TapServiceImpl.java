@@ -1,9 +1,6 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.domain.batch.Batch;
-import no.vinny.nightfly.domain.batch.BatchStatus;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.components.taphouse.TapRepository;

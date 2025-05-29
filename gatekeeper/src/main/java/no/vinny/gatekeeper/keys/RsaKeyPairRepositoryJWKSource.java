@@ -1,6 +1,5 @@
 package no.vinny.gatekeeper.keys;
 
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSelector;

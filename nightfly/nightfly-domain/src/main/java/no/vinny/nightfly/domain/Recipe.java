@@ -1,6 +1,5 @@
 package no.vinny.nightfly.domain;
 
-import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;

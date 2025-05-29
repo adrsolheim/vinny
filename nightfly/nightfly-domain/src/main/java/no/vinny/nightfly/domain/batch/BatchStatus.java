@@ -1,7 +1,6 @@
 package no.vinny.nightfly.domain.batch;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public enum BatchStatus {

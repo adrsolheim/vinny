@@ -7,7 +7,6 @@ import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.tap.TapStatus;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -67,7 +66,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         if (batchUnits == null || batchUnits.isEmpty()) {
             return 0;
         }
-        int[] dbResult = jdbcTemplate.batchUpdate(INSERT_BATCH_UNIT, batchUnits.stream().map(this::convertToMap).toArray(Map[]::new));
+        int[] dbResult = jdbcTemplate.batchUpdate(INSERT_BATCH_UNIT, batchUnits.stream().map(this::toSqlParams).toArray(Map[]::new));
         int inserts = Arrays.stream(dbResult).reduce(0, (a, b) -> a + b);
         if (inserts < batchUnits.size()) {
             log.warn("{}/{} batch units inserted for batch {}", inserts, batchUnits.size(), batchUnits.get(0).getBatchId());
@@ -82,12 +81,12 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     public void update(Batch batch) {
-        MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batch));
+        MapSqlParameterSource params = new MapSqlParameterSource(toSqlParams(batch));
         jdbcTemplate.update(UPDATE_BATCH, params);
     }
 
     public void update(BatchUnit batchUnit) {
-        MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(batchUnit));
+        MapSqlParameterSource params = toSqlParams(batchUnit);
         jdbcTemplate.update(UPDATE_BATCH_UNIT, params);
     }
 
@@ -166,7 +165,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
 
-    private Map<String, Object> convertToMap(Batch batch) {
+    private Map<String, Object> toSqlParams(Batch batch) {
         Map<String, Object> batchMap = new HashMap<>();
         batchMap.put("id", batch.getId());
         batchMap.put("brewfatherId", batch.getBrewfatherId());
@@ -176,15 +175,15 @@ public class BatchRepositoryImpl implements BatchRepository {
         return batchMap;
     }
 
-    private Map<String, Object> convertToMap(BatchUnit batchUnit) {
-        Map<String, Object> batchUnitMap = new HashMap<>();
-        batchUnitMap.put("id", batchUnit.getId());
-        batchUnitMap.put("batch",  batchUnit.getBatchId());
-        batchUnitMap.put("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
-        batchUnitMap.put("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
-        batchUnitMap.put("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());
-        batchUnitMap.put("keg", batchUnit.getKeg() == null ? null : batchUnit.getKeg().getId());
-        return batchUnitMap;
+    private MapSqlParameterSource toSqlParams(BatchUnit batchUnit) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", batchUnit.getId());
+        params.addValue("batch",  batchUnit.getBatchId());
+        params.addValue("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
+        params.addValue("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
+        params.addValue("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());
+        params.addValue("keg", batchUnit.getKeg() == null ? null : batchUnit.getKeg().getId());
+        return params;
     }
 
     private void stall() {

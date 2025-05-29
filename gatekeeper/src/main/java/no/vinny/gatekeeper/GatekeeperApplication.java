@@ -19,7 +19,6 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j

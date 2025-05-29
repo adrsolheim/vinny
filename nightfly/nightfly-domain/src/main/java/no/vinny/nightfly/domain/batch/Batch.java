@@ -2,10 +2,8 @@ package no.vinny.nightfly.domain.batch;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import no.vinny.nightfly.domain.Recipe;
 
 import java.io.Serializable;
