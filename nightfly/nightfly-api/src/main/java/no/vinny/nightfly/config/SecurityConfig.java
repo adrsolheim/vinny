@@ -49,6 +49,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET,    "/api/taps/**").hasAnyAuthority("SCOPE_taps.read")
                     .requestMatchers(HttpMethod.GET,    "/api/public/protected").authenticated()
                     .requestMatchers(HttpMethod.GET,    "/api/public").permitAll()
+                    .requestMatchers(HttpMethod.GET,    "/login/**").permitAll()
                     .anyRequest().authenticated())
                 .addFilterBefore(new JwtInspectionFilter(), AuthorizationFilter.class)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
