@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,7 +14,6 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -31,15 +31,15 @@ public class SecurityConfig {
         corsConfiguration.addAllowedOrigin("http://localhost:3000");
         corsConfiguration.addAllowedOrigin("http://127.0.0.1:5500");
         corsConfiguration.addAllowedOrigin("http://localhost:5500");
+        corsConfiguration.addAllowedOrigin("http://127.0.0.1:5000");
+        corsConfiguration.addAllowedOrigin("http://localhost:5000");
 
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+        corsConfiguration.setAllowCredentials(true);
 
-        corsConfiguration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
-        corsConfiguration.addAllowedHeader("*"); // Allow all headers
-
-        // Apply CORS configuration to the path where the authorization endpoints reside
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration); // Apply to all endpoints
-
         return new CorsFilter(source);
     }
 
@@ -86,29 +86,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(Customizer.withDefaults())
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
-                        //.requestMatchers("/oauth2/**").permitAll()
-                        //.requestMatchers("/login/**").permitAll()
-                        //.requestMatchers("/authorize/**").permitAll()
                 )
-                .cors(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .build();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5000", "http://127.0.0.1:5000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
     @Bean

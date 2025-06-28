@@ -36,6 +36,7 @@ export async function getToken(code: string) {
     });
     const response = await fetch("http://gatekeeper:9000/oauth2/token", {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
