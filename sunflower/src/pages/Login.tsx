@@ -1,10 +1,10 @@
-import StandardButton from "../components/StandardButton";
+import { useEffect } from "react";
 import { getAuthUrl } from "../util/auth";
 
 export default function Login() {
-    return <>
-        <StandardButton onClick={redirect} text="Login" />
-    </>;
+    useEffect(() => {
+        redirect();
+    });
 }
 
 async function redirect() {
