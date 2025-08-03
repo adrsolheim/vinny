@@ -1,6 +1,6 @@
 import pkceChallenge from 'pkce-challenge';
 
-export async function getAuthUrl(): Promise<string> {
+export async function generateAuthUrl(): Promise<string> {
 
     const { code_verifier, code_challenge } = await pkceChallenge(128);
     // TODO: Store in react context instead

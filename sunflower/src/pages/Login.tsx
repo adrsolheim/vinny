@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getAuthUrl } from "../util/auth";
+import { generateAuthUrl } from "../util/auth";
 
 export default function Login() {
     useEffect(() => {
@@ -8,6 +8,6 @@ export default function Login() {
 }
 
 async function redirect() {
-    const authUrl = await getAuthUrl();
+    const authUrl = await generateAuthUrl();
     window.location.href = authUrl;
 }

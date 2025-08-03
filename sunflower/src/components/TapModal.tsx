@@ -25,6 +25,7 @@ export default function TapModal(props: Readonly<ModalProps>) {
 function ModalContent (props: Readonly<ModalProps>) {
     const batchUnits = props.batchUnits;
     const tap = useContext(TapContext);
+    // TODO: replace with id and search for tap
     const [activeItem, setActiveItem] = useState<Tap | null>(tap);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const update = () => {
