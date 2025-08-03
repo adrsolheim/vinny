@@ -1,24 +1,21 @@
 
 import { useEffect, useState } from 'react';
-import Card from '../components/RecipeCard';
-import { Recipe } from '../types/recipe';
-import styles from '../app.module.css';
+import RecipeCard from '../features/Recipe/components/RecipeCard';
+import { Recipe } from '../features/Recipe/types';
+import { fetchRecipes } from '../features/Recipe/api';
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const BASE_URL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const response = await fetch(`${BASE_URL}/api/recipes`);
-      const recipes = (await response.json()) as Recipe[];
-      setRecipes(recipes);
+    const fetchAllRecipes = async () => {
+      setRecipes(await fetchRecipes());
     };
-    fetchRecipes();
+    fetchAllRecipes();
   }, []);
     return (
       <main>
-        {recipes.map((r) => <Card recipe={r}/>)}
+        {recipes.map((r) => <RecipeCard recipe={r}/>)}
       </main>
     );
 }

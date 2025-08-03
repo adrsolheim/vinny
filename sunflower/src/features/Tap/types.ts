@@ -1,6 +1,6 @@
-import BatchUnit from "./batchUnit";
+import { BatchUnit } from "../Batch/types";
 
-export default interface Tap {
+export interface Tap {
     id: number,
     active: boolean,
     batchUnit: BatchUnit | undefined

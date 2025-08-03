@@ -1,13 +1,13 @@
 
-import logo from '../assets/tap_handle.jpg';
-import styles from '../app.module.css';
-import Tap from '../types/tap';
-import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
+import logo from '../../../assets/tap_handle.jpg';
+import styles from '../../../app.module.css';
+import { Tap } from '../types';
+import { BaselineAddCircleOutline } from '../../../assets/BaselineAddCircleOutline';
 import { useEffect, useState } from 'react';
 import TapModal from './TapModal';
 import BatchUnit from '../types/batchUnit';
-import { fetchBatchUnits } from '../util/datafetch';
-import { TapContext } from '../contexts/Context';
+import { fetchBatchUnits } from '../../../services/datafetch';
+import { TapContext } from '../../../contexts/Context';
 
 // TODO: All buttons hidden by default, show on hover
 

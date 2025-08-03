@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { generateAuthUrl } from "../util/auth";
+import { generateAuthUrl } from "../../../services/auth";
 
 export default function Login() {
     useEffect(() => {

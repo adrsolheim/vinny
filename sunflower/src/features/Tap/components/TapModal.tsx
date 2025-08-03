@@ -1,13 +1,11 @@
 import { createPortal } from "react-dom";
-import styles from '../app.module.css';
-import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
-import DropdownMenu from "./DropdownMenu";
+import styles from '../../../app.module.css';
+import DropdownMenu from "../../../components/Dropdown/DropdownMenu";
 import { useContext, useEffect, useState } from "react";
 import BatchUnit from "../types/batchUnit";
-import { fetchBatchUnits } from "../util/datafetch";
-import StandardButton from "./StandardButton";
-import { TapContext } from "../contexts/Context";
-import Tap from "../types/tap";
+import StandardButton from "../../../components/Button/StandardButton";
+import { TapContext } from "../../../contexts/Context";
+import Tap from "../types";
 
 export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;

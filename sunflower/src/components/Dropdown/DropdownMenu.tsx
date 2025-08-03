@@ -1,9 +1,9 @@
 import { useState } from "react";
-import DropdownButton from "./DropdownButton";
+import styles from '../../app.module.css';
+import { Tap } from "../../features/Tap/types";
+import DropdownButton from "../Button/DropdownButton";
 import DropdownContent from "./DropdownContent";
-import styles from '../app.module.css';
-import BatchUnit from "../types/batchUnit";
-import Tap from "../types/tap";
+import { BatchUnit } from "../../features/Batch/types";
 
 export default function DropdownMenu(props: DropdownProps) {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);

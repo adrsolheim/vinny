@@ -1,6 +1,5 @@
-import { BaselineAddCircleOutline } from '../assets/BaselineAddCircleOutline';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import styles from '../app.module.css';
+import styles from '../../app.module.css';
 
 
 export default function DropdownButton(props: DropdownButtonProps) {

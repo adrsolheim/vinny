@@ -1,5 +1,5 @@
 import BatchUnit from "../types/batchUnit";
-import Tap from "../types/tap";
+import Tap from "../features/Tap/types";
 
 const BASE_URL = 'http://127.0.0.1:8080';
 

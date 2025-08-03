@@ -1,4 +1,4 @@
-import styles from '../app.module.css';
+import styles from '../../app.module.css';
 
 export default function StandardButton(props : StandardButtonProps) {
     return <button className={`${styles.standardbutton} ${props.end ? styles.last : ''}`} onClick={props.onClick}>

@@ -1,7 +1,7 @@
 
 import { useParams, useOutletContext } from "react-router-dom";
 
-import Batch from "../types/batch";
+import { Batch } from "../features/Batch/types";
 
 export default function BatchPage() {
   const params = useParams<{batchId: string}>();

@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-import Batch from "../types/batch";
+import { Batch } from "../features/Batch/types";
+import { fetchBatches } from "../features/Batch/api";
+import BatchTable from "../features/Batch/components/BatchTable";
 
 export default function BatchesPage() {
   const [batches, setBatches] = useState<Batch[]>([]);
-  const BASE_URL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
-    const fetchBatches = async () => {
-      const response = await fetch(`${BASE_URL}/api/batches`);
-      const batches = (await response.json()) as Batch[];
-      setBatches(batches);
+    const fetchAllBatches = async () => {
+      setBatches(await fetchBatches());
     };
-    fetchBatches();
+    fetchAllBatches();
   }, []);
 
 
@@ -23,30 +22,4 @@ export default function BatchesPage() {
             <Outlet context={batches}/>
         </main>
     );
-}
-
-function BatchTable({batches}: { batches: Batch[]}) {
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Batches</th>
-        </tr>
-      </thead>
-      <tbody>
-        { batches.map(b => <BatchRow key={b.id} batch={b}/>) }
-      </tbody>
-    </table>
-  );
-}
-
-function BatchRow({ batch}: {batch: Batch}) {
-  return (
-    <tr>
-      <td>{batch.id}</td>
-      <td>{batch.name}</td>
-      <td>{batch.status}</td>
-    </tr>
-
-  );
 }

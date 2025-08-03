@@ -8,9 +8,9 @@ import NotFound from './pages/ErrorPage';
 import BatchesPage from './pages/BatchesPage';
 import BatchPage from './pages/BatchPage';
 import RecipesPage from './pages/RecipesPage';
-import LoginPage from './pages/Login';
+import LoginPage from './features/Login/components/Login';
 import Gui from './components/Gui';
-import Callback from './pages/Callback';
+import Callback from './features/Login/components/Callback';
 
 const router = createBrowserRouter([
   {

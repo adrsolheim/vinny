@@ -1,5 +1,5 @@
-import styles from '../app.module.css';
-import BatchUnit from '../types/batchUnit';
+import styles from '../../app.module.css';
+import { BatchUnit } from '../../features/Batch/types';
 
 export default function DropdownContent(props: DropdownContentProps) {
     const items = props.items;
