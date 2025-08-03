@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
-import ModalContent, { ModalProps } from "./ModalContent";
+import { ModalProps } from "../types";
+import ModalContent from "./ModalContent";
 
 export default function TapModal(props: Readonly<ModalProps>) {
     const open = props.open;

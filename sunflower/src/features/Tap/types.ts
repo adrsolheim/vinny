@@ -5,3 +5,9 @@ export interface Tap {
     active: boolean,
     batchUnit: BatchUnit | undefined
 }
+
+export interface ModalProps {
+  open: boolean;
+  setOpen: Function;
+  batchUnits: BatchUnit[];
+}

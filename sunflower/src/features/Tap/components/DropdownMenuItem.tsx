@@ -1,4 +1,3 @@
-import { DropdownItemProps } from "./DropdownMenu";
 
 export default function DropdownItem(props : Readonly<DropdownItemProps>) {
   return (
@@ -6,4 +5,9 @@ export default function DropdownItem(props : Readonly<DropdownItemProps>) {
       <a href="#">{props.icon} {props.operation}</a>
     </li>
   );
+}
+
+export interface DropdownItemProps {
+  icon: JSX.Element;
+  operation: string;
 }

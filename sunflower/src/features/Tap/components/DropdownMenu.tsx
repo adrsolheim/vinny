@@ -1,5 +1,7 @@
-import DropdownItem from "./DropdownMenuItem";
 import styles from '../../../app.module.css';
+import { BatchUnit } from "../../Batch/types";
+import { Tap } from "../types";
+import DropdownItem from './DropdownMenuItem';
 
 export default function DropdownMenu(props : Readonly<DropdownProps>) {
   return (
@@ -10,10 +12,9 @@ export default function DropdownMenu(props : Readonly<DropdownProps>) {
 }
 
 export interface DropdownProps {
-  items: DropdownItemProps[];
-}
-
-export interface DropdownItemProps {
-  icon: JSX.Element;
-  operation: string;
+    menuOpen: boolean;
+    setMenuOpen: Function;
+    item: Tap;
+    items: BatchUnit[];
+    setItem: Function;
 }

@@ -12,7 +12,7 @@ export default function ModalButton(props : Readonly<CardButtonProps>) {
     const getBatchUnits = async () =>{
       const units = await fetchBatchUnits();
       setBatchUnits(units);
-    } 
+    };
     getBatchUnits();
   }, []);
   return (

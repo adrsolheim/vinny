@@ -1,16 +1,15 @@
 import { useContext, useState } from "react";
 import StandardButton from "../../../components/Button/StandardButton";
 import { TapContext } from "../../../contexts/Context";
-import { BatchUnit } from "../../Batch/types";
-import { Tap } from "../types";
-import DropdownMenu from "./DropdownMenu";
+import { ModalProps, Tap } from "../types";
 import styles from '../../../app.module.css';
+import DropdownMenu from "../../../components/Dropdown/DropdownMenu";
 
 export default function ModalContent (props: Readonly<ModalProps>) {
     const batchUnits = props.batchUnits;
     const tap = useContext(TapContext);
     // TODO: replace with id and search for tap
-    const [activeItem, setActiveItem] = useState<Tap | null>(tap);
+    const [activeItem, setActiveItem] = useState<Tap | { id: 0, active: false, batchUnit: undefined }>(tap);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const update = () => {
       props.setOpen(false);
@@ -26,10 +25,4 @@ export default function ModalContent (props: Readonly<ModalProps>) {
           </div>
         </div>
     );
-}
-
-export interface ModalProps {
-  open: boolean;
-  setOpen: Function;
-  batchUnits: BatchUnit[];
 }
