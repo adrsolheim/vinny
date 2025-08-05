@@ -1,6 +1,6 @@
 package no.vinny.nightfly.components.taphouse;
 
-import no.vinny.nightfly.domain.tap.Tap;
+import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +17,22 @@ public class TaphouseController {
     }
 
     @GetMapping
-    public List<Tap> allTaps() {
+    public List<TapDTO> allTaps() {
         return tapService.findAll();
     }
 
     @GetMapping("/{tap}")
-    public Tap get(@PathVariable Long tap) {
+    public TapDTO get(@PathVariable Long tap) {
         return tapService.find(tap).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
     }
 
     @GetMapping("/active")
-    public List<Tap> activeTaps() {
+    public List<TapDTO> activeTaps() {
         return tapService.findActive();
     }
 
     @PostMapping("{tap}/connect/{batchUnitId}")
-    public Tap connectBatch(@PathVariable Long tap, @PathVariable Long batchUnitId) {
+    public TapDTO connectBatch(@PathVariable Long tap, @PathVariable Long batchUnitId) {
         return tapService.connectBatch(tap, batchUnitId);
     }
 }

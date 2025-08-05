@@ -1,18 +1,18 @@
 package no.vinny.nightfly.components.taphouse;
 
 import no.vinny.nightfly.domain.batch.*;
-import no.vinny.nightfly.domain.tap.Tap;
+import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TapRowMapper implements RowMapper<Tap> {
+public class TapRowDTOMapper implements RowMapper<TapDTO> {
 
     @Override
-    public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), mapBatchUnit(rs));
+    public TapDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new TapDTO(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), mapBatchUnit(rs));
     }
 
     private BatchUnitDTO mapBatchUnit(ResultSet rs) throws SQLException {

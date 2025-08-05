@@ -5,6 +5,7 @@ import no.vinny.nightfly.domain.batch.*;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.domain.tap.Tap;
+import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class TapServiceImplTest {
     TapService tapService;
     TapRepository tapRepository;
     BatchService batchService = mock(BatchService.class);
-    Map<Long, Tap> taps;
+    Map<Long, TapDTO> taps;
 
     @BeforeEach
     void setup() {
@@ -36,12 +37,17 @@ class TapServiceImplTest {
 
         tapRepository = new TapRepository() {
             @Override
-            public Tap find(Long tap) {
+            public TapDTO find(Long tap) {
                 return taps.get(tap);
             }
 
             @Override
-            public List<Tap> findAll() {
+            public Tap findById(Long id) {
+                return null;
+            }
+
+            @Override
+            public List<TapDTO> findAll() {
                 return taps.values().stream().toList();
             }
 
@@ -55,21 +61,21 @@ class TapServiceImplTest {
     }
     @Test
     void find() {
-        Optional<Tap> connectedTap = tapService.find(3L);
+        Optional<TapDTO> connectedTap = tapService.find(3L);
 
         assertTrue(connectedTap.isPresent());
     }
 
     @Test
     void findAll() {
-        List<Tap> all = tapService.findAll();
+        List<TapDTO> all = tapService.findAll();
 
         assertEquals(4, all.size());
     }
 
     @Test
     void findActive() {
-        List<Tap> active = tapService.findActive();
+        List<TapDTO> active = tapService.findActive();
 
         assertEquals(3, active.size());
         assertTrue(active.stream().anyMatch(t -> t.getId().equals(1L) && t.getBatchUnit().getBatchId().equals(10L)));
@@ -85,12 +91,12 @@ class TapServiceImplTest {
     void update() {
     }
 
-    private Map<Long, Tap> taps() {
+    private Map<Long, TapDTO> taps() {
         return Map.of(
-                1L, new Tap(1L, true, batchUnitMap().get(1L)),
-                2L, new Tap(2L, true, batchUnitMap().get(2L)),
-                3L, new Tap(3L, true, batchUnitMap().get(3L)),
-                4L, new Tap(4L, false, null)
+                1L, new TapDTO(1L, true, batchUnitMap().get(1L)),
+                2L, new TapDTO(2L, true, batchUnitMap().get(2L)),
+                3L, new TapDTO(3L, true, batchUnitMap().get(3L)),
+                4L, new TapDTO(4L, false, null)
         );
     }
 
