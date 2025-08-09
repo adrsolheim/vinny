@@ -60,14 +60,14 @@ public class TapServiceImpl implements TapService {
         if (canConnect(batchUnit)) {
             batchUnit.setTapStatus(TapStatus.CONNECTED);
         }
-        tap.setBatchUnitId(batchUnitId);
-        update(tap);
-        batchService.update(batchUnit);
         if (tap.getBatchUnitId() != null) {
             BatchUnit oldBatchUnit = batchService.getBatchUnit(tap.getBatchUnitId()).orElseThrow(() -> new ResourceNotFoundException("BatchUnit not found: " + batchUnitId));
             oldBatchUnit.setTapStatus(TapStatus.DISCONNECTED);
             batchService.update(oldBatchUnit);
         }
+        tap.setBatchUnitId(batchUnitId);
+        update(tap);
+        batchService.update(batchUnit);
 
         return find(tapId).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
     }
