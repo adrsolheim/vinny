@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -33,17 +35,22 @@ public class DatabaseConfig  {
         return new HikariDataSource(config);
     }
 
-    @Bean
-    @ConfigurationProperties("spring.datasource")
-    public HikariDataSource hikariDataSource() {
-        return DataSourceBuilder
-                .create()
-                .type(HikariDataSource.class)
-                .build();
-    }
+    //@Bean
+    //@ConfigurationProperties("spring.datasource")
+    //public HikariDataSource hikariDataSource() {
+    //    return DataSourceBuilder
+    //            .create()
+    //            .type(HikariDataSource.class)
+    //            .build();
+    //}
 
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate(HikariDataSource hikariDataSource) {
         return new NamedParameterJdbcTemplate(hikariDataSource);
+    }
+
+    @Bean
+    TransactionManager transactionManager(DataSource ds) {
+        return new DataSourceTransactionManager(ds);
     }
 }

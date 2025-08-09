@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository
 public class TapRepositoryImpl implements TapRepository {
 
-    private final String TAP_COLUMNS = "t.id t_id, t.active t_active, t.batch_unit_id t_batch_unit_id";
+    private final String TAP_COLUMNS = "t.id t_id, t.active t_active, t.batch_unit t_batch_unit";
     private final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe";
     private final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
     private final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
@@ -53,7 +53,7 @@ public class TapRepositoryImpl implements TapRepository {
         List<Tap> result = jdbcTemplate.query(sql, new MapSqlParameterSource(Map.of("tap", id)), new RowMapper<Tap>() {
             @Override
             public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), rs.getObject("t_batch_id", Long.class));
+                return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), rs.getObject("t_batch_unit", Long.class));
             }
         });
         return result.size() == 1 ? Optional.of(result.get(0)) : Optional.empty();
@@ -67,7 +67,7 @@ public class TapRepositoryImpl implements TapRepository {
     @Override
     public int update(Tap tap) {
         String sql = UPDATE_TAP + " WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batch", Optional.ofNullable(tap.getBatchUnitId()).orElse(null)));
+        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batchUnit", Optional.ofNullable(tap.getBatchUnitId()).orElse(null)));
         return jdbcTemplate.update(sql, params);
     }
 }

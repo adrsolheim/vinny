@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.taphouse;
 
+import no.vinny.nightfly.components.taphouse.api.ConnectBatchRequest;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,11 @@ public class TaphouseController {
         return tapService.findActive();
     }
 
-    @PostMapping("{tap}/connect/{batchUnitId}")
-    public TapDTO connectBatch(@PathVariable Long tap, @PathVariable Long batchUnitId) {
-        return tapService.connectBatch(tap, batchUnitId);
+    @PostMapping("/{tap}/connect/{batchUnitId}")
+    public TapDTO connectBatch(@PathVariable Long tap,
+                               @PathVariable Long batchUnitId,
+                               @RequestParam(required = false) Boolean oldBatchEmpty) {
+        ConnectBatchRequest request = new ConnectBatchRequest(tap, batchUnitId, !Boolean.FALSE.equals(oldBatchEmpty));
+        return tapService.connectBatch(request);
     }
 }

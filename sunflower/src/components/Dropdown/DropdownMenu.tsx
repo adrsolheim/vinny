@@ -15,7 +15,6 @@ export default function DropdownMenu(props: DropdownProps) {
     );
 }
 
-
 interface DropdownProps {
     menuOpen: boolean;
     setMenuOpen: Function;

@@ -9,6 +9,7 @@ import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapStatus;
+import no.vinny.nightfly.util.exception.ResourceNotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,7 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Optional<BatchUnit> getBatchUnit(Long batchUnitId) {
-
-        return Optional.empty();
+        return batchRepository.getBatchUnit(batchUnitId);
     }
     //public Optional<Batch> get(Long id) {
     //    String redisKey = String.format("%s::%s", REDIS_PREFIX, id);
@@ -153,7 +153,7 @@ public class BatchServiceImpl implements BatchService {
             throw new IllegalArgumentException("Update rejected because batch unit id is null");
         }
         batchRepository.update(batchUnit);
-        return batchRepository.getBatchUnit(batchUnit.getBatchId()).orElseThrow();
+        return batchRepository.getBatchUnit(batchUnit.getId()).orElseThrow(() -> new ResourceNotFoundException("Batch unit not found " + batchUnit.getId()));
     }
 
     @Override

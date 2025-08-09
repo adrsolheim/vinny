@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.taphouse;
 
+import no.vinny.nightfly.components.taphouse.api.ConnectBatchRequest;
 import no.vinny.nightfly.domain.tap.Tap;
 import no.vinny.nightfly.domain.tap.TapDTO;
 
@@ -12,5 +13,5 @@ public interface TapService {
     Optional<Tap> findById(Long id);
     List<TapDTO> findAll();
     List<TapDTO> findActive();
-    TapDTO connectBatch(Long tap, Long batchId);
+    TapDTO connectBatch(ConnectBatchRequest request);
 }
