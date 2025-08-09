@@ -37,13 +37,13 @@ class TapServiceImplTest {
 
         tapRepository = new TapRepository() {
             @Override
-            public TapDTO find(Long tap) {
-                return taps.get(tap);
+            public Optional<TapDTO> find(Long tap) {
+                return Optional.ofNullable(taps.get(tap));
             }
 
             @Override
-            public Tap findById(Long id) {
-                return null;
+            public Optional<Tap> findById(Long id) {
+                return Optional.empty();
             }
 
             @Override

@@ -4,6 +4,7 @@ import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowDTOMapper;
 import no.vinny.nightfly.domain.tap.Tap;
 import no.vinny.nightfly.domain.tap.TapDTO;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -40,20 +41,22 @@ public class TapRepositoryImpl implements TapRepository {
     }
 
     @Override
-    public TapDTO find(Long tap) {
+    public Optional<TapDTO> find(Long tap) {
         String sql = SELECT_TAP + " WHERE t.id = :tap";
-        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(Map.of("tap", tap)), mapper);
+        List<TapDTO> result = jdbcTemplate.query(sql, new MapSqlParameterSource(Map.of("tap", tap)), mapper);
+        return result.size() == 1 ? Optional.of(result.get(0)) : Optional.empty();
     }
 
     @Override
-    public Tap findById(Long id) {
+    public Optional<Tap> findById(Long id) {
         String sql = SELECT_TAP + " WHERE t.id = :tap";
-        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(Map.of("tap", id)), new RowMapper<Tap>() {
+        List<Tap> result = jdbcTemplate.query(sql, new MapSqlParameterSource(Map.of("tap", id)), new RowMapper<Tap>() {
             @Override
             public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), rs.getObject("t_batch_id", Long.class));
             }
         });
+        return result.size() == 1 ? Optional.of(result.get(0)) : Optional.empty();
     }
 
     @Override

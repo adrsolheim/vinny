@@ -32,12 +32,12 @@ public class TapServiceImpl implements TapService {
 
     @Override
     public Optional<TapDTO> find(Long tap) {
-        return Optional.ofNullable(tapRepository.find(tap));
+        return tapRepository.find(tap);
     }
 
     @Override
     public Optional<Tap> findById(Long id) {
-        return Optional.ofNullable(tapRepository.findById(id));
+        return tapRepository.findById(id);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TapServiceImpl implements TapService {
     @Transactional
     @Override
     public TapDTO connectBatch(Long tapId, Long batchUnitId) {
-        Tap tap = tapRepository.findById(tapId);
+        Tap tap = tapRepository.findById(tapId).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tapId));
         BatchUnit batchUnit = batchService.getBatchUnit(batchUnitId).orElseThrow(() -> new ResourceNotFoundException("Batch unit not found " + batchUnitId));
         if (canConnect(batchUnit)) {
             batchUnit.setTapStatus(TapStatus.CONNECTED);
