@@ -11,10 +11,12 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:h2init.sql
+      schema-locations: classpath:h2schema.sql
+      data-locations: classpath:h2data.sql
   datasource:
     driver-class-name: org.h2.Driver
-    jdbc-url: jdbc:h2:mem:nightfly;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MariaDB;INIT=RUNSCRIPT FROM 'classpath:h2init.sql'
+    jdbc-url: jdbc:h2:mem:nightfly;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MariaDB;INIT=RUNSCRIPT FROM 'classpath:h2schema.sql'\;RUNSCRIPT FROM 'classpath:h2data.sql'
+    url: jdbc:h2:mem:nightfly;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MariaDB;INIT=RUNSCRIPT FROM 'classpath:h2schema.sql'\;RUNSCRIPT FROM 'classpath:h2data.sql'
     username: sa
     password:
   data:
@@ -28,5 +30,5 @@ web:
      - "http://127.0.0.1:5500"
      - "http://127.0.0.1:5000"
      - "http://127.0.0.1:3000"
-    allowedOethods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+    allowedMethods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
     maxAge: 3600
