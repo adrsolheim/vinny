@@ -26,6 +26,8 @@ public interface BatchRepository {
 
     List<Batch> findAll();
 
+    List<Batch> getBatchesBy(Long recipeId, Long tapId);
+
     List<Batch> findByTapStatus(TapStatus status);
 
     List<BatchUnit> findBatchUnits(Set<Long> batchIds, Set<TapStatus> excludeTapStatus);

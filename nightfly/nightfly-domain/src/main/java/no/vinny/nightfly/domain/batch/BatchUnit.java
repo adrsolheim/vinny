@@ -9,6 +9,7 @@ import no.vinny.nightfly.domain.tap.TapStatus;
 public class BatchUnit {
     Long id;
     Long batchId;
+    Long tapId;
     TapStatus tapStatus;
     Packaging packaging;
     VolumeStatus volumeStatus;

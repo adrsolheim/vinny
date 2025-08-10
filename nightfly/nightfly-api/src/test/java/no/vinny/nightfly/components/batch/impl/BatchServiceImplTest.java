@@ -95,6 +95,11 @@ class BatchServiceImplTest {
             }
 
             @Override
+            public List<Batch> getBatchesBy(Long recipeId, Long tapId) {
+                return null;
+            }
+
+            @Override
             public List<Batch> findByTapStatus(TapStatus status) {
                 return null;
             }

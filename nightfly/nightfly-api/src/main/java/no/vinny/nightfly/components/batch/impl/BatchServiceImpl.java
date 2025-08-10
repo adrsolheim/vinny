@@ -76,6 +76,11 @@ public class BatchServiceImpl implements BatchService {
         return batchRepository.findAll();
     }
 
+    @Override
+    public List<Batch> filterBy(Long recipeId, Long tapId) {
+        return batchRepository.getBatchesBy(recipeId,tapId);
+    }
+
     //TODO: implement rest
     @Override
     public Long count() {

@@ -21,7 +21,7 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     private static final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe";
     private static final String RECIPE_COLUMNS = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name";
-    private static final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
+    private static final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap bu_tap, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
     private static final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
 
     private static final String SELECT_BATCH = "SELECT "
@@ -34,8 +34,8 @@ public class BatchRepositoryImpl implements BatchRepository {
             + " LEFT JOIN recipe r on r.id = b.recipe ";
     private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
 
-    private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap_status, packaging, volume_status, keg) VALUES (:batch, :tapStatus, :packaging, :volumeStatus, :keg)";
-    private static final String UPDATE_BATCH_UNIT = "UPDATE batch_unit SET batch = :batch, tap_status = :tapStatus, packaging = :packaging, volume_status = :volumeStatus, keg = :keg WHERE id = :id";
+    private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap, tap_status, packaging, volume_status, keg) VALUES (:batch, :tap, :tapStatus, :packaging, :volumeStatus, :keg)";
+    private static final String UPDATE_BATCH_UNIT = "UPDATE batch_unit SET batch = :batch, tap = :tap, tap_status = :tapStatus, packaging = :packaging, volume_status = :volumeStatus, keg = :keg WHERE id = :id";
 
     private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
@@ -124,6 +124,15 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     @Override
+    public List<Batch> getBatchesBy(Long recipeId, Long tapId) {
+        StringBuilder sql = new StringBuilder(SELECT_BATCH);
+        if (recipeId != null) {
+
+        }
+        return null;
+    }
+
+    @Override
     public List<Batch> findByTapStatus(TapStatus status) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tapStatus", status.name());
@@ -179,6 +188,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", batchUnit.getId());
         params.addValue("batch",  batchUnit.getBatchId());
+        params.addValue("tap",  batchUnit.getTapId());
         params.addValue("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
         params.addValue("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
         params.addValue("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());

@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS keg (
 CREATE TABLE IF NOT EXISTS batch_unit (
     id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
     batch BIGINT,
+    tap TINYINT,
     packaging VARCHAR(30),
     tap_status VARCHAR(30),
     volume_status VARCHAR(30),

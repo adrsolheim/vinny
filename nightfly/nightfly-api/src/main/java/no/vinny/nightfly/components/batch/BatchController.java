@@ -40,7 +40,8 @@ public class BatchController {
     }
 
     @GetMapping
-    public List<Batch> batches() {
+    public List<Batch> batches(@RequestParam(required = false) Long recipeId,
+                               @RequestParam(required = false) Long tapId) {
         return batchService.getAll();
     }
 
@@ -82,5 +83,7 @@ public class BatchController {
         log.info("Update request for id {}. Batch: {}", id, updateBatch);
         return batchService.update(updateBatch);
     }
+
+
 
 }
