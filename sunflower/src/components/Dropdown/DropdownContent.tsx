@@ -6,6 +6,7 @@ import { Tap } from '../../features/Tap/types';
 export default function DropdownContent(props: DropdownContentProps) {
     const items = props.items;
     const handleClick = (unit: BatchUnit) => {
+        // TODO: bug?? connect after switching
         if (props.activeItem?.batchUnit && props.activeItem && props.activeItem.batchUnit.id !== unit.id) {
             connectBatch(props.activeItem.id, props.activeItem.batchUnit.id, true)
         }

@@ -9,7 +9,16 @@ export async function fetchBatches(): Promise<Batch[]> {
 };
 
 export async function fetchBatchUnits(): Promise<BatchUnit[]> {
-    const response = await fetch(`${BASE_URL}/api/batches/units`);
-    const batchUnits = (await response.json()) as BatchUnit[];
-    return batchUnits;
+      const response = await fetch(`${BASE_URL}/api/batches/units`);
+      const batchUnits = (await response.json()) as BatchUnit[];
+      return batchUnits;
+}
+
+export async function fetchAvailableBatchUnits(): Promise<BatchUnit[]> {
+      const params = new URLSearchParams();
+      params.set('volumeStatus', 'NOT_EMPTY');
+      params.set('excludeTapStatus', 'CONNECTED');
+      const response = await fetch(`${BASE_URL}/api/batches/units?${params}`);
+      const batchUnits = (await response.json()) as BatchUnit[];
+      return batchUnits;
 }

@@ -3,14 +3,14 @@ import { BatchUnit } from "../../Batch/types";
 import { CardButtonProps } from "./CardButton";
 import TapModal from "./TapModal";
 import styles from '../../../app.module.css';
-import { fetchBatchUnits } from "../../Batch/api";
+import { fetchAvailableBatchUnits } from "../../Batch/api";
 
 export default function ModalButton(props : Readonly<CardButtonProps>) {
   const [open, setOpen] = useState<boolean>(false);
   const [batchUnits, setBatchUnits] = useState<BatchUnit[]>([]); 
   useEffect(() => {
     const getBatchUnits = async () =>{
-      const units = await fetchBatchUnits();
+      const units = await fetchAvailableBatchUnits();
       setBatchUnits(units);
     };
     getBatchUnits();
