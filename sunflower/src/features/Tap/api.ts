@@ -10,3 +10,16 @@ export async function connectBatch(tapId: number, batchUnitId: number, oldBatchE
     const updatedTap = (await response.json()) as Tap;
     return updatedTap;
 }
+
+export async function fetchTaps(): Promise<Tap[]> {
+    const response = await fetch(`${BASE_URL}/api/taphouse`);
+    const taps = (await response.json()) as Tap[];
+    return taps;
+};
+
+export async function updateTap(tapId: number, batchUnitId: number): Promise<Tap> {
+    const response = await fetch(`${BASE_URL}/api/taphouse/${tapId}/connect/${batchUnitId}`);
+    const tap = (await response.json()) as Tap;
+    return tap;
+}
+

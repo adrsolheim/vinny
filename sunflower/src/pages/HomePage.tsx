@@ -1,7 +1,7 @@
 import { Tap } from '../features/Tap/types';
 import { useState, useEffect } from 'react';
 import TapCard from '../features/Tap/components/TapCard';
-import { fetchTaps } from '../services/datafetch';
+import { fetchTaps } from '../features/Tap/api';
 
 
 export default function HomePage() {

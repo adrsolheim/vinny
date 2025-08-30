@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { fetchBatchUnits } from "../../../services/datafetch";
 import { BatchUnit } from "../../Batch/types";
 import { CardButtonProps } from "./CardButton";
 import TapModal from "./TapModal";
 import styles from '../../../app.module.css';
+import { fetchBatchUnits } from "../../Batch/api";
 
 export default function ModalButton(props : Readonly<CardButtonProps>) {
   const [open, setOpen] = useState<boolean>(false);
