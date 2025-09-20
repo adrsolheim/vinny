@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import HomePage from "./pages/HomePage"
+import TapsPage from "./pages/TapsPage"
 import AboutPage from "./pages/AboutPage"
 import NotFound from './pages/ErrorPage';
 import BatchesPage from './pages/BatchesPage';
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <HomePage />,
+        element: <TapsPage />,
         errorElement: <NotFound />
       },
       {

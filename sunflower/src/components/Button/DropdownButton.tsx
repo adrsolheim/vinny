@@ -7,7 +7,10 @@ export default function DropdownButton(props: DropdownButtonProps) {
     const menuOpen: boolean = props.menuOpen;
     return (
         <div className={styles.dropdownmenubutton} onClick={() => setMenuOpen(!menuOpen)}>
-            <span>{props.buttonText}</span><span className={styles.dropmenuicon}>{menuOpen ?<FaChevronUp fill='white' /> : <FaChevronDown fill='white'/>}</span>
+            <span>{props.buttonText}</span>
+            <span className={styles.dropmenuicon}>
+                {menuOpen ?<FaChevronUp fill='white' /> : <FaChevronDown fill='white'/>}
+            </span>
         </div>
     );
 }

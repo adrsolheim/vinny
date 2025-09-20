@@ -17,4 +17,5 @@ export interface CardButtonProps {
   // this should be React.ReactElement?
   icon: JSX.Element;
   children?: React.ReactNode;
+  handleUpdateTap: Function;
 }

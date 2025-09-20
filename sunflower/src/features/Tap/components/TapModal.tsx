@@ -8,7 +8,12 @@ export default function TapModal(props: Readonly<ModalProps>) {
     return (
         <>       
         {open && createPortal(
-            <ModalContent open={props.open} setOpen={props.setOpen} batchUnits={batchUnits}/>,
+            <ModalContent 
+                open={props.open} 
+                setOpen={props.setOpen} 
+                batchUnits={batchUnits} 
+                handleUpdateTap={props.handleUpdateTap}
+            />,
             document.body
         )}
         </>   

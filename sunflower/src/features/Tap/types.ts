@@ -9,5 +9,6 @@ export interface Tap {
 export interface ModalProps {
   open: boolean;
   setOpen: Function;
+  handleUpdateTap: Function;
   batchUnits: BatchUnit[];
 }

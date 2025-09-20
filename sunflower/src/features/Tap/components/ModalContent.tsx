@@ -11,13 +11,17 @@ export default function ModalContent (props: Readonly<ModalProps>) {
     // TODO: replace with id and search for tap
     const [activeItem, setActiveItem] = useState<Tap | { id: 0, active: false, batchUnit: undefined }>(tap);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-    const update = () => {
-      props.setOpen(false);
-    };
     return (
         <div className={styles.modal}>
           <div className={styles.modalcontent}>
-            <DropdownMenu item={activeItem} items={batchUnits} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setItem={setActiveItem}/>
+            <DropdownMenu 
+              item={activeItem} 
+              items={batchUnits} 
+              menuOpen={menuOpen} 
+              setMenuOpen={setMenuOpen} 
+              setItem={setActiveItem}
+              handleUpdateTap={props.handleUpdateTap}
+            />
             <div className={styles.last}>
             <StandardButton onClick={() => props.setOpen(false)} text="Save" />
             <StandardButton onClick={() => props.setOpen(false)} text="Close" />

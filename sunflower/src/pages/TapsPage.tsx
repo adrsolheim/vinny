@@ -4,8 +4,12 @@ import TapCard from '../features/Tap/components/TapCard';
 import { fetchTaps } from '../features/Tap/api';
 
 
-export default function HomePage() {
+export default function TapsPage() {
   const [taps, setTaps] = useState<Tap[]>(defaultTaps());
+  const handleUpdateTap = (tap: Tap) => {
+    console.log('Updating tap in TapsPage', tap);
+    setTaps(taps.map(t => t.id === tap.id ? tap : t));
+  }
 
   useEffect(() => {
     const getTaps = async () => {
@@ -16,16 +20,9 @@ export default function HomePage() {
   }, []);
   
   return (
-    <Taps taps={taps}/>
-  );
-}
-
-function Taps({ taps } : { taps:  Tap[] }) {
-  return (
     <main>
-      {taps.map((t) => <TapCard key={t.id} tap={t}/>)}
+      {taps.map((t) => <TapCard key={t.id} tap={t} handleUpdateTap={handleUpdateTap}/>)}
     </main>
-
   );
 }
 

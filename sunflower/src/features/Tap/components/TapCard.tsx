@@ -8,10 +8,11 @@ import CardButton from './CardButton';
 import CardButtonRow from './CardButtonRow';
 import DropdownMenu from './DropdownMenu';
 import ModalButton from './ModalButton';
+import { HiAnnotation } from 'react-icons/hi';
 
 // TODO: All buttons hidden by default, show on hover
 
-export default function TapCard(props: Readonly<{ tap: Tap; }>) {
+export default function TapCard(props: Readonly<{ tap: Tap, handleUpdateTap: Function }>) {
     const tap: Tap = props.tap;
     const dropdownItems = [
       { icon: <BaselineAddCircleOutline color='white'/>, operation: 'Settings' },
@@ -25,11 +26,11 @@ export default function TapCard(props: Readonly<{ tap: Tap; }>) {
             <div className={styles.cardnumber}><p>{tap.id}</p></div>
             <div className={styles.cardtail }>
                 <CardButtonRow>
-                    <ModalButton icon={<BaselineAddCircleOutline color='white'/>} />
-                    <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
+                    <ModalButton handleUpdateTap={props.handleUpdateTap} icon={<BaselineAddCircleOutline color='white'/> } />
+                    <CardButton icon={<BaselineAddCircleOutline color='white'/>} handleUpdateTap={() => {}}>
                       <DropdownMenu items={dropdownItems} />
                     </CardButton>
-                    <CardButton icon={<BaselineAddCircleOutline color='white'/>}>
+                    <CardButton icon={<BaselineAddCircleOutline color='white'/>} handleUpdateTap={() => {}}>
                       <DropdownMenu items={dropdownItems} />
                     </CardButton>
                 </CardButtonRow>

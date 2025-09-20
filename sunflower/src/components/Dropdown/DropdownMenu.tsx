@@ -9,8 +9,19 @@ export default function DropdownMenu(props: DropdownProps) {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     return(
         <div className={styles.dropdownMenu}>
-            <DropdownButton menuOpen={menuOpen} setMenuOpen={setMenuOpen} buttonText={props.item.batchUnit?.name ?? '<empty>'}/>
-            {menuOpen && <DropdownContent activeItem={props.item} items={props.items} setItem={props.setItem} setMenuOpen={setMenuOpen}/>}
+            <DropdownButton 
+                menuOpen={menuOpen} 
+                setMenuOpen={setMenuOpen} 
+                buttonText={props.item.batchUnit?.name ?? '<empty>'}
+            />
+            {menuOpen && 
+            <DropdownContent 
+                activeItem={props.item} 
+                items={props.items} 
+                setItem={props.setItem} 
+                setMenuOpen={setMenuOpen}
+                handleUpdateTap={props.handleUpdateTap}
+                />}
         </div>
     );
 }
@@ -21,4 +32,5 @@ interface DropdownProps {
     item: Tap;
     items: BatchUnit[];
     setItem: Function;
+    handleUpdateTap: Function;
 }

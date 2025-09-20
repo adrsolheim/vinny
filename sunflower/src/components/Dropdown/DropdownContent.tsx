@@ -5,14 +5,15 @@ import { Tap } from '../../features/Tap/types';
 
 export default function DropdownContent(props: DropdownContentProps) {
     const items = props.items;
+    const updateTap = props.handleUpdateTap;
     const handleClick = (unit: BatchUnit) => {
-        // TODO: bug?? connect after switching
         if (props.activeItem?.batchUnit && props.activeItem && props.activeItem.batchUnit.id !== unit.id) {
-            connectBatch(props.activeItem.id, props.activeItem.batchUnit.id, true)
+            connectBatch(props.activeItem.id, unit.id, true)
+            .then((tap: Tap) => props.handleUpdateTap.apply(tap));
         }
-       props.activeItem.batchUnit = unit;
-       props.setItem(props.activeItem);
-       props.setMenuOpen(false);
+        //props.activeItem.batchUnit = unit;
+        //props.setItem(props.activeItem);
+        props.setMenuOpen(false);
     };
     return (
         <div className={styles.dropdowncontent}>
@@ -28,4 +29,5 @@ interface DropdownContentProps {
     activeItem: Tap;
     setItem: Function;
     setMenuOpen: Function;
+    handleUpdateTap: Function;
 }
