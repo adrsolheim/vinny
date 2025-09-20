@@ -20,7 +20,7 @@ export default function ModalButton(props : Readonly<CardButtonProps>) {
       <a className={styles.iconbutton} href="#" onClick={() => setOpen(!open)}>
         {props.icon}
       </a>
-      {open && <TapModal batchUnits={batchUnits} open={open} setOpen={setOpen} />}
+      {open && <TapModal handleUpdateTap={props.handleUpdateTap} batchUnits={batchUnits} open={open} setOpen={setOpen} />}
     </li>
   );
 }

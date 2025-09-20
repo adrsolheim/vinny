@@ -8,7 +8,7 @@ export default function TapsPage() {
   const [taps, setTaps] = useState<Tap[]>(defaultTaps());
   const handleUpdateTap = (tap: Tap) => {
     console.log('Updating tap in TapsPage', tap);
-    setTaps(taps.map(t => t.id === tap.id ? tap : t));
+    setTaps(prevTaps => prevTaps.map(t => t.id === tap.id ? tap : t));
   }
 
   useEffect(() => {

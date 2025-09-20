@@ -9,7 +9,7 @@ export default function DropdownContent(props: DropdownContentProps) {
     const handleClick = (unit: BatchUnit) => {
         if (props.activeItem?.batchUnit && props.activeItem && props.activeItem.batchUnit.id !== unit.id) {
             connectBatch(props.activeItem.id, unit.id, true)
-            .then((tap: Tap) => props.handleUpdateTap.apply(tap));
+            .then((tap: Tap) => props.handleUpdateTap(tap));
         }
         //props.activeItem.batchUnit = unit;
         //props.setItem(props.activeItem);
