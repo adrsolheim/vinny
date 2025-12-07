@@ -69,7 +69,7 @@ public class BatchRowMapper implements ResultSetExtractor<List<Batch>> {
                 batchUnit = BatchUnit.builder()
                         .id(unitId)
                         .batchId(batch.getId())
-                        .tapId(rs.getObject("bu_tap_id", Long.class))
+                        .tapId(rs.getObject("bu_tap", Long.class))
                         .tapStatus(rs.getString("bu_tap_status") == null ? null : TapStatus.valueOf(rs.getString("bu_tap_status")))
                         .packaging(rs.getString("bu_packaging") == null ? null : Packaging.valueOf(rs.getString("bu_packaging")))
                         .volumeStatus(rs.getString("bu_volume_status") == null ? null : VolumeStatus.valueOf(rs.getString("bu_volume_status")))
