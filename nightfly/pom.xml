@@ -31,10 +31,38 @@
     <lombok.version>1.18.36</lombok.version>
   </properties>
 
+
   <repositories>
     <repository>
       <id>projectlombok.org</id>
       <url>https://projectlombok.org/edge-releases</url>
     </repository>
   </repositories>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
+          <configuration>
+            <!-- Make sure we do full annotation processing + compile (Lombok) -->
+            <proc>full</proc>
+            <!-- Force the compiler to use the major version, NOT 25.0.1 -->
+            <release>${java.version}</release>
+
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+              <!-- Add MapStruct or others here if you use them -->
+            </annotationProcessorPaths>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>
