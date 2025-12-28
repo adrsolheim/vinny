@@ -8,7 +8,6 @@ services:
     depends_on:
       nightfly_db:
         condition: service_healthy
-        restart: true
       gatekeeper:
         condition: service_started
       redis:
@@ -67,7 +66,6 @@ services:
     depends_on:
       gatekeeper_db:
         condition: service_healthy
-        restart: true
     environment:
       SPRING_PROFILES_ACTIVE: prod
       DATABASE_HOST: gatekeeper_db
