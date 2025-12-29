@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -23,7 +24,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         // Allow localhost for testing
@@ -40,7 +41,7 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration); // Apply to all endpoints
-        return new CorsFilter(source);
+        return source;
     }
 
     //@Bean

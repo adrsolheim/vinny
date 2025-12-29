@@ -55,6 +55,7 @@ public class AuthorizationServerConfig {
                 .oidc(Customizer.withDefaults());
         // Accept and respond to protected resource requests using access tokens
         http.oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
+        http.cors(Customizer.withDefaults());
         return http
                 // Unauthenticated -> redirect to login
                 .exceptionHandling((exceptions) -> exceptions

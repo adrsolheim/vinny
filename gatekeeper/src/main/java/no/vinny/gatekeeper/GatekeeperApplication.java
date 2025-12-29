@@ -86,7 +86,6 @@ public class GatekeeperApplication {
 										.accessTokenTimeToLive(Duration.ofHours(8))
 										.refreshTokenTimeToLive(Duration.ofHours(10))
 										.build())
-								.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
 								.build()
 				);
 			}
