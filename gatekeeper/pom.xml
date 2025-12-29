@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.1</version>
+		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>no.vinny</groupId>
@@ -14,7 +14,8 @@
 	<name>gatekeeper</name>
 	<description>Spring Authorization Server</description>
 	<properties>
-		<java.version>21</java.version>
+		<jdk.version>25</jdk.version>
+		<java.version>${jdk.version}</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -84,6 +85,19 @@
 					</excludes>
 				</configuration>
 			</plugin>
+		  	<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+            </plugin>
 		</plugins>
 	</build>
 
