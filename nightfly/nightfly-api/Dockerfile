@@ -1,10 +1,10 @@
-FROM bellsoft/liberica-openjdk-alpine:23-cds as builder
+FROM maven:3.9-eclipse-temurin-25 AS builder
 
 WORKDIR /app
 ADD . /app/nightfly
-RUN cd nightfly && ./mvnw -Dmaven.test.skip=true clean package
+RUN cd nightfly && mvn -Dmaven.test.skip=true clean package
 
-FROM bellsoft/liberica-openjdk-alpine:23-cds as optimizer
+FROM bellsoft/liberica-openjdk-alpine:25-cds as optimizer
 
 WORKDIR /app
 ARG JAR_FILE=/app/nightfly/target/*.jar
@@ -13,7 +13,7 @@ COPY --from=builder ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
 
-FROM bellsoft/liberica-openjdk-alpine:23-cds
+FROM bellsoft/liberica-openjdk-alpine:25-cds
 
 WORKDIR /app
 COPY --from=optimizer app/dependencies/ ./

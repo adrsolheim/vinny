@@ -14,9 +14,6 @@
 	<name>nightfly-client</name>
 	<description>Client for nightfly</description>
 
-	<properties>
-		<java.version>${java.version}</java.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>no.vinny</groupId>

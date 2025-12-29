@@ -24,10 +24,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>3.3.4</spring.version>
-    <java.version>25</java.version>
-    <maven.compiler.source>25</maven.compiler.source>
-    <maven.compiler.target>25</maven.compiler.target>
+    <jdk.version>25</jdk.version>
+    <java.version>${jdk.version}</java.version>
+    <maven.compiler.release>${jdk.version}</maven.compiler.release>
+    <maven.compiler.source>${jdk.version}</maven.compiler.source>
+    <maven.compiler.target>${jdk.version}</maven.compiler.target>
     <lombok.version>1.18.38</lombok.version>
   </properties>
 
@@ -45,12 +46,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
+          <version>3.14.1</version>
           <configuration>
             <!-- Make sure we do full annotation processing + compile (Lombok) -->
             <proc>full</proc>
             <!-- Force the compiler to use the major version, NOT 25.0.1 -->
-            <release>${java.version}</release>
+            <release>${jdk.version}</release>
 
             <annotationProcessorPaths>
               <path>

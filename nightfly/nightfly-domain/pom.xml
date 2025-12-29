@@ -14,9 +14,6 @@
 	<name>nightfly-domain</name>
 	<description>Domain for nightfly</description>
 
-	<properties>
-		<java.version>${java.version}</java.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
