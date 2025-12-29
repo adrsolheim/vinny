@@ -49,6 +49,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET,    "/api/public/protected").authenticated()
                     .requestMatchers(HttpMethod.GET,    "/api/public").permitAll()
                     .requestMatchers(HttpMethod.GET,    "/login/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,    "/swagger-ui/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,    "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated())
                 .addFilterBefore(new JwtInspectionFilter(), AuthorizationFilter.class)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
