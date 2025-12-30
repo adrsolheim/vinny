@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS nightfly.keg (
 CREATE TABLE IF NOT EXISTS nightfly.batch_unit (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     batch BIGINT,
+    tap TINYINT,
     packaging VARCHAR(30),
     tap_status VARCHAR(30),
     volume_status VARCHAR(30),
