@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# for testing only
+# keys are automatically generated and persisted when running the application
+
 fname=key
 if [ ! -z "$1" ]
 then
