@@ -2,6 +2,7 @@ package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowDTOMapper;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.tap.Tap;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import org.apache.poi.sl.draw.geom.GuideIf;
@@ -48,26 +49,14 @@ public class TapRepositoryImpl implements TapRepository {
     }
 
     @Override
-    public Optional<Tap> findById(Long id) {
-        String sql = SELECT_TAP + " WHERE t.id = :tap";
-        List<Tap> result = jdbcTemplate.query(sql, new MapSqlParameterSource(Map.of("tap", id)), new RowMapper<Tap>() {
-            @Override
-            public Tap mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Tap(rs.getObject("t_id", Long.class), rs.getBoolean("t_active"), rs.getObject("t_batch_unit", Long.class));
-            }
-        });
-        return result.size() == 1 ? Optional.of(result.get(0)) : Optional.empty();
-    }
-
-    @Override
     public List<TapDTO> findAll() {
         return jdbcTemplate.query(SELECT_TAP, mapper);
     }
 
     @Override
-    public int update(Tap tap) {
+    public int update(TapDTO tap) {
         String sql = UPDATE_TAP + " WHERE id = :id";
-        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batchUnit", Optional.ofNullable(tap.getBatchUnitId()).orElse(null)));
+        MapSqlParameterSource params = new MapSqlParameterSource(Map.of("id", tap.getId(), "active", tap.isActive(), "batchUnit", Optional.ofNullable(tap.getBatchUnit()).map(BatchUnitDTO::getId).orElse(null)));
         return jdbcTemplate.update(sql, params);
     }
 }

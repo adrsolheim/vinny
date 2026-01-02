@@ -1,144 +1,234 @@
 package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.batch.BatchService;
-import no.vinny.nightfly.domain.batch.*;
 import no.vinny.nightfly.components.taphouse.TapRepository;
-import no.vinny.nightfly.components.taphouse.TapService;
-import no.vinny.nightfly.domain.tap.Tap;
+import no.vinny.nightfly.components.taphouse.api.ConnectBatchRequest;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
+import no.vinny.nightfly.domain.batch.Packaging;
+import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static no.vinny.nightfly.domain.batch.BatchStatus.COMPLETED;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class TapServiceImplTest {
 
-    TapService tapService;
+    @Mock
     TapRepository tapRepository;
-    BatchService batchService = mock(BatchService.class);
-    Map<Long, TapDTO> taps;
 
-    @BeforeEach
-    void setup() {
-        taps = taps();
+    @Mock
+    BatchService batchService;
 
-        tapRepository = new TapRepository() {
-            @Override
-            public Optional<TapDTO> find(Long tap) {
-                return Optional.ofNullable(taps.get(tap));
-            }
+    @InjectMocks
+    TapServiceImpl tapService;
 
-            @Override
-            public Optional<Tap> findById(Long id) {
-                return Optional.empty();
-            }
+    @Captor
+    ArgumentCaptor<BatchUnitDTO> batchUnitCaptor;
 
-            @Override
-            public List<TapDTO> findAll() {
-                return taps.values().stream().toList();
-            }
+    @Captor
+    ArgumentCaptor<TapDTO> tapCaptor;
 
-            @Override
-            public int update(Tap tap) {
-                return 0;
-            }
-        };
-        when(batchService.get(anyLong())).thenAnswer(a -> batchesMap().get(a.getArgument(0)));
-        tapService = new TapServiceImpl(tapRepository, mock(BatchService.class));
-    }
     @Test
-    void find() {
+    void connectBatch_success_setsConnectedAndUpdates() {
+        TapDTO tap = new TapDTO(1L, true, null);
+        BatchUnitDTO unit = BatchUnitDTO.builder()
+                .id(10L)
+                .packaging(Packaging.KEG)
+                .volumeStatus(VolumeStatus.NOT_EMPTY)
+                .tapStatus(TapStatus.WAITING)
+                .build();
+
+        when(tapRepository.find(1L)).thenReturn(Optional.of(tap));
+        when(batchService.getBatchUnitById(10L)).thenReturn(Optional.of(unit));
+
+        TapDTO result = tapService.connectBatch(new ConnectBatchRequest(1L, 10L, false));
+
+        assertThat(result.getId()).isEqualTo(1L);
+
+        verify(batchService).update(batchUnitCaptor.capture());
+        BatchUnitDTO updated = batchUnitCaptor.getValue();
+        assertThat(updated.getTapStatus()).isEqualTo(TapStatus.CONNECTED);
+
+        verify(tapRepository).update(tapCaptor.capture());
+        TapDTO updatedTap = tapCaptor.getValue();
+        assertThat(updatedTap.getBatchUnit().getId()).isEqualTo(10L);
+    }
+
+    @Test
+    void connectBatch_disconnectsOldBatch_whenTapHasExistingBatch() {
+        BatchUnitDTO newUnit = BatchUnitDTO.builder()
+                .id(10L)
+                .packaging(Packaging.KEG)
+                .volumeStatus(VolumeStatus.NOT_EMPTY)
+                .tapStatus(TapStatus.WAITING)
+                .build();
+
+        BatchUnitDTO oldUnit = BatchUnitDTO.builder()
+                .id(2L)
+                .packaging(Packaging.KEG)
+                .volumeStatus(VolumeStatus.NOT_EMPTY)
+                .tapStatus(TapStatus.SERVING)
+                .build();
+        TapDTO tap = new TapDTO(1L, true, oldUnit);
+
+        when(tapRepository.find(1L)).thenReturn(Optional.of(tap));
+        when(batchService.getBatchUnitById(10L)).thenReturn(Optional.of(newUnit));
+        when(batchService.getBatchUnitById(2L)).thenReturn(Optional.of(oldUnit));
+
+        tapService.connectBatch(new ConnectBatchRequest(1L, 10L, false));
+
+        verify(batchService, times(2)).update(batchUnitCaptor.capture());
+        List<BatchUnitDTO> captured = batchUnitCaptor.getAllValues();
+        assertThat(captured).hasSize(2);
+        assertThat(captured.get(0).getTapStatus()).isEqualTo(TapStatus.DISCONNECTED);
+        assertThat(captured.get(0).getVolumeStatus()).isEqualTo(VolumeStatus.NOT_EMPTY);
+        assertThat(captured.get(1).getTapStatus()).isEqualTo(TapStatus.CONNECTED);
+    }
+
+    @Test
+    void connectBatch_throws_whenPackagingNotKeg() {
+        TapDTO tap = new TapDTO(1L, true, null);
+        BatchUnitDTO unit = BatchUnitDTO.builder()
+                .id(11L)
+                .packaging(Packaging.BOTTLE)
+                .volumeStatus(VolumeStatus.NOT_EMPTY)
+                .tapStatus(TapStatus.WAITING)
+                .build();
+
+        when(tapRepository.find(1L)).thenReturn(Optional.of(tap));
+        when(batchService.getBatchUnitById(11L)).thenReturn(Optional.of(unit));
+
+        assertThatThrownBy(() -> tapService.connectBatch(new ConnectBatchRequest(1L, 11L, false)))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Cannot connect");
+    }
+
+    @Test
+    void connectBatch_throws_whenVolumeEmpty() {
+        TapDTO tap = new TapDTO(1L, true, null);
+        BatchUnitDTO unit = BatchUnitDTO.builder()
+                .id(12L)
+                .packaging(Packaging.KEG)
+                .volumeStatus(VolumeStatus.EMPTY)
+                .tapStatus(TapStatus.WAITING)
+                .build();
+
+        when(tapRepository.find(1L)).thenReturn(Optional.of(tap));
+        when(batchService.getBatchUnitById(12L)).thenReturn(Optional.of(unit));
+
+        assertThatThrownBy(() -> tapService.connectBatch(new ConnectBatchRequest(1L, 12L, false)))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Cannot connect empty keg");
+    }
+
+    @Test
+    void connectBatch_throws_whenBatchAlreadyConnected() {
+        TapDTO tap = new TapDTO(1L, true, null);
+        BatchUnitDTO unit = BatchUnitDTO.builder()
+                .id(13L)
+                .packaging(Packaging.KEG)
+                .volumeStatus(VolumeStatus.NOT_EMPTY)
+                .tapStatus(TapStatus.CONNECTED)
+                .build();
+
+        when(tapRepository.find(1L)).thenReturn(Optional.of(tap));
+        when(batchService.getBatchUnitById(13L)).thenReturn(Optional.of(unit));
+
+        assertThatThrownBy(() -> tapService.connectBatch(new ConnectBatchRequest(1L, 13L, false)))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("already connected");
+    }
+
+    @Test
+    void find_returnsTapDTO_whenPresent() {
+        when(tapRepository.find(3L)).thenReturn(Optional.of(new TapDTO(3L, true, null)));
+
         Optional<TapDTO> connectedTap = tapService.find(3L);
 
-        assertTrue(connectedTap.isPresent());
+        assertThat(connectedTap).isPresent();
+        assertThat(connectedTap.get().getId()).isEqualTo(3L);
     }
 
     @Test
-    void findAll() {
+    void findAll_returnsAllTaps() {
+        TapDTO t1 = new TapDTO(1L, true, null);
+        TapDTO t2 = new TapDTO(2L, true, null);
+        TapDTO t3 = new TapDTO(3L, true, null);
+        TapDTO t4 = new TapDTO(4L, false, null);
+
+        when(tapRepository.findAll()).thenReturn(Arrays.asList(t1, t2, t3, t4));
+
         List<TapDTO> all = tapService.findAll();
 
-        assertEquals(4, all.size());
+        assertThat(all).hasSize(4);
     }
 
     @Test
-    void findActive() {
+    void findActive_filtersByBatchOrActiveFlag() {
+        var b1 = BatchUnitDTO.builder().id(1L).batchId(10L).build();
+        var b2 = BatchUnitDTO.builder().id(2L).batchId(11L).build();
+        var b3 = BatchUnitDTO.builder().id(3L).batchId(12L).build();
+
+        TapDTO t1 = new TapDTO(1L, true, b1);
+        TapDTO t2 = new TapDTO(2L, true, b2);
+        TapDTO t3 = new TapDTO(3L, true, b3);
+        TapDTO t4 = new TapDTO(4L, false, null);
+
+        when(tapRepository.findAll()).thenReturn(Arrays.asList(t1, t2, t3, t4));
+
         List<TapDTO> active = tapService.findActive();
 
-        assertEquals(3, active.size());
-        assertTrue(active.stream().anyMatch(t -> t.getId().equals(1L) && t.getBatchUnit().getBatchId().equals(10L)));
-        assertTrue(active.stream().anyMatch(t -> t.getId().equals(2L) && t.getBatchUnit().getBatchId().equals(11L)));
-        assertTrue(active.stream().anyMatch(t -> t.getId().equals(3L) && t.getBatchUnit().getBatchId().equals(12L)));
+        assertThat(active).hasSize(3);
+        assertThat(active).anyMatch(t -> t.getId().equals(1L) && t.getBatchUnit().getBatchId().equals(10L));
+        assertThat(active).anyMatch(t -> t.getId().equals(2L) && t.getBatchUnit().getBatchId().equals(11L));
+        assertThat(active).anyMatch(t -> t.getId().equals(3L) && t.getBatchUnit().getBatchId().equals(12L));
     }
 
     @Test
-    void connectBatch() {
-    }
+    void connectBatch_withOldBatchEmpty_true_disconnectsOldAndConnectsNew() {
+        BatchUnitDTO newUnit = BatchUnitDTO.builder()
+            .id(10L)
+            .packaging(Packaging.KEG)
+            .volumeStatus(VolumeStatus.NOT_EMPTY)
+            .tapStatus(TapStatus.WAITING)
+            .build();
 
-    @Test
-    void update() {
-    }
+        BatchUnitDTO oldUnit = BatchUnitDTO.builder()
+            .id(2L)
+            .packaging(Packaging.KEG)
+            .volumeStatus(VolumeStatus.NOT_EMPTY)
+            .tapStatus(TapStatus.SERVING)
+            .build();
+        TapDTO tap = new TapDTO(1L, true, oldUnit);
 
-    private Map<Long, TapDTO> taps() {
-        return Map.of(
-                1L, new TapDTO(1L, true, batchUnitMap().get(1L)),
-                2L, new TapDTO(2L, true, batchUnitMap().get(2L)),
-                3L, new TapDTO(3L, true, batchUnitMap().get(3L)),
-                4L, new TapDTO(4L, false, null)
-        );
-    }
+        when(tapRepository.find(1L)).thenReturn(Optional.of(tap));
+        when(batchService.getBatchUnitById(10L)).thenReturn(Optional.of(newUnit));
+        when(batchService.getBatchUnitById(2L)).thenReturn(Optional.of(oldUnit));
 
-    private Map<Long, Batch> batchesMap() {
-        return batchesList().stream().collect(Collectors.toMap(b -> b.getId(), Function.identity()));
-    }
-    private List<Batch> batchesList() {
-        AtomicLong i = new AtomicLong(0);
-        List<Batch> batches = Stream.of(
-                                    "13574ef0d58b50fab38ec841efe39df4",
-                                    "5eb63bbbe01eeed093cb22bb8f5acdc3",
-                                    "b96b878ad72f56709dbb5628e1cea18d",
-                                    "16e63f4d464ccd3c6014adad3dec89d5")
-                            .map(bid -> Batch.builder()
-                                    .id(i.getAndIncrement())
-                                    .brewfatherId(bid)
-                                    .name("Pilsner")
-                                    .status(COMPLETED)
-                                    .recipe(null)
-                                    .build())
-                            .collect(Collectors.toList());
-        return batches;
-    }
+        tapService.connectBatch(new ConnectBatchRequest(1L, 10L, true));
 
-    /**
-     *
-     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
-     VALUES (1, 10, 'CONNECTED',    'KEG', 'NOT_EMPTY', 1);
-     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
-     VALUES (2, 10, 'CONNECTED',    'KEG', 'NOT_EMPTY', 2);
-     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
-     VALUES (3, 11, 'CONNECTED',    'KEG', 'NOT_EMPTY', 3);
-     INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg)
-     VALUES (4, 11, 'DISCONNECTED', 'KEG', 'EMPTY',     4);
-     */
-
-    private Map<Long, BatchUnitDTO> batchUnitMap() {
-        Keg defaultKeg = Keg.builder().id(1L).capacity(19.5).build();
-        return Map.of(
-                1L, BatchUnitDTO.builder().id(1L).batchId(10L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
-                2L, BatchUnitDTO.builder().id(2L).batchId(11L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build(),
-                3L, BatchUnitDTO.builder().id(3L).batchId(12L).tapStatus(TapStatus.CONNECTED).packaging(Packaging.KEG).volumeStatus(VolumeStatus.NOT_EMPTY).keg(defaultKeg).build()
-        );
+        verify(batchService, times(2)).update(batchUnitCaptor.capture());
+        List<BatchUnitDTO> captured = batchUnitCaptor.getAllValues();
+        assertThat(captured).hasSize(2);
+        assertThat(captured.get(0).getTapStatus()).isEqualTo(TapStatus.DISCONNECTED);
+        assertThat(captured.get(0).getVolumeStatus()).isEqualTo(VolumeStatus.EMPTY);
+        assertThat(captured.get(1).getTapStatus()).isEqualTo(TapStatus.CONNECTED);
     }
 }

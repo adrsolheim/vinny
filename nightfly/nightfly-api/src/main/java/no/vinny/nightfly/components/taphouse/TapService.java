@@ -10,7 +10,6 @@ import java.util.Optional;
 public interface TapService {
 
     Optional<TapDTO> find(Long tap);
-    Optional<Tap> findById(Long id);
     List<TapDTO> findAll();
     List<TapDTO> findActive();
     TapDTO connectBatch(ConnectBatchRequest request);

@@ -2,12 +2,11 @@ package no.vinny.nightfly.components.taphouse.impl;
 
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.taphouse.api.ConnectBatchRequest;
-import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.batch.Packaging;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
-import no.vinny.nightfly.domain.tap.Tap;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import no.vinny.nightfly.util.exception.ApiException;
@@ -36,11 +35,6 @@ public class TapServiceImpl implements TapService {
     }
 
     @Override
-    public Optional<Tap> findById(Long id) {
-        return tapRepository.findById(id);
-    }
-
-    @Override
     public List<TapDTO> findAll() {
         return tapRepository.findAll();
     }
@@ -55,24 +49,25 @@ public class TapServiceImpl implements TapService {
     @Transactional
     @Override
     public TapDTO connectBatch(ConnectBatchRequest request) {
-        Tap tap = tapRepository.findById(request.tapId()).orElseThrow(() -> new NotFoundException("Tap not found " + request.tapId()));
-        BatchUnit batchUnit = batchService.getBatchUnit(request.batchUnitId()).orElseThrow(() -> new NotFoundException("Batch unit not found " + request.batchUnitId()));
+        TapDTO tap = tapRepository.find(request.tapId()).orElseThrow(() -> new NotFoundException("Tap not found " + request.tapId()));
+        BatchUnitDTO batchUnit = batchService.getBatchUnitById(request.batchUnitId()).orElseThrow(() -> new NotFoundException("Batch unit not found " + request.batchUnitId()));
         if (canConnect(batchUnit)) {
             batchUnit.setTapStatus(TapStatus.CONNECTED);
         }
-        if (tap.getBatchUnitId() != null) {
-            BatchUnit oldBatchUnit = batchService.getBatchUnit(tap.getBatchUnitId()).orElseThrow(() -> new NotFoundException("BatchUnit not found: " + request.batchUnitId()));
+        if (tap.getBatchUnit() != null) {
+            BatchUnitDTO oldBatchUnit = batchService.getBatchUnitById(tap.getBatchUnit().getId()).orElseThrow(() -> new NotFoundException("BatchUnit not found: " + request.batchUnitId()));
             oldBatchUnit.setTapStatus(TapStatus.DISCONNECTED);
+            oldBatchUnit.setVolumeStatus(request.oldBatchEmpty() ? VolumeStatus.EMPTY : oldBatchUnit.getVolumeStatus());
             batchService.update(oldBatchUnit);
         }
-        tap.setBatchUnitId(request.batchUnitId());
+        tap.setBatchUnit(batchUnit);
         update(tap);
         batchService.update(batchUnit);
 
         return find(request.tapId()).orElseThrow(() -> new NotFoundException("Tap not found " + tap));
     }
 
-    private boolean canConnect(BatchUnit batchUnit) {
+    private boolean canConnect(BatchUnitDTO batchUnit) {
         if (batchUnit.getPackaging() != Packaging.KEG) {
             throw ApiException.conflict("Cannot connect " + batchUnit.getPackaging().name() + " to tap. Must be " + Packaging.KEG.name());
         }
@@ -84,7 +79,7 @@ public class TapServiceImpl implements TapService {
         }
         return true;
     }
-    public void update(Tap tap) {
+    public void update(TapDTO tap) {
         tapRepository.update(tap);
     }
 }

@@ -4,6 +4,7 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,6 +66,11 @@ class BatchServiceImplTest {
 
             @Override
             public void update(BatchUnit batchUnit) {
+
+            }
+
+            @Override
+            public void update(BatchUnitDTO batchUnit) {
 
             }
 

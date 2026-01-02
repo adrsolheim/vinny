@@ -22,7 +22,7 @@ public interface BatchService {
    Batch update(Batch batch);
    Batch upsert(Batch batch);
    Batch replace(Batch batch);
-   BatchUnit update(BatchUnit batchUnit);
+   BatchUnit update(BatchUnitDTO batchUnit);
    List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus);
    Optional<BatchUnitDTO> getBatchUnitById(Long batchUnitId);
 

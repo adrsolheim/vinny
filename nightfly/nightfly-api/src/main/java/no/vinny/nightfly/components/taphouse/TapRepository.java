@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface TapRepository {
     Optional<TapDTO> find(Long tap);
-    Optional<Tap> findById(Long id);
     List<TapDTO> findAll();
-    int update(Tap tap);
+    int update(TapDTO tap);
 }

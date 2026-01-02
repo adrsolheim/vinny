@@ -2,6 +2,7 @@ package no.vinny.nightfly.components.batch;
 
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public interface BatchRepository {
 
     void update(Batch batch);
     void update(BatchUnit batchUnit);
+    void update(BatchUnitDTO batchUnit);
 
     Long count();
 

@@ -152,7 +152,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchUnit update(BatchUnit batchUnit) {
+    public BatchUnit update(BatchUnitDTO batchUnit) {
         if (batchUnit.getBatchId() == null) {
             log.error("Update rejected because batch unit id is null: {}", batchUnit);
             throw new IllegalArgumentException("Update rejected because batch unit id is null");

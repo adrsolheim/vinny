@@ -6,6 +6,7 @@ import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
+import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -86,6 +87,12 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     public void update(BatchUnit batchUnit) {
+        MapSqlParameterSource params = toSqlParams(batchUnit);
+        jdbcTemplate.update(UPDATE_BATCH_UNIT, params);
+    }
+
+    @Override
+    public void update(BatchUnitDTO batchUnit) {
         MapSqlParameterSource params = toSqlParams(batchUnit);
         jdbcTemplate.update(UPDATE_BATCH_UNIT, params);
     }
@@ -185,6 +192,17 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     private MapSqlParameterSource toSqlParams(BatchUnit batchUnit) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", batchUnit.getId());
+        params.addValue("batch",  batchUnit.getBatchId());
+        params.addValue("tap",  batchUnit.getTapId());
+        params.addValue("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
+        params.addValue("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
+        params.addValue("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());
+        params.addValue("keg", batchUnit.getKeg() == null ? null : batchUnit.getKeg().getId());
+        return params;
+    }
+    private MapSqlParameterSource toSqlParams(BatchUnitDTO batchUnit) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", batchUnit.getId());
         params.addValue("batch",  batchUnit.getBatchId());
