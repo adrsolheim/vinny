@@ -1,6 +1,6 @@
 package no.vinny.nightfly.components.batch;
 
-import jakarta.persistence.EntityNotFoundException;
+import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
@@ -31,12 +31,12 @@ public class BatchController {
     // TODO: return message if missing
     @GetMapping("/{id}")
     public Batch batch(@PathVariable Long id) {
-            return batchService.get(id).orElseThrow(() -> new EntityNotFoundException(String.format("Batch by id=%d not found", id)));
+            return batchService.get(id).orElseThrow(() -> new NotFoundException(String.format("Batch by id=%d not found", id)));
     }
 
     @GetMapping("/brewfather/{id}")
     public Batch batch(@PathVariable String id) {
-        return batchService.getByBrewfatherId(id).orElseThrow(() -> new EntityNotFoundException("Batch not found"));
+        return batchService.getByBrewfatherId(id).orElseThrow(() -> new NotFoundException("Batch not found"));
     }
 
     @GetMapping

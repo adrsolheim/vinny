@@ -1,6 +1,6 @@
 package no.vinny.nightfly.components.batch.impl;
 
-import jakarta.persistence.EntityNotFoundException;
+import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
@@ -9,7 +9,7 @@ import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapStatus;
-import no.vinny.nightfly.util.exception.ResourceNotFoundException;
+import no.vinny.nightfly.components.common.error.NotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -103,7 +103,7 @@ public class BatchServiceImpl implements BatchService {
         Optional<Batch> existingBatch = get(batch.getId());
         if (existingBatch.isEmpty()) {
             log.info("UPDATE: Batch not found. Skipping update..");
-            throw new EntityNotFoundException("Batch not found");
+            throw new NotFoundException("Batch not found");
         }
         batchRepository.update(mergeNonNull(batch, existingBatch.get()));
         return get(batch.getId()).get();
@@ -158,7 +158,7 @@ public class BatchServiceImpl implements BatchService {
             throw new IllegalArgumentException("Update rejected because batch unit id is null");
         }
         batchRepository.update(batchUnit);
-        return batchRepository.getBatchUnit(batchUnit.getId()).orElseThrow(() -> new ResourceNotFoundException("Batch unit not found " + batchUnit.getId()));
+        return batchRepository.getBatchUnit(batchUnit.getId()).orElseThrow(() -> new NotFoundException("Batch unit not found " + batchUnit.getId()));
     }
 
     @Override

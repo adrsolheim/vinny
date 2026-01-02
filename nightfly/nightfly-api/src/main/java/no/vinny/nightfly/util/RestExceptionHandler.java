@@ -1,6 +1,7 @@
 package no.vinny.nightfly.util;
 
 import jakarta.persistence.EntityNotFoundException;
+import no.vinny.nightfly.components.common.error.NotFoundException;
 import no.vinny.nightfly.util.exception.ApiError;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -10,13 +11,14 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ControllerAdvice // apply globally
+@RestControllerAdvice // apply globally
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -29,9 +31,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(new ApiError(HttpStatus.METHOD_NOT_ALLOWED, "Method not supported", request.getDescription(false).substring(4), ex));
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
-        return responseEntity(new ApiError(HttpStatus.NOT_FOUND, "Entity not found", request.getDescription(false).substring(4), ex));
+    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
+    protected ResponseEntity<Object> handleEntityNotFoundException(RuntimeException ex, WebRequest request) {
+        String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+        return responseEntity(new ApiError(HttpStatus.NOT_FOUND, "Entity not found", path, ex));
     }
 
     private ResponseEntity<Object> responseEntity(ApiError apiError) {

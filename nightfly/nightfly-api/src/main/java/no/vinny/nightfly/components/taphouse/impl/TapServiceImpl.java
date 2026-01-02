@@ -11,7 +11,7 @@ import no.vinny.nightfly.domain.tap.Tap;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import no.vinny.nightfly.util.exception.ApiException;
-import no.vinny.nightfly.util.exception.ResourceNotFoundException;
+import no.vinny.nightfly.components.common.error.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,13 +55,13 @@ public class TapServiceImpl implements TapService {
     @Transactional
     @Override
     public TapDTO connectBatch(ConnectBatchRequest request) {
-        Tap tap = tapRepository.findById(request.tapId()).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + request.tapId()));
-        BatchUnit batchUnit = batchService.getBatchUnit(request.batchUnitId()).orElseThrow(() -> new ResourceNotFoundException("Batch unit not found " + request.batchUnitId()));
+        Tap tap = tapRepository.findById(request.tapId()).orElseThrow(() -> new NotFoundException("Tap not found " + request.tapId()));
+        BatchUnit batchUnit = batchService.getBatchUnit(request.batchUnitId()).orElseThrow(() -> new NotFoundException("Batch unit not found " + request.batchUnitId()));
         if (canConnect(batchUnit)) {
             batchUnit.setTapStatus(TapStatus.CONNECTED);
         }
         if (tap.getBatchUnitId() != null) {
-            BatchUnit oldBatchUnit = batchService.getBatchUnit(tap.getBatchUnitId()).orElseThrow(() -> new ResourceNotFoundException("BatchUnit not found: " + request.batchUnitId()));
+            BatchUnit oldBatchUnit = batchService.getBatchUnit(tap.getBatchUnitId()).orElseThrow(() -> new NotFoundException("BatchUnit not found: " + request.batchUnitId()));
             oldBatchUnit.setTapStatus(TapStatus.DISCONNECTED);
             batchService.update(oldBatchUnit);
         }
@@ -69,7 +69,7 @@ public class TapServiceImpl implements TapService {
         update(tap);
         batchService.update(batchUnit);
 
-        return find(request.tapId()).orElseThrow(() -> new ResourceNotFoundException("Tap not found " + tap));
+        return find(request.tapId()).orElseThrow(() -> new NotFoundException("Tap not found " + tap));
     }
 
     private boolean canConnect(BatchUnit batchUnit) {

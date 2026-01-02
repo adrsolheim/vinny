@@ -1,6 +1,6 @@
 package no.vinny.nightfly.components.recipe.impl;
 
-import jakarta.persistence.EntityNotFoundException;
+import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.RecipeService;
@@ -50,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public int delete(Long id) {
-        get(id).orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
+        get(id).orElseThrow(() -> new NotFoundException("Recipe not found"));
         return recipeRepository.delete(id);
     }
 
@@ -62,7 +62,7 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<Recipe> existingRecipe = get(recipe.getId());
         if (existingRecipe.isEmpty()) {
             log.info("UPDATE: Batch not found. Skipping update..");
-            throw new EntityNotFoundException("Recipe not found");
+            throw new NotFoundException("Recipe not found");
         }
         recipeRepository.update(mergeNonNull(recipe, existingRecipe.get()));
         return get(recipe.getId()).get(); // TODO: throw exception with description here

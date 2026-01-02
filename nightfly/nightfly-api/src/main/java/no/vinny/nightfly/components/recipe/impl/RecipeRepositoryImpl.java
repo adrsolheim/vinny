@@ -60,7 +60,8 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     public Optional<Recipe> findById(Long id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return Optional.of(jdbcTemplate.queryForObject(SELECT_RECIPE + " WHERE id=:id", params, new RecipeRowMapper()));
+        List<Recipe> result = jdbcTemplate.query(SELECT_RECIPE + " WHERE id=:id", params, new RecipeRowMapper());
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override
