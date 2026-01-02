@@ -22,12 +22,12 @@ import java.util.List;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
+@Profile("!noauth")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    @Profile("!noauth")
     @Order(HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -62,19 +62,6 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtInspectionFilter(), AuthorizationFilter.class)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
                 return http.build();
-    }
-
-    @Bean
-    @Profile("noauth")
-    @Order(HIGHEST_PRECEDENCE)
-    public SecurityFilterChain noSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(CorsConfigurer::disable)
-                .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests((request) -> request
-                        .anyRequest().permitAll());
-        return http.build();
     }
 
     @Bean
