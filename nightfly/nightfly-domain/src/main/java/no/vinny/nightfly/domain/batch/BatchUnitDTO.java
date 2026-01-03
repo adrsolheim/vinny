@@ -10,6 +10,7 @@ public class BatchUnitDTO {
 
     private Long id;
     private Long batchId;
+    private Long tapId;
     private String brewfatherId;
     private String name;
     private TapStatus tapStatus;
