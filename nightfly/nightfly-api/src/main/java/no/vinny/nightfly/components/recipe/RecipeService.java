@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.recipe;
 
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.Recipe;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +17,7 @@ public interface RecipeService {
     Recipe update(Recipe batch);
     Recipe upsert(Recipe batch);
     Recipe replace(Recipe batch);
+
+    Optional<SyncEntity> getLastSyncedEntity();
+    int syncRecipe(String recipe);
 }

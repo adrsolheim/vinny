@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.recipe;
 
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.Recipe;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface RecipeRepository {
     Optional<Recipe> findByBrewfatherId(String id);
 
     List<Recipe> findAll();
+
+    int syncRecipe(String recipe);
+    Optional<SyncEntity> getLastSyncedEntity();
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -41,6 +42,8 @@ public class BatchRepositoryImpl implements BatchRepository {
     private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
     private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
     private static final String BATCH_COUNT = "SELECT COUNT(*) FROM batch";
+    private static final String SYNC_BATCH = "INSERT INTO sync_batch (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
+    private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -178,6 +181,19 @@ public class BatchRepositoryImpl implements BatchRepository {
         List<Batch> result = jdbcTemplate.query(sql, params, new BatchRowMapper());
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result.getFirst());
+    }
+
+    @Override
+    public int syncBatch(String batch) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("entity", batch);
+        return jdbcTemplate.update(SYNC_BATCH, params);
+    }
+
+    @Override
+    public Optional<SyncEntity> getLastSyncedEntity() {
+        List<SyncEntity> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class)));
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
 

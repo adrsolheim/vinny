@@ -2,6 +2,7 @@ package no.vinny.nightfly.components.recipe.impl;
 
 import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.RecipeService;
 import no.vinny.nightfly.domain.Recipe;
@@ -107,5 +108,16 @@ public class RecipeServiceImpl implements RecipeService {
         }
         recipeRepository.update(recipe);
         return get(recipe.getId()).get();
+    }
+
+    @Override
+    public Optional<SyncEntity> getLastSyncedEntity() {
+        return recipeRepository.getLastSyncedEntity();
+    }
+
+    @Override
+    public int syncRecipe(String recipe) {
+        // TODO: Keep 3 latest changes of any given recipe
+        return recipeRepository.syncRecipe(recipe);
     }
 }

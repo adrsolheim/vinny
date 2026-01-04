@@ -1,6 +1,7 @@
 package no.vinny.nightfly.brewfather;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.brewfather.harvest.ScheduledSyncV2;
 import no.vinny.nightfly.components.batch.impl.BatchRepositoryImpl;
 import no.vinny.nightfly.components.batch.impl.BatchServiceImpl;
 import no.vinny.nightfly.brewfather.harvest.ScheduledSync;
@@ -31,7 +32,7 @@ public class DataLoaderApplication implements ApplicationRunner {
 
     private ApplicationContext context;
     @Autowired
-    private ScheduledSync scheduledSync;
+    private ScheduledSyncV2 scheduledSync;
 
     public static void main(String[] args) {
         Logger log = LoggerFactory.getLogger(DataLoaderApplication.class);

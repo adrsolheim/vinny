@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.batch;
 
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -25,5 +26,8 @@ public interface BatchService {
    BatchUnit update(BatchUnitDTO batchUnit);
    List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus);
    Optional<BatchUnitDTO> getBatchUnitById(Long batchUnitId);
+
+   Optional<SyncEntity> getLastSyncedEntity();
+   int syncBatch(String batch);
 
 }

@@ -2,6 +2,7 @@ package no.vinny.nightfly.components.batch.impl;
 
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -122,6 +123,16 @@ class BatchServiceImplTest {
 
             @Override
             public Optional<Batch> getBatchAndBatchUnit(Long batchUnitId) {
+                return Optional.empty();
+            }
+
+            @Override
+            public int syncBatch(String batch) {
+                return 0;
+            }
+
+            @Override
+            public Optional<SyncEntity> getLastSyncedEntity() {
                 return Optional.empty();
             }
         };

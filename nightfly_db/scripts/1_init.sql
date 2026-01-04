@@ -42,3 +42,17 @@ CREATE TABLE IF NOT EXISTS nightfly.tap (
     batch_unit BIGINT,
     FOREIGN KEY (batch_unit) REFERENCES batch_unit(id)
 );
+
+CREATE TABLE IF NOT EXISTS nightfly.sync_recipe (
+    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    updated_epoch BIGINT,
+    brewfather_id VARCHAR(50),
+    entity JSON
+);
+
+CREATE TABLE IF NOT EXISTS nightfly.sync_batch (
+    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    updated_epoch BIGINT,
+    brewfather_id VARCHAR(50),
+    entity JSON
+);

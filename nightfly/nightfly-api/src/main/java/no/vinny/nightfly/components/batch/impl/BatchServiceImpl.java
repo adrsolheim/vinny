@@ -4,6 +4,7 @@ import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -177,6 +178,16 @@ public class BatchServiceImpl implements BatchService {
         return batchRepository.getBatchAndBatchUnit(batchUnitId)
                 .map(this::toSingle);
 
+    }
+
+    @Override
+    public Optional<SyncEntity> getLastSyncedEntity() {
+        return batchRepository.getLastSyncedEntity();
+    }
+
+    @Override
+    public int syncBatch(String batch) {
+        return batchRepository.syncBatch(batch);
     }
 
     private boolean ignore(Set set) {

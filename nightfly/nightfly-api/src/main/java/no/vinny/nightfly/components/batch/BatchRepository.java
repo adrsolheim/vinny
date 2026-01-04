@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.batch;
 
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -38,4 +39,6 @@ public interface BatchRepository {
 
     Optional<Batch> getBatchAndBatchUnit(Long batchUnitId);
 
+    int syncBatch(String batch);
+    Optional<SyncEntity> getLastSyncedEntity();
 }

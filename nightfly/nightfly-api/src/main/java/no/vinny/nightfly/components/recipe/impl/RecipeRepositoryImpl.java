@@ -1,6 +1,7 @@
 package no.vinny.nightfly.components.recipe.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
 import no.vinny.nightfly.domain.Recipe;
@@ -19,6 +20,9 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     private static final String SELECT_RECIPE = "SELECT r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name FROM recipe r";
     private static final String INSERT_RECIPE = "INSERT INTO recipe (brewfather_id, name) VALUES (:brewfatherId, :name)";
+    private static final String SYNC_RECIPE = "INSERT INTO sync_recipe (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
+
+    private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -75,6 +79,19 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public List<Recipe> findAll() {
         return jdbcTemplate.query(SELECT_RECIPE, new RecipeRowMapper());
+    }
+
+    @Override
+    public int syncRecipe(String recipe) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("entity", recipe);
+        return jdbcTemplate.update(SYNC_RECIPE, params);
+    }
+
+    @Override
+    public Optional<SyncEntity> getLastSyncedEntity() {
+        List<SyncEntity> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class)));
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     private Map<String, Object> convertToMap(Recipe recipe) {
