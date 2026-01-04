@@ -1,11 +1,16 @@
 package no.vinny.nightfly.components.batch.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
+import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.domain.batch.Batch;
+import no.vinny.nightfly.domain.batch.BatchStatus;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
@@ -46,10 +51,12 @@ public class BatchRepositoryImpl implements BatchRepository {
     private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public BatchRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
        this.jdbcTemplate = jdbcTemplate;
+       this.objectMapper = new ObjectMapper();
     }
 
     public int insert(Batch batch) {
@@ -191,11 +198,27 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     @Override
-    public Optional<SyncEntity> getLastSyncedEntity() {
-        List<SyncEntity> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class)));
+    public Optional<SyncEntity<Batch>> getLastImportedEntity() {
+        List<SyncEntity<Batch>> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), batchFromJson(rs.getString("entity"))));
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
+    private Batch batchFromJson(String json) {
+        if (json == null) {
+            return null;
+        }
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(json);
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
+        return Batch.builder()
+                .name(root.path("name").asText())
+                .brewfatherId(root.path("_id").asText())
+                .status(BatchStatus.fromValue(root.path("status").asText()))
+                .build();
+    }
 
     private Map<String, Object> toSqlParams(Batch batch) {
         Map<String, Object> batchMap = new HashMap<>();

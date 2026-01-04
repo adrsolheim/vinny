@@ -1,5 +1,8 @@
 package no.vinny.nightfly.components.recipe.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
@@ -22,12 +25,14 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     private static final String INSERT_RECIPE = "INSERT INTO recipe (brewfather_id, name) VALUES (:brewfatherId, :name)";
     private static final String SYNC_RECIPE = "INSERT INTO sync_recipe (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
 
-    private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
+    private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch, entity FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
 
     public RecipeRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override
@@ -89,9 +94,25 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public Optional<SyncEntity> getLastImportedEntity() {
-        List<SyncEntity> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class)));
-        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    public Optional<SyncEntity<Recipe>> getLastImportedEntity() {
+        List<SyncEntity<Recipe>> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), recipeFromJson(rs.getString("entity"))));
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.getFirst());
+    }
+
+    private Recipe recipeFromJson(String json) {
+        if (json == null) {
+            return null;
+        }
+        JsonNode root = null;
+        try {
+            root = objectMapper.readTree(json);
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
+        return Recipe.builder()
+                .name(root.path("name").asText())
+                .brewfatherId(root.path("_id").asText())
+                .build();
     }
 
     private Map<String, Object> convertToMap(Recipe recipe) {

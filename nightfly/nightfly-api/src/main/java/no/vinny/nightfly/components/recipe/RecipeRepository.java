@@ -22,5 +22,6 @@ public interface RecipeRepository {
     List<Recipe> findAll();
 
     int importRecipe(String recipe);
-    Optional<SyncEntity> getLastImportedEntity();
+    Optional<SyncEntity<Recipe>> getLastImportedEntity();
+
 }

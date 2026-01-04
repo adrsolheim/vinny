@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeService;
+import no.vinny.nightfly.domain.Recipe;
+import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -97,7 +99,7 @@ public class ScheduledImport {
     }
 
     private String findCheckpointOfLastRecipeImport() {
-        Optional<SyncEntity> lastImportedEntity = recipeService.getLastImportedEntity();
+        Optional<SyncEntity<Recipe>> lastImportedEntity = recipeService.getLastImportedEntity();
         if (lastImportedEntity.isEmpty()) {
             return null;
         }
@@ -126,7 +128,7 @@ public class ScheduledImport {
     }
 
     private String findCheckpointOfLastBatchImport() {
-        Optional<SyncEntity> lastImportedEntity = batchService.getLastImportedEntity();
+        Optional<SyncEntity<Batch>> lastImportedEntity = batchService.getLastImportedEntity();
         if (lastImportedEntity.isEmpty()) {
             return null;
         }

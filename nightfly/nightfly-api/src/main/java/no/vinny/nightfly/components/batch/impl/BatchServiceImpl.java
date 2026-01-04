@@ -10,7 +10,6 @@ import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapStatus;
-import no.vinny.nightfly.components.common.error.NotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -181,8 +180,8 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Optional<SyncEntity> getLastImportedEntity() {
-        return batchRepository.getLastSyncedEntity();
+    public Optional<SyncEntity<Batch>> getLastImportedEntity() {
+        return batchRepository.getLastImportedEntity();
     }
 
     @Override

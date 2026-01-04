@@ -132,9 +132,10 @@ class BatchServiceImplTest {
             }
 
             @Override
-            public Optional<SyncEntity> getLastSyncedEntity() {
+            public Optional<SyncEntity<Batch>> getLastImportedEntity() {
                 return Optional.empty();
             }
+
         };
         batchService = new BatchServiceImpl(batchRepository);
     }

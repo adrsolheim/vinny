@@ -27,7 +27,7 @@ public interface BatchService {
    List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus);
    Optional<BatchUnitDTO> getBatchUnitById(Long batchUnitId);
 
-   Optional<SyncEntity> getLastImportedEntity();
+   Optional<SyncEntity<Batch>> getLastImportedEntity();
    int importBatch(String batch);
 
 }

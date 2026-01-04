@@ -40,5 +40,5 @@ public interface BatchRepository {
     Optional<Batch> getBatchAndBatchUnit(Long batchUnitId);
 
     int syncBatch(String batch);
-    Optional<SyncEntity> getLastSyncedEntity();
+    Optional<SyncEntity<Batch>> getLastImportedEntity();
 }

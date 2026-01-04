@@ -111,7 +111,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<SyncEntity> getLastImportedEntity() {
+    public Optional<SyncEntity<Recipe>> getLastImportedEntity() {
         return recipeRepository.getLastImportedEntity();
     }
 
@@ -119,5 +119,12 @@ public class RecipeServiceImpl implements RecipeService {
     public int importRecipe(String recipe) {
         // TODO: Keep 3 latest changes of any given recipe
         return recipeRepository.importRecipe(recipe);
+    }
+
+    @Override
+    public int syncRecipe(String brewfatherId) {
+        Optional<Recipe> existingRecipe = recipeRepository.findByBrewfatherId(brewfatherId);
+
+        return 0;
     }
 }

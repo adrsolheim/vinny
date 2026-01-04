@@ -18,6 +18,7 @@ public interface RecipeService {
     Recipe upsert(Recipe batch);
     Recipe replace(Recipe batch);
 
-    Optional<SyncEntity> getLastImportedEntity();
+    Optional<SyncEntity<Recipe>> getLastImportedEntity();
     int importRecipe(String recipe);
+    int syncRecipe(String brewfatherId);
 }
