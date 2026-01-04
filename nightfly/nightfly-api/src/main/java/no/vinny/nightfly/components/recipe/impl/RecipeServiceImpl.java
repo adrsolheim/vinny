@@ -111,13 +111,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<SyncEntity> getLastSyncedEntity() {
-        return recipeRepository.getLastSyncedEntity();
+    public Optional<SyncEntity> getLastImportedEntity() {
+        return recipeRepository.getLastImportedEntity();
     }
 
     @Override
-    public int syncRecipe(String recipe) {
+    public int importRecipe(String recipe) {
         // TODO: Keep 3 latest changes of any given recipe
-        return recipeRepository.syncRecipe(recipe);
+        return recipeRepository.importRecipe(recipe);
     }
 }

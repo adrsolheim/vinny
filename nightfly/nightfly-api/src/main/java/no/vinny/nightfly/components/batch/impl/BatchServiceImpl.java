@@ -181,12 +181,12 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Optional<SyncEntity> getLastSyncedEntity() {
+    public Optional<SyncEntity> getLastImportedEntity() {
         return batchRepository.getLastSyncedEntity();
     }
 
     @Override
-    public int syncBatch(String batch) {
+    public int importBatch(String batch) {
         return batchRepository.syncBatch(batch);
     }
 

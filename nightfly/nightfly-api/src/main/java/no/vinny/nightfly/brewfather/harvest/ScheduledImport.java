@@ -3,15 +3,10 @@ package no.vinny.nightfly.brewfather.harvest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import no.vinny.nightfly.brewfather.domain.BatchJson;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeService;
-import no.vinny.nightfly.domain.Recipe;
-import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -19,20 +14,19 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ScheduledSyncV2 {
+public class ScheduledImport {
 
     private final BrewfatherSettings brewfatherSettings;
     private final BatchService batchService;
     private final RecipeService recipeService;
     private final ObjectMapper objectMapper;
 
-    public ScheduledSyncV2(BrewfatherSettings brewfatherSettings,
+    public ScheduledImport(BrewfatherSettings brewfatherSettings,
                            BatchService batchService,
                            RecipeService recipeService) {
        this.brewfatherSettings = brewfatherSettings;
@@ -42,42 +36,42 @@ public class ScheduledSyncV2 {
     }
 
     public void start() {
-        log.info("Starting scheduled sync..");
+        log.info("Starting scheduled import..");
         boolean dryRun = true;
-        syncRecipes(dryRun);
-        syncBatches(dryRun);
-        log.info("Stopping scheduled sync");
+        importRecipes(dryRun);
+        importBatches(dryRun);
+        log.info("Stopping scheduled import");
     }
 
-    private void syncRecipes(boolean dryRun) {
-        log.info("=== Syncing Recipes ===");
-        String checkpointOfLastSync = findCheckpointOfLastRecipeSync();
-        if (checkpointOfLastSync != null) {
-            log.info("Checkpoint of last sync: {}", checkpointOfLastSync);
+    private void importRecipes(boolean dryRun) {
+        log.info("=== Importing Recipes ===");
+        String checkpointOfLastImport = findCheckpointOfLastRecipeImport();
+        if (checkpointOfLastImport != null) {
+            log.info("Checkpoint of last import: {}", checkpointOfLastImport);
         }
-        List<String> importedRecipes = importRecipes(checkpointOfLastSync);
+        List<String> importedRecipes = importRecipes(checkpointOfLastImport);
         importedRecipes.forEach(recipeJson -> log.info("IMPORT -> {}", recipeJson));
         if (!dryRun) {
-            Integer entitiesSynced = importedRecipes.stream()
-                    .map(recipeService::syncRecipe)
+            Integer entitiesImported = importedRecipes.stream()
+                    .map(recipeService::importRecipe)
                     .reduce(0, (a, b) -> a + b);
-            log.info("Synced {} recipes", entitiesSynced);
+            log.info("Imported {} recipes", entitiesImported);
         }
     }
 
-    private void syncBatches(boolean dryRun) {
-        log.info("=== Syncing Batches" + (dryRun ? " (dry run)" : "") + " ===");
-        String checkpointOfLastSync = findCheckpointOfLastBatchSync();
-        if (checkpointOfLastSync != null) {
-            log.info("Checkpoint of last sync: {}", checkpointOfLastSync);
+    private void importBatches(boolean dryRun) {
+        log.info("=== Importing Batches" + (dryRun ? " (dry run)" : "") + " ===");
+        String checkpointOfLastImport = findCheckpointOfLastBatchImport();
+        if (checkpointOfLastImport != null) {
+            log.info("Checkpoint of last import: {}", checkpointOfLastImport);
         }
-        List<String> importedBatches = importBatches(checkpointOfLastSync);
+        List<String> importedBatches = importBatches(checkpointOfLastImport);
         importedBatches.forEach(batchJson -> log.info("IMPORT -> {}", batchJson));
         if (!dryRun) {
-            Integer entitiesSynced = importedBatches.stream()
-                    .map(batchService::syncBatch)
+            Integer entitiesImported = importedBatches.stream()
+                    .map(batchService::importBatch)
                     .reduce(0, (a, b) -> a + b);
-            log.info("Synced {} batches", entitiesSynced);
+            log.info("Imported {} batches", entitiesImported);
         }
     }
 
@@ -102,12 +96,12 @@ public class ScheduledSyncV2 {
         return splitJsonArrayIntoObjects(recipesResponse);
     }
 
-    private String findCheckpointOfLastRecipeSync() {
-        Optional<SyncEntity> lastSyncedEntity = recipeService.getLastSyncedEntity();
-        if (lastSyncedEntity.isEmpty()) {
+    private String findCheckpointOfLastRecipeImport() {
+        Optional<SyncEntity> lastImportedEntity = recipeService.getLastImportedEntity();
+        if (lastImportedEntity.isEmpty()) {
             return null;
         }
-        Long timestamp = lastSyncedEntity.get().updated();
+        Long timestamp = lastImportedEntity.get().updated();
 
         StringBuilder params = new StringBuilder("complete=false");
         params.append("&limit=50");
@@ -122,21 +116,21 @@ public class ScheduledSyncV2 {
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<List<SyncEntity>>() {})
                 .getBody();
-        Optional<SyncEntity> lastSynced = recipes.stream()
+        Optional<SyncEntity> lastImported = recipes.stream()
                 .filter(recipe -> recipe.updated() <= timestamp)
                 .max(Comparator.comparing(SyncEntity::updated));
 
-        return lastSynced
+        return lastImported
                 .map(SyncEntity::brewfatherId)
                 .orElse(null) ;
     }
 
-    private String findCheckpointOfLastBatchSync() {
-        Optional<SyncEntity> lastSyncedEntity = batchService.getLastSyncedEntity();
-        if (lastSyncedEntity.isEmpty()) {
+    private String findCheckpointOfLastBatchImport() {
+        Optional<SyncEntity> lastImportedEntity = batchService.getLastImportedEntity();
+        if (lastImportedEntity.isEmpty()) {
             return null;
         }
-        Long timestamp = lastSyncedEntity.get().updated();
+        Long timestamp = lastImportedEntity.get().updated();
         StringBuilder params = new StringBuilder("complete=false");
         params.append("&limit=50");
         params.append("&order_by=_timestamp_ms");
@@ -151,11 +145,11 @@ public class ScheduledSyncV2 {
                 .toEntity(new ParameterizedTypeReference<List<SyncEntity>>() {
                 })
                 .getBody();
-        Optional<SyncEntity> lastSynced = batches.stream()
+        Optional<SyncEntity> lastImported = batches.stream()
                 .filter(batch -> batch.updated() <= timestamp)
                 .max(Comparator.comparing(SyncEntity::updated));
 
-        return lastSynced
+        return lastImported
                 .map(SyncEntity::brewfatherId)
                 .orElse(null) ;
     }

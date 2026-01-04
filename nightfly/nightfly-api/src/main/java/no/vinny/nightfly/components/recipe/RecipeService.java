@@ -18,6 +18,6 @@ public interface RecipeService {
     Recipe upsert(Recipe batch);
     Recipe replace(Recipe batch);
 
-    Optional<SyncEntity> getLastSyncedEntity();
-    int syncRecipe(String recipe);
+    Optional<SyncEntity> getLastImportedEntity();
+    int importRecipe(String recipe);
 }

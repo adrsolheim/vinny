@@ -82,14 +82,14 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public int syncRecipe(String recipe) {
+    public int importRecipe(String recipe) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("entity", recipe);
         return jdbcTemplate.update(SYNC_RECIPE, params);
     }
 
     @Override
-    public Optional<SyncEntity> getLastSyncedEntity() {
+    public Optional<SyncEntity> getLastImportedEntity() {
         List<SyncEntity> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class)));
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
