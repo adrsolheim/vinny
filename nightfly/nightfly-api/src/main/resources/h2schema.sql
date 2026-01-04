@@ -1,6 +1,8 @@
 --DROP DATABASE IF EXISTS nightfly;
 --CREATE DATABASE IF NOT EXISTS nightfly;
 
+CREATE ALIAS IF NOT EXISTS JSON_VALUE FOR "no.vinny.nightfly.util.H2JsonFunctions.jsonValue";
+
 DROP TABLE IF EXISTS tap;
 DROP TABLE IF EXISTS batch_unit;
 DROP TABLE IF EXISTS keg;
@@ -56,4 +58,18 @@ CREATE TABLE IF NOT EXISTS account (
     id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
     username VARCHAR(100),
     password VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS sync_recipe (
+    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    updated_epoch BIGINT,
+    brewfather_id VARCHAR(50),
+    entity JSON
+);
+
+CREATE TABLE IF NOT EXISTS sync_batch (
+    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+    updated_epoch BIGINT,
+    brewfather_id VARCHAR(50),
+    entity JSON
 );
