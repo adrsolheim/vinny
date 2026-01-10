@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.ZonedDateTime;
+
 @Data
 @Builder
 public class Recipe {
@@ -12,4 +14,5 @@ public class Recipe {
     private String brewfatherId;
     @NotEmpty
     private String name;
+    private ZonedDateTime updated;
 }

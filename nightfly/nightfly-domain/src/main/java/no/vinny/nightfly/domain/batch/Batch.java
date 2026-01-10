@@ -7,6 +7,7 @@ import lombok.Data;
 import no.vinny.nightfly.domain.Recipe;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -17,6 +18,7 @@ public class Batch implements Serializable {
     private String name;
     @Enumerated(EnumType.STRING)
     private BatchStatus status;
+    private ZonedDateTime updated;
     private Recipe recipe;
     private List<BatchUnit> batchUnits;
     // TODO: filter batches for display on frontend

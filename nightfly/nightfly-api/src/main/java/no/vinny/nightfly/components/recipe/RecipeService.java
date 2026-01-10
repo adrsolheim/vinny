@@ -21,4 +21,5 @@ public interface RecipeService {
     Optional<SyncEntity<Recipe>> getLastImportedEntity();
     int importRecipe(String recipe);
     int syncRecipe(String brewfatherId);
+    void syncRecipes();
 }

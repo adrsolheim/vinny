@@ -127,4 +127,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         return 0;
     }
+
+    @Override
+    public void syncRecipes() {
+
+    }
 }

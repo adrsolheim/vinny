@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
+import no.vinny.nightfly.components.common.time.Time;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
 import no.vinny.nightfly.domain.Recipe;
@@ -21,8 +22,8 @@ import java.util.Optional;
 @Slf4j
 public class RecipeRepositoryImpl implements RecipeRepository {
 
-    private static final String SELECT_RECIPE = "SELECT r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name FROM recipe r";
-    private static final String INSERT_RECIPE = "INSERT INTO recipe (brewfather_id, name) VALUES (:brewfatherId, :name)";
+    private static final String SELECT_RECIPE = "SELECT r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated FROM recipe r";
+    private static final String INSERT_RECIPE = "INSERT INTO recipe (brewfather_id, name, updated) VALUES (:brewfatherId, :name, :updated)";
     private static final String SYNC_RECIPE = "INSERT INTO sync_recipe (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
 
     private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch, entity FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
@@ -40,6 +41,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", recipe.getBrewfatherId());
         params.addValue("name", recipe.getName());
+        params.addValue("updated", Time.now());
         return jdbcTemplate.update(INSERT_RECIPE, params);
     }
 
@@ -55,7 +57,8 @@ public class RecipeRepositoryImpl implements RecipeRepository {
         MapSqlParameterSource params = new MapSqlParameterSource(convertToMap(recipe));
         String sql = "UPDATE recipe SET "
                 + "brewfather_id = :brewfatherId, "
-                + "name = :name "
+                + "name = :name, "
+                + "updated = :updated "
                 + "WHERE id = :id";
         jdbcTemplate.update(sql, params);
     }
@@ -116,10 +119,11 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     private Map<String, Object> convertToMap(Recipe recipe) {
-        Map<String, Object> batchMap = new HashMap<>();
-        batchMap.put("id", recipe.getId());
-        batchMap.put("brewfatherId", recipe.getBrewfatherId());
-        batchMap.put("name", recipe.getName());
-        return batchMap;
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", recipe.getId());
+        params.put("brewfatherId", recipe.getBrewfatherId());
+        params.put("name", recipe.getName());
+        params.put("updated", Time.now());
+        return params;
     }
 }

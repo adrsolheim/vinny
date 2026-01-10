@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.recipe;
 
+import no.vinny.nightfly.components.common.time.Time;
 import no.vinny.nightfly.domain.Recipe;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -13,6 +14,7 @@ public class RecipeRowMapper implements RowMapper<Recipe> {
                 .id(rs.getLong("r_id"))
                 .brewfatherId(rs.getString("r_brewfather_id"))
                 .name(rs.getString("r_name"))
+                .updated(Time.toOsloTime(rs.getTimestamp("r_updated")))
                 .build();
     }
 }

@@ -1,17 +1,19 @@
-INSERT INTO recipe (id, brewfather_id, name) VALUES (100001, 'b1W72a2OuL9xsC1c1OTrgog6JiPP0b', 'Eldon');
-INSERT INTO recipe (id, brewfather_id, name) VALUES (100002, 'oCJlXhR1iIdYgLMwem0V0mmYNBIIia', 'KIWI Pilsner');
-INSERT INTO recipe (id, brewfather_id, name) VALUES (100003, 'EpqhXK8qMTPPONNKkfr9bdIBFfl2Ji', 'Oaoei');
-INSERT INTO recipe (id, brewfather_id, name) VALUES (100004, 'fvUxvDvJVl5Pz5ufsIncT1ZMXJsifj', 'Fruktig Juling');
+SET @now_timestamp = NOW();
 
-INSERT INTO batch (id, brewfather_id, name, status, recipe) VALUES (10, 'LAXI2KWZXcU2pBpzrfg6B3Uy5940vQ', 'Eldon',            'COMPLETED', 100001);
-INSERT INTO batch (id, brewfather_id, name, status, recipe) VALUES (11, '6TY4Hg2JfQA0zBnscwspPsVF29JAKM', 'KIWI Pilsner',     'COMPLETED', 100002);
-INSERT INTO batch (id, brewfather_id, name, status)         VALUES (12, 'HY27A73dYWZNMxapgE4UdljPtNvDOL', 'MarisOtter SMASH', 'COMPLETED');
-INSERT INTO batch (id, brewfather_id, name, status)         VALUES (13, 'NLltIcoo87foHbTz1N8rH0v0KXht6q', 'Juicy SafAle',     'COMPLETED');
-INSERT INTO batch (id, brewfather_id, name, status)         VALUES (14, 'NLltIcoo87foHbTz1N8rH0v0KXht6P', 'Juicy NEIPA',      'COMPLETED');
-INSERT INTO batch (id, brewfather_id, name, status)         VALUES (15, 'NLltIcoo87foHbTz1N8rH0v0KXht6A', 'NETTO',            'COMPLETED');
-INSERT INTO batch (id, brewfather_id, name, status, recipe) VALUES (16, 'eWRVqaAtQQohR3KReuE15xgDkSjHpJ', 'KIWI Pilsner',     'COMPLETED', 100002);
-INSERT INTO batch (id, brewfather_id, name, status, recipe) VALUES (17, 'rkXRnoh6IlsoG3GAo9GQdQPqqmalAW', 'Oaoei',            'COMPLETED', 100003);
-INSERT INTO batch (id, brewfather_id, name, status, recipe) VALUES (18, 'KdtmDWn05IvmNHvehrpEV8UO2bQpeO', 'Fruktig Juling',   'COMPLETED', 100004);
+INSERT INTO recipe (id, brewfather_id, name, updated) VALUES (100001, 'b1W72a2OuL9xsC1c1OTrgog6JiPP0b', 'Eldon',          @now_timestamp);
+INSERT INTO recipe (id, brewfather_id, name, updated) VALUES (100002, 'oCJlXhR1iIdYgLMwem0V0mmYNBIIia', 'KIWI Pilsner',   @now_timestamp);
+INSERT INTO recipe (id, brewfather_id, name, updated) VALUES (100003, 'EpqhXK8qMTPPONNKkfr9bdIBFfl2Ji', 'Oaoei',          @now_timestamp);
+INSERT INTO recipe (id, brewfather_id, name, updated) VALUES (100004, 'fvUxvDvJVl5Pz5ufsIncT1ZMXJsifj', 'Fruktig Juling', @now_timestamp);
+
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (10, 'LAXI2KWZXcU2pBpzrfg6B3Uy5940vQ', 'Eldon',            'COMPLETED', 100001, @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (11, '6TY4Hg2JfQA0zBnscwspPsVF29JAKM', 'KIWI Pilsner',     'COMPLETED', 100002, @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (12, 'HY27A73dYWZNMxapgE4UdljPtNvDOL', 'MarisOtter SMASH', 'COMPLETED', null, , @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (13, 'NLltIcoo87foHbTz1N8rH0v0KXht6q', 'Juicy SafAle',     'COMPLETED', null, , @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (14, 'NLltIcoo87foHbTz1N8rH0v0KXht6P', 'Juicy NEIPA',      'COMPLETED', null, , @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (15, 'NLltIcoo87foHbTz1N8rH0v0KXht6A', 'NETTO',            'COMPLETED', null, , @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (16, 'eWRVqaAtQQohR3KReuE15xgDkSjHpJ', 'KIWI Pilsner',     'COMPLETED', 100002, @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (17, 'rkXRnoh6IlsoG3GAo9GQdQPqqmalAW', 'Oaoei',            'COMPLETED', 100003, @now_timestamp);
+INSERT INTO batch (id, brewfather_id, name, status, recipe, updated) VALUES (18, 'KdtmDWn05IvmNHvehrpEV8UO2bQpeO', 'Fruktig Juling',   'COMPLETED', 100004, @now_timestamp);
 
 INSERT INTO tap (id, active, batch_unit) VALUES (1, TRUE,  1);
 INSERT INTO tap (id, active, batch_unit) VALUES (2, TRUE,  3);

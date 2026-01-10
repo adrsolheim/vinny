@@ -1,5 +1,6 @@
 package no.vinny.nightfly.components.batch;
 
+import no.vinny.nightfly.components.common.time.Time;
 import no.vinny.nightfly.domain.batch.*;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import no.vinny.nightfly.domain.Recipe;
@@ -22,6 +23,7 @@ public class BatchRowMapper implements ResultSetExtractor<List<Batch>> {
                 .id(rs.getLong("r_id"))
                 .brewfatherId(rs.getString("r_brewfather_id"))
                 .name(rs.getString("r_name"))
+                .updated(Time.toOsloTime(rs.getTimestamp("r_updated")))
                 .build();
     }
 
@@ -50,6 +52,7 @@ public class BatchRowMapper implements ResultSetExtractor<List<Batch>> {
                         .name(rs.getString("b_name"))
                         .status(rs.getObject("b_status") != null ? BatchStatus.valueOf(rs.getString("b_status").toUpperCase()) : null)
                         .recipe(mapRecipe(rs))
+                        .updated(Time.toOsloTime(rs.getTimestamp("b_updated")))
                         .build();
                 batches.put(batchId, batch);
             }

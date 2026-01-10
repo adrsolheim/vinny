@@ -28,7 +28,6 @@ public class NoSecurityConfig {
     public SecurityFilterChain noSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                //.cors(CorsConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((request) -> request

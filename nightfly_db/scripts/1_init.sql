@@ -3,7 +3,8 @@ CREATE DATABASE IF NOT EXISTS nightfly;
 CREATE TABLE IF NOT EXISTS nightfly.recipe (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     brewfather_id VARCHAR(50) UNIQUE,
-    name VARCHAR(100)
+    name VARCHAR(100),
+    updated TIMESTAMP
 ) AUTO_INCREMENT=100;
 
 CREATE TABLE IF NOT EXISTS nightfly.batch (
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS nightfly.batch (
     name VARCHAR(100),
     status VARCHAR(30),
     recipe BIGINT,
+    updated TIMESTAMP,
     FOREIGN KEY (recipe) REFERENCES recipe(id)
 ) AUTO_INCREMENT=100;
 

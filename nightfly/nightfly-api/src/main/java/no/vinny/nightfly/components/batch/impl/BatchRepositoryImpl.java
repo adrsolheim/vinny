@@ -8,6 +8,7 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchRowMapper;
 import no.vinny.nightfly.components.batch.BatchUnitRowMapper;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
+import no.vinny.nightfly.components.common.time.Time;
 import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchStatus;
@@ -26,8 +27,8 @@ import java.util.*;
 @Repository
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe";
-    private static final String RECIPE_COLUMNS = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name";
+    private static final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe, b.updated b_updated";
+    private static final String RECIPE_COLUMNS = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated";
     private static final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap bu_tap, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
     private static final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
 
@@ -44,8 +45,8 @@ public class BatchRepositoryImpl implements BatchRepository {
     private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap, tap_status, packaging, volume_status, keg) VALUES (:batch, :tap, :tapStatus, :packaging, :volumeStatus, :keg)";
     private static final String UPDATE_BATCH_UNIT = "UPDATE batch_unit SET batch = :batch, tap = :tap, tap_status = :tapStatus, packaging = :packaging, volume_status = :volumeStatus, keg = :keg WHERE id = :id";
 
-    private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe) VALUES (:brewfatherId, :name, :status, :recipe)";
-    private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe WHERE id = :id ";
+    private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe, updated) VALUES (:brewfatherId, :name, :status, :recipe, :updated)";
+    private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe, updated = :updated WHERE id = :id ";
     private static final String BATCH_COUNT = "SELECT COUNT(*) FROM batch";
     private static final String SYNC_BATCH = "INSERT INTO sync_batch (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
     private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
@@ -66,6 +67,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
         //params.addValue("tapStatus", TapStatus.WAITING.name());
         params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
+        params.addValue("updated", Time.now());
         int insertBatchResult = jdbcTemplate.update(INSERT_BATCH, params);
         if (batch.getBatchUnits() != null) {
             insertAll(batch.getBatchUnits());
@@ -227,6 +229,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         batchMap.put("name", batch.getName());
         batchMap.put("status", batch.getStatus() == null ? null : batch.getStatus().name());
         batchMap.put("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
+        batchMap.put("updated", Time.now());
         return batchMap;
     }
 
