@@ -16,6 +16,7 @@ import no.vinny.nightfly.domain.tap.TapStatus;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Function;
@@ -200,6 +201,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
+    @Transactional
     public void syncBatches() {
         // fetch all updates since last sync
         // but keep only latest version of each
@@ -227,9 +229,6 @@ public class BatchServiceImpl implements BatchService {
         List<Batch> newBatches = lastVersionOfEachBatch.stream()
                 .filter(batch -> !existingBatches.containsKey(batch.getBrewfatherId()))
                 .collect(Collectors.toUnmodifiableList());
-        log.info("existing bathces: {}", existingBatches);
-        log.info("updated bathces: {}", updatedBatches);
-        log.info("new bathces: {}", newBatches);
 
         // update existing batches
         updatedBatches.stream()
@@ -248,6 +247,8 @@ public class BatchServiceImpl implements BatchService {
             batchRepository.insert(batch);
         });
 
+        // mark everything as synced
+        batchRepository.markAsSynced(unsyncedBatches.stream().map(SyncEntity::id).collect(toUnmodifiableList()));
     }
 
     private Batch addRecipe(Batch batch, Map<String, Recipe> recipes) {
