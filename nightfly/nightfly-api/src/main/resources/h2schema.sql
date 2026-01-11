@@ -68,12 +68,14 @@ CREATE TABLE IF NOT EXISTS sync_recipe (
     id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
     updated_epoch BIGINT,
     brewfather_id VARCHAR(50),
-    entity JSON
+    synced TIMESTAMP,
+    entity CLOB
 );
 
 CREATE TABLE IF NOT EXISTS sync_batch (
     id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
     updated_epoch BIGINT,
     brewfather_id VARCHAR(50),
-    entity JSON
+    synced TIMESTAMP,
+    entity CLOB
 );

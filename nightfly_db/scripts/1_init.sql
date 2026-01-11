@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS nightfly.sync_recipe (
     id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
     updated_epoch BIGINT,
     brewfather_id VARCHAR(50),
+    synced TIMESTAMP,
     entity JSON
 );
 
@@ -56,5 +57,6 @@ CREATE TABLE IF NOT EXISTS nightfly.sync_batch (
     id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
     updated_epoch BIGINT,
     brewfather_id VARCHAR(50),
+    synced TIMESTAMP,
     entity JSON
 );
