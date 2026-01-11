@@ -8,10 +8,14 @@ import no.vinny.nightfly.components.recipe.RecipeService;
 import no.vinny.nightfly.domain.Recipe;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
 @Slf4j
@@ -63,11 +67,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe update(Recipe recipe) {
         if (recipe.getId() == null) {
-            throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
+            throw new IllegalArgumentException("Recipe id must be present in order to find and update recipe");
         }
         Optional<Recipe> existingRecipe = get(recipe.getId());
         if (existingRecipe.isEmpty()) {
-            log.info("UPDATE: Batch not found. Skipping update..");
+            log.info("UPDATE: Recipe not found. Skipping update..");
             throw new NotFoundException("Recipe not found");
         }
         recipeRepository.update(mergeNonNull(recipe, existingRecipe.get()));
@@ -134,7 +138,64 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public void syncRecipes() {
+        // fetch all updates since last sync
+        // but keep only latest version of each
+        List<SyncEntity<Recipe>> unsyncedRecipes = recipeRepository.findUnsynced();
+        List<Recipe> lastVersionOfEachRecipe = unsyncedRecipes.stream()
+                .collect(Collectors.groupingBy(SyncEntity::brewfatherId))
+                .values().stream()
+                .map(recipes -> recipes.stream().max(Comparator.comparing(SyncEntity::updated)).orElse(null))
+                .filter(Objects::nonNull)
+                .map(SyncEntity::entity)
+                .collect(Collectors.toUnmodifiableList());
 
+        Map<String, Recipe> existingRecipes = recipeRepository.findAllByBrewfatherIds(lastVersionOfEachRecipe.stream().map(Recipe::getBrewfatherId).filter(Objects::nonNull).collect(Collectors.toUnmodifiableList())).stream()
+                .collect(toMap(Recipe::getBrewfatherId, Function.identity()));
+        List<Recipe> updatedRecipes = lastVersionOfEachRecipe.stream()
+                .filter(recipe -> existingRecipes.containsKey(recipe.getBrewfatherId()))
+                .collect(Collectors.toUnmodifiableList());
+        List<Recipe> newRecipes = lastVersionOfEachRecipe.stream()
+                .filter(recipe -> !existingRecipes.containsKey(recipe.getBrewfatherId()))
+                .collect(Collectors.toUnmodifiableList());
+
+        // update existing recipes
+        updatedRecipes.stream()
+                .filter(updatedRecipe -> hasChanges(existingRecipes.get(updatedRecipe.getBrewfatherId()), updatedRecipe))
+                .map(updatedRecipe -> applyUpdatesFrom(existingRecipes.get(updatedRecipe.getBrewfatherId()), updatedRecipe))
+                .forEach(updatedRecipe -> {
+                    log.info("[SYNC/{}] Updating existing recipe {}", updatedRecipe.getId(), updatedRecipe);
+                    recipeRepository.update(updatedRecipe);
+                });
+        // add new recipes
+        newRecipes.forEach(recipe -> {
+                    log.info("[SYNC/null] New recipe {}", recipe);
+                    recipeRepository.insert(recipe);
+                });
+
+        // mark everything as synced
+        recipeRepository.markAsSynced(unsyncedRecipes.stream().map(SyncEntity::id).collect(toUnmodifiableList()));
+    }
+
+    private boolean hasChanges(Recipe existing, Recipe updatedRecipe) {
+        if (updatedRecipe == null) {
+            return false;
+        }
+
+        if (!existing.getName().equals(updatedRecipe.getName())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private Recipe applyUpdatesFrom(Recipe existing, Recipe updatedRecipe) {
+        if (updatedRecipe == null) {
+            return existing;
+        }
+        return existing.toBuilder()
+                .name(updatedRecipe.getName())
+                .build();
     }
 }

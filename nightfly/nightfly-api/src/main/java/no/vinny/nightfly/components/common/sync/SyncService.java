@@ -17,6 +17,9 @@ public class SyncService {
     }
 
     public void syncAll() {
+        // sync order matters
+        log.info("========== Syncing Recipes ==========");
+        recipeService.syncRecipes();
         log.info("========== Syncing Batches ==========");
         batchService.syncBatches();
     }

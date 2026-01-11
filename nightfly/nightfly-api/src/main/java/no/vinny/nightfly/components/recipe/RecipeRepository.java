@@ -25,5 +25,7 @@ public interface RecipeRepository {
 
     int importRecipe(String recipe);
     Optional<SyncEntity<Recipe>> getLastImportedEntity();
+    List<SyncEntity<Recipe>> findUnsynced();
+    void markAsSynced(List<Long> ids);
 
 }

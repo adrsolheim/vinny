@@ -9,6 +9,7 @@ import no.vinny.nightfly.components.common.time.Time;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
 import no.vinny.nightfly.domain.Recipe;
+import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -21,12 +22,14 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class RecipeRepositoryImpl implements RecipeRepository {
+    private static final String SYNC_RECIPE_COLUMNS = "id, brewfather_id, updated_epoch, synced, entity";
 
     private static final String SELECT_RECIPE = "SELECT r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated FROM recipe r";
     private static final String INSERT_RECIPE = "INSERT INTO recipe (brewfather_id, name, updated) VALUES (:brewfatherId, :name, :updated)";
-    private static final String SYNC_RECIPE = "INSERT INTO sync_recipe (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
 
-    private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch, entity FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
+    private static final String SELECT_SYNC_RECIPE          = "SELECT " + SYNC_RECIPE_COLUMNS + " FROM sync_recipe";
+    private static final String SELECT_LAST_IMPORTED_ENTITY = SELECT_SYNC_RECIPE + " ORDER BY updated_epoch DESC LIMIT 1";
+    private static final String SYNC_RECIPE                 = "INSERT INTO sync_recipe (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
@@ -106,8 +109,21 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     @Override
     public Optional<SyncEntity<Recipe>> getLastImportedEntity() {
-        List<SyncEntity<Recipe>> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), recipeFromJson(rs.getString("entity"))));
+        List<SyncEntity<Recipe>> result = jdbcTemplate.query(SELECT_LAST_IMPORTED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), recipeFromJson(rs.getString("entity"))));
         return result.isEmpty() ? Optional.empty() : Optional.of(result.getFirst());
+    }
+
+    @Override
+    public List<SyncEntity<Recipe>> findUnsynced() {
+        return jdbcTemplate.query(SELECT_SYNC_RECIPE + " WHERE synced IS NULL ORDER BY ID ASC", Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), recipeFromJson(rs.getString("entity"))));
+    }
+
+    @Override
+    public void markAsSynced(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        jdbcTemplate.update("UPDATE sync_recipe SET synced = :synced", Map.of("synced", Time.now()));
     }
 
     private Recipe recipeFromJson(String json) {

@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.ZonedDateTime;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class Recipe {
     private Long id;
     @NotEmpty
