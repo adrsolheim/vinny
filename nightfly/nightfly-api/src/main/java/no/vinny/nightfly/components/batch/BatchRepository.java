@@ -29,6 +29,8 @@ public interface BatchRepository {
 
     List<Batch> findAll();
 
+    List<Batch> findAllByBrewfatherIds(List<String> brewfatherIds);
+
     List<Batch> getBatchesBy(Long recipeId, Long tapId);
 
     List<Batch> findByTapStatus(TapStatus status);
@@ -41,4 +43,6 @@ public interface BatchRepository {
 
     int syncBatch(String batch);
     Optional<SyncEntity<Batch>> getLastImportedEntity();
+    List<SyncEntity<Batch>> findUnsynced();
+    void markAsSynced(List<Long> ids);
 }

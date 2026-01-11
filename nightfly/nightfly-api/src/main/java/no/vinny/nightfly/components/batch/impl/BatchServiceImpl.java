@@ -1,10 +1,13 @@
 package no.vinny.nightfly.components.batch.impl;
 
+import jakarta.validation.constraints.NotEmpty;
 import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
+import no.vinny.nightfly.components.recipe.RecipeService;
+import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -14,12 +17,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -27,9 +30,11 @@ public class BatchServiceImpl implements BatchService {
 
     private final static String REDIS_PREFIX = "Batch";
     private final BatchRepository batchRepository;
+    private final RecipeService recipeService;
 
-    public BatchServiceImpl(BatchRepository batchRepository) {
+    public BatchServiceImpl(BatchRepository batchRepository, RecipeService recipeService) {
         this.batchRepository = batchRepository;
+        this.recipeService = recipeService;
     }
 
     @Override
@@ -168,7 +173,7 @@ public class BatchServiceImpl implements BatchService {
                .flatMap(this::toDTO)
                .filter(bu -> volumeStatus == null || bu.getVolumeStatus() == volumeStatus)
                .filter(bu -> ignore(excludeTapStatus) || !excludeTapStatus.contains(bu.getTapStatus()))
-               .collect(Collectors.toList());
+               .collect(toList());
     }
 
     @Override
@@ -187,6 +192,100 @@ public class BatchServiceImpl implements BatchService {
     @Override
     public int importBatch(String batch) {
         return batchRepository.syncBatch(batch);
+    }
+
+    @Override
+    public List<SyncEntity<Batch>> findUnsynced() {
+        return batchRepository.findUnsynced();
+    }
+
+    @Override
+    public void syncBatches() {
+        // fetch all updates since last sync
+        // but keep only latest version of each
+        List<SyncEntity<Batch>> unsyncedBatches = batchRepository.findUnsynced();
+        List<Batch> lastVersionOfEachBatch = unsyncedBatches.stream()
+                .collect(Collectors.groupingBy(SyncEntity::brewfatherId))
+                .values().stream()
+                .map(batches -> batches.stream().max(Comparator.comparing(SyncEntity::updated)).orElse(null))
+                .filter(Objects::nonNull)
+                .map(SyncEntity::entity)
+                .collect(Collectors.toUnmodifiableList());
+        List<String> recipeBrewfatherIds = lastVersionOfEachBatch.stream()
+                .map(Batch::getRecipe)
+                .filter(Objects::nonNull)
+                .map(Recipe::getBrewfatherId)
+                .filter(Objects::nonNull)
+                .collect(toUnmodifiableList());
+        Map<String, Recipe> recipeByBrewfatherId = recipeService.findAllByBrewfatherIds(recipeBrewfatherIds).stream().collect(toMap(Recipe::getBrewfatherId, Function.identity()));
+
+        Map<String, Batch> existingBatches = batchRepository.findAllByBrewfatherIds(lastVersionOfEachBatch.stream().map(Batch::getBrewfatherId).filter(Objects::nonNull).collect(Collectors.toUnmodifiableList())).stream()
+                .collect(toMap(Batch::getBrewfatherId, Function.identity()));
+        List<Batch> updatedBatches = lastVersionOfEachBatch.stream()
+                .filter(batch -> existingBatches.containsKey(batch.getBrewfatherId()))
+                .collect(Collectors.toUnmodifiableList());
+        List<Batch> newBatches = lastVersionOfEachBatch.stream()
+                .filter(batch -> !existingBatches.containsKey(batch.getBrewfatherId()))
+                .collect(Collectors.toUnmodifiableList());
+        log.info("existing bathces: {}", existingBatches);
+        log.info("updated bathces: {}", updatedBatches);
+        log.info("new bathces: {}", newBatches);
+
+        // update existing batches
+        updatedBatches.stream()
+                .filter(updatedBatch -> hasChanges(existingBatches.get(updatedBatch.getBrewfatherId()), updatedBatch))
+                .map(updatedBatch -> addRecipe(updatedBatch, recipeByBrewfatherId))
+                .map(updatedBatch -> applyUpdatesFrom(existingBatches.get(updatedBatch.getBrewfatherId()), updatedBatch))
+                .forEach(updatedBatch -> {
+                    log.info("[SYNC/{}] Updating existing batch {}", updatedBatch.getId(), updatedBatch);
+                    batchRepository.update(updatedBatch);
+                });
+        // add new batches
+        newBatches.stream()
+                .map(batch -> addRecipe(batch, recipeByBrewfatherId))
+                .forEach(batch -> {
+            log.info("[SYNC/null] New batch {}", batch);
+            batchRepository.insert(batch);
+        });
+
+    }
+
+    private Batch addRecipe(Batch batch, Map<String, Recipe> recipes) {
+        String brewfatherId = Optional.ofNullable(batch.getRecipe()).map(Recipe::getBrewfatherId).orElse(null);
+        if (brewfatherId == null) {
+            return batch;
+        }
+        if (!recipes.containsKey(brewfatherId)) {
+            return batch;
+        }
+        return batch.toBuilder()
+                .recipe(recipes.get(brewfatherId))
+                .build();
+    }
+
+    private boolean hasChanges(Batch existing, Batch updatedBatch) {
+        if (updatedBatch == null) {
+            return false;
+        }
+
+        if (!existing.getName().equals(updatedBatch.getName())) {
+            return true;
+        }
+        if (existing.getStatus() != updatedBatch.getStatus()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private Batch applyUpdatesFrom(Batch existing, Batch updatedBatch) {
+        if (updatedBatch == null) {
+            return existing;
+        }
+        return existing.toBuilder()
+                .name(updatedBatch.getName())
+                .status(updatedBatch.getStatus())
+                .build();
     }
 
     private boolean ignore(Set set) {

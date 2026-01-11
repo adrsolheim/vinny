@@ -29,5 +29,7 @@ public interface BatchService {
 
    Optional<SyncEntity<Batch>> getLastImportedEntity();
    int importBatch(String batch);
+   List<SyncEntity<Batch>> findUnsynced();
+   void syncBatches();
 
 }

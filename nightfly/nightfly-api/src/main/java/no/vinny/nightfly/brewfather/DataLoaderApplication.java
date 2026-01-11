@@ -17,7 +17,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 
+@Slf4j
+@Order(1) // Run before sync
 @Import({
         BatchServiceImpl.class,
         BatchRepositoryImpl.class,
@@ -26,17 +29,16 @@ import org.springframework.context.annotation.Import;
         RedisConfig.class})
 @SpringBootApplication(scanBasePackages = {"no.vinny.nightfly.brewfather"})
 @ConditionalOnProperty(name = "cron.runner.enabled", havingValue = "true")
-@Slf4j
 public class DataLoaderApplication implements ApplicationRunner {
 
     private ApplicationContext context;
     @Autowired
     private ScheduledImport scheduledImport;
 
-    public static void main(String[] args) {
+    void main() {
         Logger log = LoggerFactory.getLogger(DataLoaderApplication.class);
         log.info("STARTING : DataLoaderApplication run");
-        SpringApplication.run(DataLoaderApplication.class, args);
+        SpringApplication.run(DataLoaderApplication.class);
         log.info("RUNNING : Run complete.");
     }
 

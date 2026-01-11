@@ -90,6 +90,14 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
+    public List<Recipe> findAllByBrewfatherIds(List<String> brewfatherIds) {
+        if (brewfatherIds == null || brewfatherIds.isEmpty()) {
+            return List.of();
+        }
+        return jdbcTemplate.query(SELECT_RECIPE + " WHERE r.brewfather_id in (:brewfatherIds)", Map.of("brewfatherIds", brewfatherIds), new RecipeRowMapper());
+    }
+
+    @Override
     public int importRecipe(String recipe) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("entity", recipe);

@@ -11,6 +11,7 @@ import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -39,7 +40,7 @@ public class ScheduledImport {
 
     public void start() {
         log.info("Starting scheduled import..");
-        boolean dryRun = true;
+        boolean dryRun = false;
         importRecipes(dryRun);
         importBatches(dryRun);
         log.info("Stopping scheduled import");
@@ -85,19 +86,31 @@ public class ScheduledImport {
         if (checkpoint != null) {
             params.append("&start_after="+checkpoint);
         }
-        String recipesResponse = RestClient.create()
+        ResponseEntity<JsonNode> jsonResponse = RestClient.create()
                 .get()
                 .uri("https://api.brewfather.app/v2/recipes?" + params.toString())
                 .headers(h -> h.setBasicAuth(brewfatherSettings.getUser(), brewfatherSettings.getKey()))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<String>() {
-                })
-                .getBody();
+                .toEntity(JsonNode.class);
 
-        return splitJsonArrayIntoObjects(recipesResponse);
+        return toJsonList(jsonResponse.getBody());
     }
 
+    /**
+     * Response is ordered by timestamp
+     * Use the last imported *timestamp* to find a recipe to use as a 'cutoff'
+     *
+     * lastImportTs=null
+     * scan:    [Recipe(name="Eldon", ts=101), Recipe(name="Kiwi Pilsner", ts=100)]
+     * cutoffRecipe=null
+     * import:  [Recipe(name="Eldon", ts=101), Recipe(name="Kiwi Pilsner", ts=100)]
+     *
+     * lastImportTs=101
+     * scan:    [Recipe(name="Eldon", ts=105), Recipe(name="Kiwi Pilsner", ts=100)]
+     * cutoffRecipe=Recipe(name="Eldon", ts=100) --> ts <= lastImportTs
+     * import:  [Recipe(name="Eldon", ts=105)]
+     */
     private String findCheckpointOfLastRecipeImport() {
         Optional<SyncEntity<Recipe>> lastImportedEntity = recipeService.getLastImportedEntity();
         if (lastImportedEntity.isEmpty()) {
@@ -164,46 +177,29 @@ public class ScheduledImport {
         if (checkpoint != null) {
             params.append("&start_after="+checkpoint);
         }
-        String batchesResponse = RestClient.create()
+        ResponseEntity<JsonNode> jsonResponse = RestClient.create()
                 .get()
-                .uri("https://api.brewfather.app/v2/batches?"+params.toString())
+                .uri("https://api.brewfather.app/v2/batches?" + params.toString())
                 .headers(h -> h.setBasicAuth(brewfatherSettings.getUser(), brewfatherSettings.getKey()))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<String>() {
-                })
-                .getBody();
+                .toEntity(JsonNode.class);
 
-        return splitJsonArrayIntoObjects(batchesResponse);
+
+        return toJsonList(jsonResponse.getBody());
     }
 
-    private List<String> splitJsonArrayIntoObjects(String json) {
-        if (json == null || json.isBlank() || "[]".equals(json)) {
+    private List<String> toJsonList(JsonNode root) {
+        if (root == null) {
             return List.of();
-        }
-
-        JsonNode root = null;
-        try {
-            root = objectMapper.readTree(json);
-        } catch (JsonProcessingException ex) {
-            log.error("Unable to parse json", ex);
-            throw new RuntimeException(ex);
         }
         if (!root.isArray()) {
             log.error("Expected json to be array");
             throw new RuntimeException("Expected json to be array");
         }
-        return root.valueStream()
-                .map(this::toJsonString)
-                .collect(Collectors.toUnmodifiableList());
-    }
 
-    private String toJsonString(JsonNode node) {
-        try {
-            return objectMapper.writeValueAsString(node);
-        } catch (JsonProcessingException ex) {
-            log.error("Unable to write json node as string", ex);
-            throw new RuntimeException(ex);
-        }
+        return root.valueStream()
+                .map(JsonNode::toString)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

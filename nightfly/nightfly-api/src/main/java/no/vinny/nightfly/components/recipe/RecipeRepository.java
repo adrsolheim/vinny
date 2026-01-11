@@ -21,6 +21,8 @@ public interface RecipeRepository {
 
     List<Recipe> findAll();
 
+    List<Recipe> findAllByBrewfatherIds(List<String> brewfatherIds);
+
     int importRecipe(String recipe);
     Optional<SyncEntity<Recipe>> getLastImportedEntity();
 

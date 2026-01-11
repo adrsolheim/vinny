@@ -11,7 +11,8 @@ public interface RecipeService {
     Optional<Recipe> get(Long id);
     Optional<Recipe> getByBrewfatherId(String id);
     int add(Recipe batch);
-    List<Recipe> getAll(Pageable pageable);
+    List<Recipe> findAll(Pageable pageable);
+    List<Recipe> findAllByBrewfatherIds(List<String> brewfatherIds);
     Long count();
     int delete(Long id);
     Recipe update(Recipe batch);

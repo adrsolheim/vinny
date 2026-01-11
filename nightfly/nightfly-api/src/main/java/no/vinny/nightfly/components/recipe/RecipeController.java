@@ -37,7 +37,7 @@ public class RecipeController {
 
     @GetMapping
     public List<Recipe> recipes() {
-        return recipeService.getAll(null);
+        return recipeService.findAll(null);
     }
 
     @GetMapping("/count")

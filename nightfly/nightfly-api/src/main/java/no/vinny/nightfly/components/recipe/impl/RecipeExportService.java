@@ -24,7 +24,7 @@ public class RecipeExportService {
 
     public String recipesToCsv() {
         StringBuilder csv = new StringBuilder(CSV_HEADER);
-        List<Recipe> recipes = recipeService.getAll(null);
+        List<Recipe> recipes = recipeService.findAll(null);
         for (Recipe recipe : recipes) {
             csv.append(String.format("%s,%s", recipe.getBrewfatherId(), recipe.getName()));
         }
@@ -64,7 +64,7 @@ public class RecipeExportService {
     }
 
     private void fillRows(Sheet sheet) {
-        List<Recipe> recipes = recipeService.getAll(null);
+        List<Recipe> recipes = recipeService.findAll(null);
         int row = 1;
         for (Recipe recipe : recipes) {
             Row current = sheet.createRow(row);

@@ -40,8 +40,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<Recipe> getAll(Pageable pageable) {
+    public List<Recipe> findAll(Pageable pageable) {
         return recipeRepository.findAll();
+    }
+
+    @Override
+    public List<Recipe> findAllByBrewfatherIds(List<String> brewfatherIds) {
+        return recipeRepository.findAllByBrewfatherIds(brewfatherIds);
     }
 
     @Override

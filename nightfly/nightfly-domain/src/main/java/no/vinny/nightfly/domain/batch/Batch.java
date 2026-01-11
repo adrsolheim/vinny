@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class Batch implements Serializable {
     private Long id;
     private String brewfatherId;
