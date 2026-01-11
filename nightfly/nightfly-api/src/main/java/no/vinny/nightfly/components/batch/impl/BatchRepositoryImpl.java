@@ -27,17 +27,19 @@ import java.util.*;
 @Repository
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe, b.updated b_updated";
-    private static final String RECIPE_COLUMNS = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated";
+    private static final String BATCH_COLUMNS      = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe, b.updated b_updated";
+    private static final String RECIPE_COLUMNS     = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated";
     private static final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap bu_tap, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
-    private static final String KEG_COLUMNS = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
+    private static final String KEG_COLUMNS        = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
+    private static final String SYNC_BATCH_COLUMNS = "id, brewfather_id, updated_epoch, synced, entity";
 
     private static final String SELECT_BATCH = "SELECT "
             + BATCH_COLUMNS + ", "
             + RECIPE_COLUMNS + ", "
             + BATCH_UNIT_COLUMNS + ", "
             + KEG_COLUMNS
-            + " FROM batch b INNER JOIN batch_unit bu on bu.batch = b.id "
+            + " FROM batch b"
+            + " LEFT JOIN batch_unit bu on bu.batch = b.id "
             + " LEFT JOIN keg k ON k.id = bu.keg "
             + " LEFT JOIN recipe r on r.id = b.recipe ";
     private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
@@ -47,9 +49,11 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     private static final String INSERT_BATCH = "INSERT INTO batch (brewfather_id, name, status, recipe, updated) VALUES (:brewfatherId, :name, :status, :recipe, :updated)";
     private static final String UPDATE_BATCH = "UPDATE batch SET brewfather_id = :brewfatherId, name = :name, status = :status, recipe = :recipe, updated = :updated WHERE id = :id ";
-    private static final String BATCH_COUNT = "SELECT COUNT(*) FROM batch";
-    private static final String SYNC_BATCH = "INSERT INTO sync_batch (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
-    private static final String SELECT_LAST_SYNCED_ENTITY = "SELECT id, brewfather_id, updated_epoch FROM sync_batch ORDER BY updated_epoch DESC LIMIT 1";
+    private static final String BATCH_COUNT  = "SELECT COUNT(*) FROM batch";
+
+    private static final String SELECT_SYNC_BATCH           = "SELECT " + SYNC_BATCH_COLUMNS + " FROM sync_batch";
+    private static final String SELECT_LAST_IMPORTED_ENTITY = SELECT_SYNC_BATCH + " ORDER BY updated_epoch DESC LIMIT 1";
+    private static final String SYNC_BATCH                  = "INSERT INTO sync_batch (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
@@ -66,9 +70,15 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("name", batch.getName());
         params.addValue("status", batch.getStatus() == null ? null : batch.getStatus().name());
         //params.addValue("tapStatus", TapStatus.WAITING.name());
-        params.addValue("recipe", batch.getRecipe() == null ? null : batch.getRecipe().getId());
+        params.addValue("recipe", Optional.ofNullable(batch.getRecipe()).map(Recipe::getId).orElse(null));
         params.addValue("updated", Time.now());
-        int insertBatchResult = jdbcTemplate.update(INSERT_BATCH, params);
+        int insertBatchResult  = 0;
+        try {
+            insertBatchResult = jdbcTemplate.update(INSERT_BATCH, params);
+        } catch (Exception ex) {
+            log.error("Unable to insert batch {}", batch, ex);
+            throw ex;
+        }
         if (batch.getBatchUnits() != null) {
             insertAll(batch.getBatchUnits());
         }
@@ -143,6 +153,14 @@ public class BatchRepositoryImpl implements BatchRepository {
     }
 
     @Override
+    public List<Batch> findAllByBrewfatherIds(List<String> brewfatherIds) {
+        if (brewfatherIds == null || brewfatherIds.isEmpty()) {
+            return List.of();
+        }
+        return jdbcTemplate.query(SELECT_BATCH + " WHERE b.brewfather_id in (:brewfatherIds)", Map.of("brewfatherIds", brewfatherIds), new BatchRowMapper());
+    }
+
+    @Override
     public List<Batch> getBatchesBy(Long recipeId, Long tapId) {
         StringBuilder sql = new StringBuilder(SELECT_BATCH);
         if (recipeId != null) {
@@ -201,8 +219,21 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     @Override
     public Optional<SyncEntity<Batch>> getLastImportedEntity() {
-        List<SyncEntity<Batch>> result = jdbcTemplate.query(SELECT_LAST_SYNCED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), batchFromJson(rs.getString("entity"))));
+        List<SyncEntity<Batch>> result = jdbcTemplate.query(SELECT_LAST_IMPORTED_ENTITY, Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), batchFromJson(rs.getString("entity"))));
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
+    public List<SyncEntity<Batch>> findUnsynced() {
+        return jdbcTemplate.query(SELECT_SYNC_BATCH + " WHERE synced IS NULL ORDER BY ID ASC", Map.of(), (rs, rowNum) -> new SyncEntity(rs.getObject("id", Long.class), rs.getString("brewfather_id"), rs.getObject("updated_epoch", Long.class), batchFromJson(rs.getString("entity"))));
+    }
+
+    @Override
+    public void markAsSynced(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        jdbcTemplate.update("UPDATE sync_batch SET synced = :synced", Map.of("synced", Time.now()));
     }
 
     private Batch batchFromJson(String json) {
@@ -212,6 +243,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         JsonNode root = null;
         try {
             root = objectMapper.readTree(json);
+            //root = root != null && root.isTextual() ? objectMapper.readTree(root.asText()) : root;
         } catch (JsonProcessingException ex) {
             throw new RuntimeException(ex);
         }
@@ -219,6 +251,11 @@ public class BatchRepositoryImpl implements BatchRepository {
                 .name(root.path("name").asText())
                 .brewfatherId(root.path("_id").asText())
                 .status(BatchStatus.fromValue(root.path("status").asText()))
+                .recipe(Optional.ofNullable(root.path("recipe").path("_id"))
+                        .filter(node -> !node.isMissingNode())
+                        .filter(node -> !node.isNull())
+                        .map(node -> Recipe.builder().brewfatherId(node.asText()).build())
+                        .orElse(null))
                 .build();
     }
 
