@@ -8,8 +8,9 @@ DROP TABLE IF EXISTS batch_unit;
 DROP TABLE IF EXISTS keg;
 DROP TABLE IF EXISTS batch;
 DROP TABLE IF EXISTS recipe;
-DROP TABLE IF EXISTS sync_recipe;
-DROP TABLE IF EXISTS sync_batch;
+--DROP TABLE IF EXISTS sync_recipe;
+--DROP TABLE IF EXISTS sync_batch;
+DROP TABLE IF EXISTS task_list;
 
 DROP TABLE IF EXISTS account;
 
@@ -79,3 +80,13 @@ CREATE TABLE IF NOT EXISTS sync_batch (
     synced TIMESTAMP,
     entity CLOB
 );
+
+--CREATE TABLE IF NOT EXISTS task_list (
+--    id BIGINT NOT NULL AUTO_INCREMENT(100) PRIMARY KEY,
+--    brewfather_id VARCHAR(50),
+--    handled TIMESTAMP,
+--    handled_by VARCHAR(50),
+--    entity_id BIGINT,
+--    entity_type VARCHAR(50), -- recipe, batch, keg
+--    origin VARCHAR(50)
+--);
