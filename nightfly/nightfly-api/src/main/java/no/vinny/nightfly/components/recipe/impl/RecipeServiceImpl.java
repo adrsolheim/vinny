@@ -38,9 +38,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public int add(Recipe recipe) {
-        Optional<Recipe> existingRecipe = getByBrewfatherId(recipe.getBrewfatherId());
-        return existingRecipe.isPresent() ? 0 : recipeRepository.insert(recipe);
+    public Recipe create(Recipe recipe) {
+        return getByBrewfatherId(recipe.getBrewfatherId())
+                .orElse(recipeRepository.insert(recipe));
     }
 
     @Override
@@ -98,9 +98,8 @@ public class RecipeServiceImpl implements RecipeService {
             return update(recipe);
         }
         getByBrewfatherId(recipe.getBrewfatherId()).ifPresent(existing -> recipe.setId(existing.getId()));
-        return recipe.getId() != null ?
-                update(recipe) : add(recipe) == 1 ?
-                getByBrewfatherId(recipe.getBrewfatherId()).orElse(null) : null;
+        return recipe.getId() != null ? update(recipe)
+                                      : create(recipe);
     }
 
     @Override

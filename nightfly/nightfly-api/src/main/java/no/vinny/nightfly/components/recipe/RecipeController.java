@@ -53,8 +53,8 @@ public class RecipeController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public int create(@RequestBody Recipe recipe) {
-        return recipeService.add(recipe);
+    public Recipe create(@RequestBody Recipe recipe) {
+        return recipeService.create(recipe);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")

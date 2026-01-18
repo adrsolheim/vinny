@@ -15,7 +15,7 @@ public interface BatchService {
    Optional<Batch> get(Long id);
    Optional<BatchUnit> getBatchUnit(Long batchUnitId);
    Optional<Batch> getByBrewfatherId(String id);
-   int add(Batch batch);
+   Batch create(Batch batch);
    List<Batch> getAll();
    List<Batch> filterBy(Long recipeId, Long tapId);
    Long count();

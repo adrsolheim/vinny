@@ -12,8 +12,11 @@ import no.vinny.nightfly.domain.Recipe;
 import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +43,19 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
-    public int insert(Recipe recipe) {
+    public Recipe insert(Recipe recipe) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        OffsetDateTime updated = Time.now();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", recipe.getBrewfatherId());
         params.addValue("name", recipe.getName());
-        params.addValue("updated", Time.now());
-        return jdbcTemplate.update(INSERT_RECIPE, params);
+        params.addValue("updated", updated);
+
+        jdbcTemplate.update(INSERT_RECIPE, params, keyHolder);
+        return recipe.toBuilder()
+                .id(keyHolder.getKeyAs(Long.class))
+                .updated(Time.zoned(updated))
+                .build();
     }
 
     @Override

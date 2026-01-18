@@ -3,6 +3,7 @@ package no.vinny.nightfly.components.batch.impl;
 import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
+import no.vinny.nightfly.components.recipe.RecipeService;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -22,11 +23,13 @@ import java.util.stream.Stream;
 
 import static no.vinny.nightfly.domain.batch.BatchStatus.COMPLETED;
 import static no.vinny.nightfly.domain.batch.BatchStatus.FERMENTING;
+import static org.mockito.Mockito.mock;
 
 class BatchServiceImplTest {
 
     BatchService batchService;
     BatchRepository batchRepository;
+    RecipeService recipeService;
     List<Batch> batchesById;
     Map<String, Batch> batchesByBrewfatherId;
 
@@ -34,19 +37,20 @@ class BatchServiceImplTest {
     void setup() {
         batchesById = batchesList();
         batchesByBrewfatherId = batchesMap();
+        recipeService = mock(RecipeService.class);
 
         batchRepository = new BatchRepository() {
             @Override
-            public int insert(Batch batch) {
+            public Batch insert(Batch batch) {
                 batch.setId(Long.valueOf(batchesById.size()));
                 batchesById.add(batch);
                 batchesByBrewfatherId.put(batch.getBrewfatherId(), batch);
-                return 1;
+                return batch;
             }
 
             @Override
-            public int insertAll(List<BatchUnit> batchUnits) {
-                return 0;
+            public List<BatchUnit> insertAll(Long batchId, List<BatchUnit> batchUnits) {
+                return null;
             }
 
             @Override
@@ -102,6 +106,11 @@ class BatchServiceImplTest {
             }
 
             @Override
+            public List<Batch> findAllByBrewfatherIds(List<String> brewfatherIds) {
+                return List.of();
+            }
+
+            @Override
             public List<Batch> getBatchesBy(Long recipeId, Long tapId) {
                 return null;
             }
@@ -136,8 +145,18 @@ class BatchServiceImplTest {
                 return Optional.empty();
             }
 
+            @Override
+            public List<SyncEntity<Batch>> findUnsynced() {
+                return List.of();
+            }
+
+            @Override
+            public void markAsSynced(List<Long> ids) {
+
+            }
+
         };
-        batchService = new BatchServiceImpl(batchRepository);
+        batchService = new BatchServiceImpl(batchRepository, recipeService);
     }
 
     @Test
@@ -150,7 +169,7 @@ class BatchServiceImplTest {
     }
 
     @Test
-    void upsert_add_new_batch() {
+    void upsert_create_new_batch() {
         Batch expected = Batch.builder().id(4L).name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
         Batch insert   = Batch.builder().name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
 

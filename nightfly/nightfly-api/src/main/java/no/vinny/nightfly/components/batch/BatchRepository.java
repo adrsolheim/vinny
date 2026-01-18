@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface BatchRepository {
-    int insert(Batch batch);
+    Batch insert(Batch batch);
 
-    int insertAll(List<BatchUnit> batchUnits);
+    List<BatchUnit> insertAll(Long batchId, List<BatchUnit> batchUnits);
 
     int delete(Long id);
 

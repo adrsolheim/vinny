@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RecipeService {
     Optional<Recipe> get(Long id);
     Optional<Recipe> getByBrewfatherId(String id);
-    int add(Recipe recipe);
+    Recipe create(Recipe recipe);
     List<Recipe> findAll(Pageable pageable);
     List<Recipe> findAllByBrewfatherIds(List<String> brewfatherIds);
     Long count();

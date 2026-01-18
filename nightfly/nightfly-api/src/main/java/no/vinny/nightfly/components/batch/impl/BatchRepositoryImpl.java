@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -43,6 +45,12 @@ public class BatchRepositoryImpl implements BatchRepository {
             + " LEFT JOIN keg k ON k.id = bu.keg "
             + " LEFT JOIN recipe r on r.id = b.recipe ";
     private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
+    private static final String SELECT_BATCH_UNIT = "SELECT "
+            + BATCH_UNIT_COLUMNS + ", "
+            + KEG_COLUMNS + " "
+            + " FROM batch_unit bu"
+            + " LEFT JOIN keg k on k.id = bu.id";
+
 
     private static final String INSERT_BATCH_UNIT = "INSERT INTO batch_unit (batch, tap, tap_status, packaging, volume_status, keg) VALUES (:batch, :tap, :tapStatus, :packaging, :volumeStatus, :keg)";
     private static final String UPDATE_BATCH_UNIT = "UPDATE batch_unit SET batch = :batch, tap = :tap, tap_status = :tapStatus, packaging = :packaging, volume_status = :volumeStatus, keg = :keg WHERE id = :id";
@@ -64,7 +72,8 @@ public class BatchRepositoryImpl implements BatchRepository {
        this.objectMapper = new ObjectMapper();
     }
 
-    public int insert(Batch batch) {
+    public Batch insert(Batch batch) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("brewfatherId", batch.getBrewfatherId());
         params.addValue("name", batch.getName());
@@ -72,29 +81,46 @@ public class BatchRepositoryImpl implements BatchRepository {
         //params.addValue("tapStatus", TapStatus.WAITING.name());
         params.addValue("recipe", Optional.ofNullable(batch.getRecipe()).map(Recipe::getId).orElse(null));
         params.addValue("updated", Time.now());
-        int insertBatchResult  = 0;
         try {
-            insertBatchResult = jdbcTemplate.update(INSERT_BATCH, params);
+            jdbcTemplate.update(INSERT_BATCH, params, keyHolder);
         } catch (Exception ex) {
             log.error("Unable to insert batch {}", batch, ex);
             throw ex;
         }
-        if (batch.getBatchUnits() != null) {
-            insertAll(batch.getBatchUnits());
+        List<BatchUnit> batchUnits = batch.getBatchUnits();
+        if (batchUnits != null) {
+            batchUnits = insertAll(batch.getId(), batch.getBatchUnits());
         }
-        return insertBatchResult;
+        return batch.toBuilder()
+                .id(keyHolder.getKey().longValue()) // generated id from db
+                .batchUnits(batchUnits)             // with generated ids from db
+                .build();
     }
 
-    public int insertAll(List<BatchUnit> batchUnits) {
+    public List<BatchUnit> insertAll(Long batchId, List<BatchUnit> batchUnits) {
         if (batchUnits == null || batchUnits.isEmpty()) {
-            return 0;
+            return batchUnits;
         }
-        int[] dbResult = jdbcTemplate.batchUpdate(INSERT_BATCH_UNIT, batchUnits.stream().map(this::toSqlParams).toArray(Map[]::new));
-        int inserts = Arrays.stream(dbResult).reduce(0, (a, b) -> a + b);
+
+        // insert all and fetched generated primary keys
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        log.info("Running sql: {}", INSERT_BATCH_UNIT);
+        int[] dbResult = jdbcTemplate.batchUpdate(INSERT_BATCH_UNIT, toSqlParams(batchId, batchUnits), keyHolder);
+
+        int inserts = Arrays.stream(dbResult).reduce(0, Integer::sum);
+        List<Long> generatedIds = keyHolder.getKeyList().stream()
+                .map(map -> (Long) map.get("id"))
+                .toList();
+        if (generatedIds.isEmpty()) {
+            // should not happen?
+            return List.of();
+        }
         if (inserts < batchUnits.size()) {
-            log.warn("{}/{} batch units inserted for batch {}", inserts, batchUnits.size(), batchUnits.get(0).getBatchId());
+            log.warn("Only {} out of {} batch units inserted for batch {}", inserts, batchUnits.size(), batchUnits.get(0).getBatchId());
         }
-        return inserts;
+
+        // batch units that were just inserted
+        return jdbcTemplate.query(SELECT_BATCH_UNIT + " WHERE bu.id in (:ids)", Map.of("ids", generatedIds), new BatchUnitRowMapper());
     }
 
     public int delete(Long id) {
@@ -270,6 +296,20 @@ public class BatchRepositoryImpl implements BatchRepository {
         return batchMap;
     }
 
+    private MapSqlParameterSource[] toSqlParams(Long batchId, List<BatchUnit> batchUnits) {
+        if (batchUnits == null || batchUnits.isEmpty()) {
+            return new MapSqlParameterSource[]{};
+        }
+        return batchUnits.stream()
+                .map(bu -> toSqlParams(batchId, bu))
+                .toArray(MapSqlParameterSource[]::new);
+    }
+
+
+    private MapSqlParameterSource toSqlParams(Long batchId, BatchUnit batchUnit) {
+        return batchId == null ? toSqlParams(batchUnit)
+                               : toSqlParams(batchUnit).addValue("batch", batchId);
+    }
     private MapSqlParameterSource toSqlParams(BatchUnit batchUnit) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", batchUnit.getId());

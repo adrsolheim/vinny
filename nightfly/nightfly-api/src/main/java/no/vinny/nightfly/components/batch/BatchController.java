@@ -5,14 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapStatus;
-import no.vinny.nightfly.config.Pagination;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.util.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,8 +64,8 @@ public class BatchController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public int create(@RequestBody Batch batch) {
-        return batchService.add(batch);
+    public Batch create(@RequestBody Batch batch) {
+        return batchService.create(batch);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")

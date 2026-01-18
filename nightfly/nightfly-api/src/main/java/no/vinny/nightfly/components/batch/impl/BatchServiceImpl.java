@@ -1,6 +1,5 @@
 package no.vinny.nightfly.components.batch.impl;
 
-import jakarta.validation.constraints.NotEmpty;
 import no.vinny.nightfly.components.common.error.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import no.vinny.nightfly.components.batch.BatchRepository;
@@ -66,13 +65,16 @@ public class BatchServiceImpl implements BatchService {
     @Override
     @Cacheable(cacheNames = {"batch"}, key = "#root.methodName + '[' + #brewfatherId + ']'")
     public Optional<Batch> getByBrewfatherId(String brewfatherId) {
+        if (brewfatherId == null) {
+            return Optional.empty();
+        }
         return batchRepository.findByBrewfatherId(brewfatherId);
     }
 
     @Override
-    public int add(Batch batch) {
-        Optional<Batch> existingBatch = getByBrewfatherId(batch.getBrewfatherId());
-        return existingBatch.isPresent() ? 0 : batchRepository.insert(batch);
+    public Batch create(Batch batch) {
+        return getByBrewfatherId(batch.getBrewfatherId())
+                .orElse(batchRepository.insert(batch));
     }
 
     // TODO: Return pagedlist
@@ -135,10 +137,9 @@ public class BatchServiceImpl implements BatchService {
         if (batch.getId() != null) {
             return update(batch);
         }
+
         getByBrewfatherId(batch.getBrewfatherId()).ifPresent(existing -> batch.setId(existing.getId()));
-        return batch.getId() != null ?
-                update(batch) : add(batch) == 1 ?
-                getByBrewfatherId(batch.getBrewfatherId()).orElse(null) : null;
+        return batch.getId() != null ? update(batch) : create(batch);
     }
 
     @Override
