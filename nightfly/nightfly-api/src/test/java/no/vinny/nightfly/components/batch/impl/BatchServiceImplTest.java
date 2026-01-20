@@ -4,6 +4,7 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeService;
+import no.vinny.nightfly.components.task.TaskService;
 import no.vinny.nightfly.domain.batch.Batch;
 import no.vinny.nightfly.domain.batch.BatchUnit;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
@@ -30,6 +31,7 @@ class BatchServiceImplTest {
     BatchService batchService;
     BatchRepository batchRepository;
     RecipeService recipeService;
+    TaskService taskService;
     List<Batch> batchesById;
     Map<String, Batch> batchesByBrewfatherId;
 
@@ -38,6 +40,7 @@ class BatchServiceImplTest {
         batchesById = batchesList();
         batchesByBrewfatherId = batchesMap();
         recipeService = mock(RecipeService.class);
+        taskService = mock(TaskService.class);
 
         batchRepository = new BatchRepository() {
             @Override
@@ -156,7 +159,7 @@ class BatchServiceImplTest {
             }
 
         };
-        batchService = new BatchServiceImpl(batchRepository, recipeService);
+        batchService = new BatchServiceImpl(batchRepository, recipeService, taskService);
     }
 
     @Test

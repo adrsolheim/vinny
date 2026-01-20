@@ -6,17 +6,16 @@ import no.vinny.nightfly.components.batch.BatchRepository;
 import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.common.sync.SyncEntity;
 import no.vinny.nightfly.components.recipe.RecipeService;
+import no.vinny.nightfly.components.task.*;
 import no.vinny.nightfly.domain.Recipe;
-import no.vinny.nightfly.domain.batch.Batch;
-import no.vinny.nightfly.domain.batch.BatchUnit;
-import no.vinny.nightfly.domain.batch.BatchUnitDTO;
-import no.vinny.nightfly.domain.batch.VolumeStatus;
+import no.vinny.nightfly.domain.batch.*;
 import no.vinny.nightfly.domain.tap.TapStatus;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,10 +30,12 @@ public class BatchServiceImpl implements BatchService {
     private final static String REDIS_PREFIX = "Batch";
     private final BatchRepository batchRepository;
     private final RecipeService recipeService;
+    private final TaskService taskService;
 
-    public BatchServiceImpl(BatchRepository batchRepository, RecipeService recipeService) {
+    public BatchServiceImpl(BatchRepository batchRepository, RecipeService recipeService, TaskService taskService) {
         this.batchRepository = batchRepository;
         this.recipeService = recipeService;
+        this.taskService = taskService;
     }
 
     @Override
@@ -73,8 +74,19 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public Batch create(Batch batch) {
-        return getByBrewfatherId(batch.getBrewfatherId())
-                .orElse(batchRepository.insert(batch));
+        Optional<Batch> existing = getByBrewfatherId(batch.getBrewfatherId());
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+        Batch newBatch = batchRepository.insert(batch);
+
+        List<Task> tasks = createTasks(newBatch, TaskOrigin.MANUAL);
+        if (!tasks.isEmpty()) {
+            log.info("Creating {} tasks for batch {}", tasks.size(), batch.getId());
+            taskService.create(tasks);
+        }
+
+        return newBatch;
     }
 
     // TODO: Return pagedlist
@@ -234,7 +246,7 @@ public class BatchServiceImpl implements BatchService {
         // update existing batches
         updatedBatches.stream()
                 .filter(updatedBatch -> hasChanges(existingBatches.get(updatedBatch.getBrewfatherId()), updatedBatch))
-                .map(updatedBatch -> addRecipe(updatedBatch, recipeByBrewfatherId))
+                .map(updatedBatch -> applyRecipe(updatedBatch, recipeByBrewfatherId))
                 .map(updatedBatch -> applyUpdatesFrom(existingBatches.get(updatedBatch.getBrewfatherId()), updatedBatch))
                 .forEach(updatedBatch -> {
                     log.info("[SYNC/{}] Updating existing batch {}", updatedBatch.getId(), updatedBatch);
@@ -242,17 +254,49 @@ public class BatchServiceImpl implements BatchService {
                 });
         // add new batches
         newBatches.stream()
-                .map(batch -> addRecipe(batch, recipeByBrewfatherId))
-                .forEach(batch -> {
-            log.info("[SYNC/null] New batch {}", batch);
-            batchRepository.insert(batch);
-        });
+                .map(batch -> applyRecipe(batch, recipeByBrewfatherId))
+                .map(batchRepository::insert)
+                .peek(batch -> log.info("[SYNC/{}] New batch {}", batch.getId(), batch))
+                .map(this::createImportTasks)
+                .flatMap(Collection::stream)
+                .peek(task -> log.info("New task {}", task))
+                .forEach(taskService::create);
 
         // mark everything as synced
         batchRepository.markAsSynced(unsyncedBatches.stream().map(SyncEntity::id).collect(toUnmodifiableList()));
     }
 
-    private Batch addRecipe(Batch batch, Map<String, Recipe> recipes) {
+    private List<Task> createImportTasks(Batch batch) {
+        return createTasks(batch, TaskOrigin.IMPORT);
+    }
+    private List<Task> createTasks(Batch batch, TaskOrigin origin) {
+        List<Task> batchTasks = new ArrayList<>();
+        if (batch.getBatchUnits() == null) {
+            batchTasks.add(createTask(batch, origin, TaskType.NOT_PACKAGED));
+        }
+        // more tasks to come..
+        return batchTasks;
+    }
+
+    private Task createTask(Batch batch, TaskOrigin origin, TaskType taskType) {
+        return Task.builder()
+                .brewfatherId(batch.getBrewfatherId())
+                .entityId(batch.getId())
+                .entity(taskEntityFrom(batch))
+                .origin(origin)
+                .task(taskType)
+                .build();
+    }
+
+    private TaskEntity taskEntityFrom(Object entity) {
+        return switch(entity) {
+            case Batch batch -> TaskEntity.BATCH;
+            case Keg keg     -> TaskEntity.KEG;
+            default          -> throw new IllegalArgumentException("Unsupported TaskEntity type: " + entity.getClass());
+        };
+    }
+
+    private Batch applyRecipe(Batch batch, Map<String, Recipe> recipes) {
         String brewfatherId = Optional.ofNullable(batch.getRecipe()).map(Recipe::getBrewfatherId).orElse(null);
         if (brewfatherId == null) {
             return batch;

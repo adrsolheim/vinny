@@ -61,7 +61,8 @@ public class BatchRepositoryImpl implements BatchRepository {
 
     private static final String SELECT_SYNC_BATCH           = "SELECT " + SYNC_BATCH_COLUMNS + " FROM sync_batch";
     private static final String SELECT_LAST_IMPORTED_ENTITY = SELECT_SYNC_BATCH + " ORDER BY updated_epoch DESC LIMIT 1";
-    private static final String SYNC_BATCH                  = "INSERT INTO sync_batch (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
+    private static final String INSERT_SYNC_BATCH           = "INSERT INTO sync_batch (brewfather_id, updated_epoch, entity) VALUES (JSON_VALUE(:entity, '$._id'), JSON_VALUE(:entity, '$._timestamp_ms'), :entity)";
+
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
@@ -240,7 +241,7 @@ public class BatchRepositoryImpl implements BatchRepository {
     public int syncBatch(String batch) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("entity", batch);
-        return jdbcTemplate.update(SYNC_BATCH, params);
+        return jdbcTemplate.update(INSERT_SYNC_BATCH, params);
     }
 
     @Override
