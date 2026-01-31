@@ -3,6 +3,7 @@ package no.vinny.nightfly.components.keg;
 import no.vinny.nightfly.domain.batch.Keg;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class KegController {
     }
 
     @GetMapping
-    public List<Keg> findAll() {
-        return kegService.findAll();
+    public List<Keg> findAll(@RequestParam(defaultValue = "false") Boolean availableOnly) {
+        return kegService.findAll(availableOnly);
     }
 }

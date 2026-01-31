@@ -35,11 +35,22 @@ INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VA
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (6, 12, 'CONNECTED',    'KEG', 'NOT_EMPTY', 6);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (7, 12, 'DISCONNECTED', 'KEG', 'NOT_EMPTY', 7);
 
-INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id) VALUES (1, 1, 10);
-INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id) VALUES (2, 2, 10);
-INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id) VALUES (3, 3, 11);
-INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id) VALUES (6, 6, 12);
-INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id) VALUES (7, 7, 12);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (1,  1,    10,   @now_timestamp);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (2,  2,    10,   @now_timestamp);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (3,  3,    11,   @now_timestamp);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (4,  null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (5,  null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (6,  6,    12,   @now_timestamp);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (7,  7,    12,   @now_timestamp);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (8,  null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (9,  null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (10, null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (11, null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (12, null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (13, null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (14, null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (15, null, null, null);
+INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (16, null, null, null);
 
 INSERT INTO tap (id, active, batch_unit) VALUES (1, TRUE,  1);
 INSERT INTO tap (id, active, batch_unit) VALUES (2, TRUE,  2);

@@ -16,7 +16,8 @@ public class KegService {
         this.kegRepository = kegRepository;
     }
 
-    public List<Keg> findAll() {
-        return kegRepository.findAll();
+    public List<Keg> findAll(Boolean availableOnly) {
+        return Boolean.TRUE.equals(availableOnly) ? kegRepository.findAvailable()
+                                                  : kegRepository.findAll();
     }
 }
