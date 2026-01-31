@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -349,7 +348,7 @@ public class BatchServiceImpl implements BatchService {
                         .brewfatherId(batch.getBrewfatherId())
                         .name(batch.getName())
                         .tapStatus(bu.getTapStatus())
-                        .packaging(bu.getPackaging())
+                        .packagingType(bu.getPackagingType())
                         .volumeStatus(bu.getVolumeStatus())
                         .keg(bu.getKeg())
                         .build());
@@ -365,7 +364,7 @@ public class BatchServiceImpl implements BatchService {
                         .brewfatherId(batch.getBrewfatherId())
                         .name(batch.getName())
                         .tapStatus(bu.getTapStatus())
-                        .packaging(bu.getPackaging())
+                        .packagingType(bu.getPackagingType())
                         .volumeStatus(bu.getVolumeStatus())
                         .keg(bu.getKeg())
                         .build())

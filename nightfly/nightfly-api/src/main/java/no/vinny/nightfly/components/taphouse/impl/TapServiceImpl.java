@@ -5,7 +5,7 @@ import no.vinny.nightfly.components.taphouse.api.ConnectBatchRequest;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapService;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
-import no.vinny.nightfly.domain.batch.Packaging;
+import no.vinny.nightfly.domain.batch.PackagingType;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
@@ -68,8 +68,8 @@ public class TapServiceImpl implements TapService {
     }
 
     private boolean canConnect(BatchUnitDTO batchUnit) {
-        if (batchUnit.getPackaging() != Packaging.KEG) {
-            throw ApiException.conflict("Cannot connect " + batchUnit.getPackaging().name() + " to tap. Must be " + Packaging.KEG.name());
+        if (batchUnit.getPackagingType() != PackagingType.KEG) {
+            throw ApiException.conflict("Cannot connect " + batchUnit.getPackagingType().name() + " to tap. Must be " + PackagingType.KEG.name());
         }
         if (batchUnit.getVolumeStatus() == VolumeStatus.EMPTY) {
             throw ApiException.conflict("Cannot connect empty keg");

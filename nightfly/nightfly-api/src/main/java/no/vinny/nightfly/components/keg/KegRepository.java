@@ -24,4 +24,9 @@ public class KegRepository {
     public List<Keg> findAll() {
         return jdbcTemplate.query(SELECT_KEG, kegRowMapper);
     }
+
+
+    public List<Keg> findAvailable() {
+        return List.of();
+    }
 }

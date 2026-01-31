@@ -4,7 +4,7 @@ import no.vinny.nightfly.components.batch.BatchService;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.api.ConnectBatchRequest;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
-import no.vinny.nightfly.domain.batch.Packaging;
+import no.vinny.nightfly.domain.batch.PackagingType;
 import no.vinny.nightfly.domain.batch.VolumeStatus;
 import no.vinny.nightfly.domain.tap.TapDTO;
 import no.vinny.nightfly.domain.tap.TapStatus;
@@ -50,7 +50,7 @@ class TapServiceImplTest {
         TapDTO tap = new TapDTO(1L, true, null);
         BatchUnitDTO unit = BatchUnitDTO.builder()
                 .id(10L)
-                .packaging(Packaging.KEG)
+                .packagingType(PackagingType.KEG)
                 .volumeStatus(VolumeStatus.NOT_EMPTY)
                 .tapStatus(TapStatus.WAITING)
                 .build();
@@ -75,14 +75,14 @@ class TapServiceImplTest {
     void connectBatch_disconnectsOldBatch_whenTapHasExistingBatch() {
         BatchUnitDTO newUnit = BatchUnitDTO.builder()
                 .id(10L)
-                .packaging(Packaging.KEG)
+                .packagingType(PackagingType.KEG)
                 .volumeStatus(VolumeStatus.NOT_EMPTY)
                 .tapStatus(TapStatus.WAITING)
                 .build();
 
         BatchUnitDTO oldUnit = BatchUnitDTO.builder()
                 .id(2L)
-                .packaging(Packaging.KEG)
+                .packagingType(PackagingType.KEG)
                 .volumeStatus(VolumeStatus.NOT_EMPTY)
                 .tapStatus(TapStatus.SERVING)
                 .build();
@@ -107,7 +107,7 @@ class TapServiceImplTest {
         TapDTO tap = new TapDTO(1L, true, null);
         BatchUnitDTO unit = BatchUnitDTO.builder()
                 .id(11L)
-                .packaging(Packaging.BOTTLE)
+                .packagingType(PackagingType.BOTTLE)
                 .volumeStatus(VolumeStatus.NOT_EMPTY)
                 .tapStatus(TapStatus.WAITING)
                 .build();
@@ -125,7 +125,7 @@ class TapServiceImplTest {
         TapDTO tap = new TapDTO(1L, true, null);
         BatchUnitDTO unit = BatchUnitDTO.builder()
                 .id(12L)
-                .packaging(Packaging.KEG)
+                .packagingType(PackagingType.KEG)
                 .volumeStatus(VolumeStatus.EMPTY)
                 .tapStatus(TapStatus.WAITING)
                 .build();
@@ -143,7 +143,7 @@ class TapServiceImplTest {
         TapDTO tap = new TapDTO(1L, true, null);
         BatchUnitDTO unit = BatchUnitDTO.builder()
                 .id(13L)
-                .packaging(Packaging.KEG)
+                .packagingType(PackagingType.KEG)
                 .volumeStatus(VolumeStatus.NOT_EMPTY)
                 .tapStatus(TapStatus.CONNECTED)
                 .build();
@@ -205,14 +205,14 @@ class TapServiceImplTest {
     void connectBatch_withOldBatchEmpty_true_disconnectsOldAndConnectsNew() {
         BatchUnitDTO newUnit = BatchUnitDTO.builder()
             .id(10L)
-            .packaging(Packaging.KEG)
+            .packagingType(PackagingType.KEG)
             .volumeStatus(VolumeStatus.NOT_EMPTY)
             .tapStatus(TapStatus.WAITING)
             .build();
 
         BatchUnitDTO oldUnit = BatchUnitDTO.builder()
             .id(2L)
-            .packaging(Packaging.KEG)
+            .packagingType(PackagingType.KEG)
             .volumeStatus(VolumeStatus.NOT_EMPTY)
             .tapStatus(TapStatus.SERVING)
             .build();

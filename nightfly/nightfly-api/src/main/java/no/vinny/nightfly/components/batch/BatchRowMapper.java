@@ -74,8 +74,9 @@ public class BatchRowMapper implements ResultSetExtractor<List<Batch>> {
                         .batchId(batch.getId())
                         .tapId(rs.getObject("bu_tap", Long.class))
                         .tapStatus(rs.getString("bu_tap_status") == null ? null : TapStatus.valueOf(rs.getString("bu_tap_status")))
-                        .packaging(rs.getString("bu_packaging") == null ? null : Packaging.valueOf(rs.getString("bu_packaging")))
+                        .packagingType(rs.getString("bu_packaging") == null ? null : PackagingType.valueOf(rs.getString("bu_packaging")))
                         .volumeStatus(rs.getString("bu_volume_status") == null ? null : VolumeStatus.valueOf(rs.getString("bu_volume_status")))
+                        .occupiesKeg(rs.getObject("ko_keg_id", Long.class) != null)
                         .keg(keg)
                         .build();
                 batchUnits.put(unitId, batchUnit);

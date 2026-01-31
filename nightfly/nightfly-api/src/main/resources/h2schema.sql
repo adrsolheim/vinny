@@ -6,6 +6,7 @@ CREATE ALIAS IF NOT EXISTS JSON_VALUE FOR "no.vinny.nightfly.util.H2JsonFunction
 DROP TABLE IF EXISTS tap;
 DROP TABLE IF EXISTS batch_unit;
 DROP TABLE IF EXISTS keg;
+DROP TABLE IF EXISTS keg_occupancy;
 DROP TABLE IF EXISTS batch;
 DROP TABLE IF EXISTS recipe;
 --DROP TABLE IF EXISTS sync_recipe;
@@ -38,6 +39,13 @@ CREATE TABLE IF NOT EXISTS keg (
     serial_number VARCHAR(255),
     purchase_condition VARCHAR(100),
     note VARCHAR (1000)
+);
+
+CREATE TABLE IF NOT EXISTS keg_occupancy (
+    keg_id BIGINT NOT NULL PRIMARY KEY,
+    batch_unit_id BIGINT,
+    batch_id BIGINT,
+    occupied_at TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS batch_unit (

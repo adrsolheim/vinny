@@ -11,7 +11,9 @@ public class BatchUnit {
     Long batchId;
     Long tapId;
     TapStatus tapStatus;
-    Packaging packaging;
+    PackagingType packagingType;
     VolumeStatus volumeStatus;
+    // is the keg currently filled with this batch unit?
+    boolean occupiesKeg;
     Keg keg;
 }

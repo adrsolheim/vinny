@@ -29,20 +29,23 @@ import java.util.*;
 @Repository
 public class BatchRepositoryImpl implements BatchRepository {
 
-    private static final String BATCH_COLUMNS      = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe, b.updated b_updated";
-    private static final String RECIPE_COLUMNS     = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated";
-    private static final String BATCH_UNIT_COLUMNS = "bu.id bu_id, bu.batch bu_batch, bu.tap bu_tap, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
-    private static final String KEG_COLUMNS        = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
-    private static final String SYNC_BATCH_COLUMNS = "id, brewfather_id, updated_epoch, synced, entity";
+    private static final String BATCH_COLUMNS         = "b.id b_id, b.brewfather_id b_brewfather_id, b.name b_name, b.status b_status, b.recipe b_recipe, b.updated b_updated";
+    private static final String RECIPE_COLUMNS        = "r.id r_id, r.brewfather_id r_brewfather_id, r.name r_name, r.updated r_updated";
+    private static final String BATCH_UNIT_COLUMNS    = "bu.id bu_id, bu.batch bu_batch, bu.tap bu_tap, bu.tap_status bu_tap_status, bu.packaging bu_packaging, bu.volume_status bu_volume_status, bu.keg bu_keg";
+    private static final String KEG_COLUMNS           = "k.id k_id, k.capacity k_capacity, k.brand k_brand, k.serial_number k_serial_number, k.purchase_condition k_purchase_condition, k.note k_note";
+    private static final String KEG_OCCUPANCY_COLUMNS = "ko.keg_id ko_keg_id, ko.batch_unit_id ko_batch_unit_id, ko.batch_id ko_batch_id, ko.occupied_at ko_occupied_at";
+    private static final String SYNC_BATCH_COLUMNS    = "id, brewfather_id, updated_epoch, synced, entity";
 
     private static final String SELECT_BATCH = "SELECT "
             + BATCH_COLUMNS + ", "
             + RECIPE_COLUMNS + ", "
             + BATCH_UNIT_COLUMNS + ", "
-            + KEG_COLUMNS
+            + KEG_COLUMNS + ", "
+            + KEG_OCCUPANCY_COLUMNS
             + " FROM batch b"
             + " LEFT JOIN batch_unit bu on bu.batch = b.id "
             + " LEFT JOIN keg k ON k.id = bu.keg "
+            + " LEFT JOIN keg_occupancy ko ON ko.batch_unit_id = bu.id "
             + " LEFT JOIN recipe r on r.id = b.recipe ";
     private static final String SELECT_BATCH_ONLY = "SELECT " + BATCH_COLUMNS;
     private static final String SELECT_BATCH_UNIT = "SELECT "
@@ -317,7 +320,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("batch",  batchUnit.getBatchId());
         params.addValue("tap",  batchUnit.getTapId());
         params.addValue("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
-        params.addValue("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
+        params.addValue("packaging", batchUnit.getPackagingType() == null ? null : batchUnit.getPackagingType().name());
         params.addValue("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());
         params.addValue("keg", batchUnit.getKeg() == null ? null : batchUnit.getKeg().getId());
         return params;
@@ -328,7 +331,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         params.addValue("batch",  batchUnit.getBatchId());
         params.addValue("tap",  batchUnit.getTapId());
         params.addValue("tapStatus", batchUnit.getTapStatus() == null ? null : batchUnit.getTapStatus().name());
-        params.addValue("packaging", batchUnit.getPackaging() == null ? null : batchUnit.getPackaging().name());
+        params.addValue("packaging", batchUnit.getPackagingType() == null ? null : batchUnit.getPackagingType().name());
         params.addValue("volumeStatus", batchUnit.getVolumeStatus() == null ? null : batchUnit.getVolumeStatus().name());
         params.addValue("keg", batchUnit.getKeg() == null ? null : batchUnit.getKeg().getId());
         return params;

@@ -1,6 +1,6 @@
 package no.vinny.nightfly.domain.batch;
 
-public enum Packaging {
+public enum PackagingType {
     KEG("Keg", "Fat"),
     BOTTLE("Bottle", "Flaske"),
     CAN("Can", "Boks"),
@@ -9,7 +9,7 @@ public enum Packaging {
     private final String name;
     private final String navn;
 
-    Packaging(String name, String navn) {
+    PackagingType(String name, String navn) {
         this.name = name;
         this.navn = navn;
     }

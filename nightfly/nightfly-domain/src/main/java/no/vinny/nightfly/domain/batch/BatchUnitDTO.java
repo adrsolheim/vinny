@@ -14,7 +14,7 @@ public class BatchUnitDTO {
     private String brewfatherId;
     private String name;
     private TapStatus tapStatus;
-    private Packaging packaging;
+    private PackagingType packagingType;
     private VolumeStatus volumeStatus;
     private Keg keg;
 }

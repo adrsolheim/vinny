@@ -26,6 +26,13 @@ CREATE TABLE IF NOT EXISTS nightfly.keg (
     note VARCHAR (1000)
 ) AUTO_INCREMENT=100;
 
+CREATE TABLE IF NOT EXISTS nightfly.keg_occupancy (
+    keg_id BIGINT NOT NULL PRIMARY KEY,
+    batch_unit_id BIGINT,
+    batch_id BIGINT,
+    occupied_at TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS nightfly.batch_unit (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     batch BIGINT,
