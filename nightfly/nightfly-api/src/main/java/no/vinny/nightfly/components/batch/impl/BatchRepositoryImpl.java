@@ -260,7 +260,7 @@ public class BatchRepositoryImpl implements BatchRepository {
         if (ids == null || ids.isEmpty()) {
             return;
         }
-        jdbcTemplate.update("UPDATE sync_batch SET synced = :synced", Map.of("synced", Time.now()));
+        jdbcTemplate.update("UPDATE sync_batch SET synced = :synced WHERE id in (:ids)", Map.of("ids", ids, "synced", Time.now()));
     }
 
     private Batch batchFromJson(String json) {
