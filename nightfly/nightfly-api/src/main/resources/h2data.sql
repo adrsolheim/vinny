@@ -34,6 +34,7 @@ INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VA
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (5, 12, 'DISCONNECTED', 'KEG', 'EMPTY',     5);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (6, 12, 'CONNECTED',    'KEG', 'NOT_EMPTY', 6);
 INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (7, 12, 'DISCONNECTED', 'KEG', 'NOT_EMPTY', 7);
+INSERT INTO batch_unit (id, batch, tap_status, packaging, volume_status, keg) VALUES (8, 15, 'DISCONNECTED', null,  null,        null);
 
 INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (1,  1,    10,   @now_timestamp);
 INSERT INTO keg_occupancy (keg_id, batch_unit_id, batch_id, occupied_at) VALUES (2,  2,    10,   @now_timestamp);

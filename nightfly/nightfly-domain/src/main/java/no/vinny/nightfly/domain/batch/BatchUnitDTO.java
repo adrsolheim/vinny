@@ -17,4 +17,8 @@ public class BatchUnitDTO {
     private PackagingType packagingType;
     private VolumeStatus volumeStatus;
     private Keg keg;
+
+    public boolean kegged() {
+        return keg != null;
+    }
 }

@@ -6,7 +6,7 @@ public enum VolumeStatus {
 
     String value;
 
-    private VolumeStatus(String value) {
+    VolumeStatus(String value) {
         this.value = value;
     }
 }

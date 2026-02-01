@@ -180,12 +180,13 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus) {
+    public List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus, Boolean kegged) {
        return getAll().stream()
-               .filter(batch -> ignore(batchIds) || batchIds.contains(batch.getId()))
+               .filter(batch -> empty(batchIds) || batchIds.contains(batch.getId()))
                .flatMap(this::toDTO)
                .filter(bu -> volumeStatus == null || bu.getVolumeStatus() == volumeStatus)
-               .filter(bu -> ignore(excludeTapStatus) || !excludeTapStatus.contains(bu.getTapStatus()))
+               .filter(bu -> empty(excludeTapStatus) || !excludeTapStatus.contains(bu.getTapStatus()))
+               .filter(bu -> kegged == null || kegged.equals(bu.kegged()))
                .collect(toList());
     }
 
@@ -316,11 +317,7 @@ public class BatchServiceImpl implements BatchService {
         if (!existing.getName().equals(updatedBatch.getName())) {
             return true;
         }
-        if (existing.getStatus() != updatedBatch.getStatus()) {
-            return true;
-        }
-
-        return false;
+        return existing.getStatus() != updatedBatch.getStatus();
     }
 
     private Batch applyUpdatesFrom(Batch existing, Batch updatedBatch) {
@@ -333,7 +330,7 @@ public class BatchServiceImpl implements BatchService {
                 .build();
     }
 
-    private boolean ignore(Set set) {
+    private boolean empty(Set set) {
         return set == null || set.isEmpty();
     }
 

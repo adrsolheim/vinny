@@ -10,7 +10,7 @@ import org.springframework.web.client.RestClient;
 
 @Service
 public class NightflyService {
-    private String clientSecret;
+    private final String clientSecret;
     private static final String baseUrl = "http://localhost:8080";
     private static final String authUrl = "http://localhost:9000/oauth2/token";
 

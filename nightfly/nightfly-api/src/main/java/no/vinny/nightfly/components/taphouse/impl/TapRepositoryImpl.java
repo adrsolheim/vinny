@@ -3,16 +3,11 @@ package no.vinny.nightfly.components.taphouse.impl;
 import no.vinny.nightfly.components.taphouse.TapRepository;
 import no.vinny.nightfly.components.taphouse.TapRowDTOMapper;
 import no.vinny.nightfly.domain.batch.BatchUnitDTO;
-import no.vinny.nightfly.domain.tap.Tap;
 import no.vinny.nightfly.domain.tap.TapDTO;
-import org.apache.poi.sl.draw.geom.GuideIf;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

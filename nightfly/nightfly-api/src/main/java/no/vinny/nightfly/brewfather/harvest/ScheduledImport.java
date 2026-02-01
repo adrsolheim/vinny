@@ -1,6 +1,5 @@
 package no.vinny.nightfly.brewfather.harvest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +87,7 @@ public class ScheduledImport {
         }
         ResponseEntity<JsonNode> jsonResponse = RestClient.create()
                 .get()
-                .uri("https://api.brewfather.app/v2/recipes?" + params.toString())
+                .uri("https://api.brewfather.app/v2/recipes?" + params)
                 .headers(h -> h.setBasicAuth(brewfatherSettings.getUser(), brewfatherSettings.getKey()))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -118,14 +117,13 @@ public class ScheduledImport {
         }
         Long timestamp = lastImportedEntity.get().updated();
 
-        StringBuilder params = new StringBuilder("complete=false");
-        params.append("&limit=50");
-        params.append("&order_by=_timestamp_ms");
-        params.append("&order_direction=desc");
-        params.append("&include=_timestamp_ms");
+        String params = "complete=false" + "&limit=50" +
+                "&order_by=_timestamp_ms" +
+                "&order_direction=desc" +
+                "&include=_timestamp_ms";
         List<SyncEntity> recipes = RestClient.create()
                 .get()
-                .uri("https://api.brewfather.app/v2/recipes?" + params.toString())
+                .uri("https://api.brewfather.app/v2/recipes?" + params)
                 .headers(h -> h.setBasicAuth(brewfatherSettings.getUser(), brewfatherSettings.getKey()))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -146,14 +144,13 @@ public class ScheduledImport {
             return null;
         }
         Long timestamp = lastImportedEntity.get().updated();
-        StringBuilder params = new StringBuilder("complete=false");
-        params.append("&limit=50");
-        params.append("&order_by=_timestamp_ms");
-        params.append("&order_direction=desc");
-        params.append("&include=_timestamp_ms");
+        String params = "complete=false" + "&limit=50" +
+                "&order_by=_timestamp_ms" +
+                "&order_direction=desc" +
+                "&include=_timestamp_ms";
         List<SyncEntity> batches = RestClient.create()
                 .get()
-                .uri("https://api.brewfather.app/v2/batches?" + params.toString())
+                .uri("https://api.brewfather.app/v2/batches?" + params)
                 .headers(h -> h.setBasicAuth(brewfatherSettings.getUser(), brewfatherSettings.getKey()))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -179,7 +176,7 @@ public class ScheduledImport {
         }
         ResponseEntity<JsonNode> jsonResponse = RestClient.create()
                 .get()
-                .uri("https://api.brewfather.app/v2/batches?" + params.toString())
+                .uri("https://api.brewfather.app/v2/batches?" + params)
                 .headers(h -> h.setBasicAuth(brewfatherSettings.getUser(), brewfatherSettings.getKey()))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()

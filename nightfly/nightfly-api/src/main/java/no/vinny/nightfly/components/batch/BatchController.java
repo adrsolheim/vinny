@@ -46,8 +46,10 @@ public class BatchController {
     @GetMapping("/units")
     public List<BatchUnitDTO> batchUnits(@RequestParam(required = false) Set<Long> batchIds,
                                          @RequestParam(required = false) VolumeStatus volumeStatus,
-                                         @RequestParam(required = false) Set<TapStatus> excludeTapStatus) {
-        return batchService.findAllBy(batchIds, volumeStatus, excludeTapStatus);
+                                         @RequestParam(required = false) Set<TapStatus> excludeTapStatus,
+                                         @RequestParam(required = false) Boolean kegged
+                                         ) {
+        return batchService.findAllBy(batchIds, volumeStatus, excludeTapStatus, kegged);
     }
 
 

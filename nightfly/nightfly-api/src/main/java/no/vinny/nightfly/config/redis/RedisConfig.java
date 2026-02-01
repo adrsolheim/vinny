@@ -89,9 +89,9 @@ public class RedisConfig implements CachingConfigurer {
     objectMapper.registerModule(new Jdk8Module());
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.setConstructorDetector(ConstructorDetector.USE_PROPERTIES_BASED);
-    objectMapper.enable(new JsonGenerator.Feature[]{JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN});
-    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, new SerializationFeature[]{SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, SerializationFeature.FAIL_ON_EMPTY_BEANS});
-    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, new DeserializationFeature[]{DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE});
+    objectMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
 

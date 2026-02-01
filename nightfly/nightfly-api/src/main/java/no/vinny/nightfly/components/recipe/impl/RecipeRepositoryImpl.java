@@ -9,7 +9,6 @@ import no.vinny.nightfly.components.common.time.Time;
 import no.vinny.nightfly.components.recipe.RecipeRepository;
 import no.vinny.nightfly.components.recipe.RecipeRowMapper;
 import no.vinny.nightfly.domain.Recipe;
-import no.vinny.nightfly.domain.batch.Batch;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

@@ -24,7 +24,7 @@ public interface BatchService {
    Batch upsert(Batch batch);
    Batch replace(Batch batch);
    BatchUnit update(BatchUnitDTO batchUnit);
-   List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus);
+   List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus, Boolean kegged);
    Optional<BatchUnitDTO> getBatchUnitById(Long batchUnitId);
 
    Optional<SyncEntity<Batch>> getLastImportedEntity();

@@ -18,7 +18,7 @@ public class NightflyRunner implements CommandLineRunner {
     }
 
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         new SpringApplicationBuilder(NightflyRunner.class)
                 .web(WebApplicationType.NONE)
                 .run(args);

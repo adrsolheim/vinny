@@ -182,11 +182,7 @@ public class RecipeServiceImpl implements RecipeService {
             return false;
         }
 
-        if (!existing.getName().equals(updatedRecipe.getName())) {
-            return true;
-        }
-
-        return false;
+        return !existing.getName().equals(updatedRecipe.getName());
     }
 
     private Recipe applyUpdatesFrom(Recipe existing, Recipe updatedRecipe) {
