@@ -20,8 +20,8 @@ public interface BatchService {
    List<Batch> filterBy(Long recipeId, Long tapId);
    Long count();
    int delete(Long id);
-   Batch update(Batch batch);
-   Batch upsert(Batch batch);
+   Batch update(Batch batch, String updatedBy);
+   Batch upsert(Batch batch, String updatedBy);
    Batch replace(Batch batch);
    BatchUnit update(BatchUnitDTO batchUnit);
    List<BatchUnitDTO> findAllBy(Set<Long> batchIds, VolumeStatus volumeStatus, Set<TapStatus> excludeTapStatus, Boolean kegged);

@@ -167,7 +167,7 @@ class BatchServiceImplTest {
         Batch expected = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").status(COMPLETED).build();
         Batch update   = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").build();
 
-        Batch result = batchService.upsert(update);
+        Batch result = batchService.upsert(update, "test");
         Assertions.assertEquals(expected, result);
     }
 
@@ -176,7 +176,7 @@ class BatchServiceImplTest {
         Batch expected = Batch.builder().id(4L).name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
         Batch insert   = Batch.builder().name("New Batch").brewfatherId("NEW63bbbe01eeed093cb22bb8f5acdc3").status(FERMENTING).build();
 
-        Batch result = batchService.upsert(insert);
+        Batch result = batchService.upsert(insert, "test");
         Assertions.assertEquals(expected, result);
     }
 
@@ -187,8 +187,8 @@ class BatchServiceImplTest {
         Batch update         = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").build();
         Batch expectedUpdate = Batch.builder().id(1L).name("Updoot").brewfatherId("5eb63bbbe01eeed093cb22bb8f5acdc3").status(COMPLETED).build();
 
-        Batch insertResult = batchService.upsert(insert);
-        Batch updateResult = batchService.upsert(update);
+        Batch insertResult = batchService.upsert(insert, "test");
+        Batch updateResult = batchService.upsert(update, "test");
         Long count = batchService.count();
 
         Assertions.assertEquals(expectedInsert, insertResult);

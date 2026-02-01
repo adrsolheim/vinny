@@ -81,7 +81,8 @@ public class BatchController {
     public Batch update(@PathVariable Long id, @RequestBody Batch updateBatch) {
         updateBatch.setId(id);
         log.info("Update request for id {}. Batch: {}", id, updateBatch);
-        return batchService.update(updateBatch);
+        String user = userService.currentUser().orElseThrow(() -> new NotFoundException("Logged in user not found"));
+        return batchService.update(updateBatch, user);
     }
 
 

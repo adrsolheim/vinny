@@ -115,7 +115,7 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     // CacheEvict by id and brewfatherId
-    public Batch update(Batch batch) {
+    public Batch update(Batch batch, String updatedBy) {
         if (batch.getId() == null) {
             throw new IllegalArgumentException("Batch id must be present in order to find and update batch");
         }
@@ -125,6 +125,9 @@ public class BatchServiceImpl implements BatchService {
             throw new NotFoundException("Batch not found");
         }
         batchRepository.update(mergeNonNull(batch, existingBatch.get()));
+        if (batch.getBatchUnits() != null) {
+            taskService.findAndHandleTask(batch.getId(), batch.getBrewfatherId(), TaskEntity.BATCH, TaskType.NOT_PACKAGED, updatedBy);
+        }
         return get(batch.getId()).get();
     }
 
@@ -144,13 +147,13 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public Batch upsert(Batch batch) {
+    public Batch upsert(Batch batch, String updatedBy) {
         if (batch.getId() != null) {
-            return update(batch);
+            return update(batch, updatedBy);
         }
 
         getByBrewfatherId(batch.getBrewfatherId()).ifPresent(existing -> batch.setId(existing.getId()));
-        return batch.getId() != null ? update(batch) : create(batch);
+        return batch.getId() != null ? update(batch, updatedBy) : create(batch);
     }
 
     @Override
