@@ -1,9 +1,9 @@
 package no.vinny.nightfly.config.redis;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.lang.Nullable;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class GZippingJackson2JsonRedisSerializer extends GenericJackson2JsonRedisSerializer {
+public class GZippingJackson2JsonRedisSerializer extends GenericJacksonJsonRedisSerializer {
     public GZippingJackson2JsonRedisSerializer(ObjectMapper objectMapper) {
         super(objectMapper);
     }
