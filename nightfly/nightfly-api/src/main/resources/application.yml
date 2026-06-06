@@ -19,9 +19,9 @@ spring:
   data:
     jdbc:
       dialect: org.hibernate.dialect.MariaDBDialect
-redis:
-  host: ${REDIS_HOST:localhost}
-  port: ${REDIS_PORT:6379}
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 cron:
   runner:
     enabled: false
