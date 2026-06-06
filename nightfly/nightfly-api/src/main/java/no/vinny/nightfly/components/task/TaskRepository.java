@@ -1,12 +1,11 @@
 package no.vinny.nightfly.components.task;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.vinny.nightfly.components.common.time.Time;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import tools.jackson.databind.ObjectMapper;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Repository
