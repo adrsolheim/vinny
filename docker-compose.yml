@@ -1,4 +1,12 @@
 services:
+  proxy:
+    image: nginx:alpine
+    port:
+      - "80:80"
+      - "443:443"
+    networks:
+      - brewnet
+
   nightfly:
     container_name: nightfly
     build: ./nightfly
@@ -19,6 +27,8 @@ services:
       REDIS_PORT: 6379
       DB_PASS: nightfly
       SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - brewnet
 
   nightfly_db:
     container_name: nightfly_db
@@ -42,6 +52,8 @@ services:
       - ./nightfly_db/data:/var/lib/mysql
       - ./nightfly_db/scripts:/docker-entrypoint-initdb.d
       - ./nightfly_db/config:/etc/mysql/mariadb.conf.d
+    networks:
+      - brewnet
 
   gate:
     container_name: gate
@@ -56,6 +68,8 @@ services:
         condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - brewnet
 
   gatekeeper:
     container_name: gatekeeper
@@ -71,6 +85,8 @@ services:
       DATABASE_HOST: gatekeeper_db
       DB_USER: gatekeeper
       DB_PASS: gatekeeper
+    networks:
+      - brewnet
 
 
   gatekeeper_db:
@@ -95,6 +111,8 @@ services:
       - ./gatekeeper_db/data:/var/lib/mysql
       - ./gatekeeper_db/scripts:/docker-entrypoint-initdb.d
       - ./gatekeeper_db/config:/etc/mysql/mariadb.conf.d
+    networks:
+      - brewnet
   
   redis:
     container_name: redis
@@ -105,3 +123,8 @@ services:
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./redis/data:/data
+    networks:
+      - brewnet
+
+networks:
+  brewnet:
